@@ -498,7 +498,7 @@ struct StreakCard: View {
                 Text("\(streakCount)")
                     .font(.system(size: 72, weight: .heavy, design: .rounded))
                     .foregroundColor(DesignSystem.Colors.primary)
-                    .monospacedDigit()
+                    .tracking(-3)
                     .minimumScaleFactor(0.6)
                     .lineLimit(1)
                     .accessibilityHidden(true)
