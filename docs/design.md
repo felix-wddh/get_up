@@ -1,21 +1,23 @@
-# GetUp — iOS Design System & Product Specification
+# GetUp — iOS Design System & Product Specification (v2)
 
-> **One sentence**: GetUp is an iOS alarm app that forces you out of bed by requiring a physical NFC tag scan to silence the alarm. This document is the single source of truth for its visual language, component library, motion, copy, and implementation.
+> **One sentence:** GetUp is an iPhone alarm app that turns off only when you physically walk your phone to an NFC tag in another room. This document is the single source of truth for its visual language, components, motion, copy, and iOS implementation.
+>
+> **What changed in v2:** The visual language has been rebuilt to feel **contemporary, native to modern iOS, and elegantly light**. White-and-blue logic is preserved, but page surfaces are now a softly tinted blue-gray, cards are larger-radius with soft halo shadows, primary CTAs are fully-rounded pills, and the signature element is a large circular progress ring. A restrained "liquid glass" treatment appears on floating chrome (status bar overlays, the active alarm halo) — never as a heavy effect.
 
 ---
 
 ## 0. Table of Contents
 
 1. [Design Principles](#1-design-principles)
-2. [Typography](#2-typography)
-3. [Spacing System](#3-spacing-system)
+2. [Visual Language](#2-visual-language)
+3. [Typography](#3-typography)
 4. [Color System](#4-color-system)
-5. [Core UI Components](#5-core-ui-components)
-6. [Button System](#6-button-system)
+5. [Spacing System](#5-spacing-system)
+6. [Components](#6-components)
 7. [Screen Designs](#7-screen-designs)
-8. [Navigation Logic](#8-navigation-logic)
-9. [Motion & Animation](#9-motion--animation)
-10. [NFC-Specific Experience](#10-nfc-specific-experience)
+8. [iPhone UX & Navigation](#8-iphone-ux--navigation)
+9. [Motion & Transitions](#9-motion--transitions)
+10. [NFC Experience](#10-nfc-experience)
 11. [Tone of Voice](#11-tone-of-voice)
 12. [Iconography](#12-iconography)
 13. [Accessibility](#13-accessibility)
@@ -26,392 +28,485 @@
 
 ## 1. Design Principles
 
-GetUp is a utility you use at the worst moment of the day — half-awake, eyes squinting, brain offline. The product must feel like a quiet, confident tool, not a toy. Six principles guide every decision.
+GetUp is a tool you use at the worst moment of the day — half-awake, eyes squinting, brain offline. The product must feel like a quiet, confident iOS utility, not a toy and not a productivity dashboard.
 
 | # | Principle | What it means | What it rules out |
 |---|---|---|---|
-| 1 | **Simple** | One job per screen. No more than one primary action. | Dashboards, info density, dual CTAs. |
-| 2 | **Physical** | The product extends into the real world through the NFC tag. The UI rewards and reinforces that physical motion. | Pure-digital "tap to dismiss" shortcuts. |
-| 3 | **Calm urgency** | At 6:30 AM, the app insists — but it never yells. Motion is firm, copy is steady, color stays controlled. | Red flashing screens, aggressive vibration, exclamation marks. |
-| 4 | **Trustworthy** | Looks and behaves like an Apple-native utility. Predictable, immediate, no surprises. | Custom alert dialogs, marketing splash screens. |
-| 5 | **Minimal friction** | Setup is < 60 seconds. Creating an alarm is two taps after the first run. | Modals stacked on modals, mandatory accounts. |
-| 6 | **Consistent white-and-blue logic** | White is the world; black is information; blue is action. Every component obeys this. | Multi-color palettes, gradient buttons, mood-based theming. |
+| 1 | **Simplicity is key** | One job per screen, one primary action. Whitespace is a feature. | Density, dual CTAs, dashboards. |
+| 2 | **Physical action drives behavior** | The product extends into the real world through the NFC tag. The UI rewards motion, not taps. | Pure-digital dismiss shortcuts. |
+| 3 | **Calm urgency** | At 6:30 AM the app insists — but never yells. Motion is firm, copy steady, color controlled. | Red flashing screens, all-caps copy, aggressive haptics. |
+| 4 | **Frictionless mornings** | The morning path is muscle-memory: ringtone → walk → scan → done. No decisions required after the alarm fires. | Multi-step dismiss flows, mandatory choices. |
+| 5 | **Native iPhone feel** | Looks and behaves like Apple shipped it. Predictable patterns, system primitives, full Dynamic Type. | Custom alert dialogs, marketing splash screens, off-platform fonts. |
+| 6 | **Consistency across the entire app** | One spacing system, one button system, one corner radius logic, one motion library. | Local exceptions, special-cased screens. |
 
 **Golden rule** — *Every pixel justifies its presence. If a screen can be quieter, it should be.*
 
 ---
 
-## 2. Typography
+## 2. Visual Language
 
-GetUp uses **SF Pro** exclusively, following iOS Human Interface Guidelines and Dynamic Type. The variant is implied by usage: SF Pro Display ≥ 20 pt, SF Pro Text < 20 pt. SF Mono is used only inside the alarm countdown for tabular numerals.
+GetUp's look is defined by five layered ideas.
 
-### 2.1 Type scale
+### 2.1 Layered light
 
-| Token | Style | Size / Line height | Weight | Tracking | Usage |
-|---|---|---|---|---|---|
-| `type/largeTitle` | Large Title | 34 / 41 | Bold (700) | +0.37 | Onboarding hero, big moments ("Good morning") |
-| `type/title1` | Title 1 | 28 / 34 | Bold (700) | +0.36 | Page titles ("Your alarms") |
-| `type/title2` | Title 2 | 22 / 28 | Semibold (600) | +0.35 | Sub-page headings, modal titles |
-| `type/title3` | Title 3 | 20 / 25 | Semibold (600) | +0.38 | Section titles inside lists |
-| `type/headline` | Headline | 17 / 22 | Semibold (600) | -0.43 | Card titles, list row primary |
-| `type/body` | Body | 17 / 22 | Regular (400) | -0.43 | Default paragraph, list row body |
-| `type/callout` | Callout | 16 / 21 | Regular (400) | -0.32 | Helper copy adjacent to inputs |
-| `type/subhead` | Subheadline | 15 / 20 | Regular (400) | -0.24 | Secondary text, metadata |
-| `type/footnote` | Footnote | 13 / 18 | Regular (400) | -0.08 | Disclosures, fine print |
-| `type/caption1` | Caption 1 | 12 / 16 | Regular (400) | 0 | Labels, timestamps |
-| `type/caption2` | Caption 2 | 11 / 13 | Medium (500) | +0.06 | Micro-labels, tag badges |
-| `type/button` | Button | 17 / 22 | Semibold (600) | -0.43 | All button labels |
-| `type/countdown` | Alarm Countdown | 96 / 96 | Light (300), SF Pro Display, tabular nums | -1.2 | Active alarm time display |
+- The **page background** is a soft, cool blue-gray (`color/canvas` = `#EEF2F8`), not pure white. It reads as ambient light — the room around the content.
+- **Cards** are pure white, floating above the canvas with generous corner radii (24–28 px) and soft, diffused shadows. They feel weightless rather than heavy.
+- **Hero surfaces** (active alarm, scan screen, success screen) are filled with `color/primarySoft` (`#F4F8FF`) — a barely-there blue. Same shape language, slightly cooler tone, signals "this is a key moment."
 
-### 2.2 Usage rules
+### 2.2 Surface treatment
 
-- **One title per screen.** Never stack `largeTitle` with `title1`.
-- **Body color is `text.primary`** unless deliberately demoted to `text.secondary` for hierarchy.
-- **Line length** stays between 40–70 characters for `body`. Wider lines break trust.
-- **Numerals in time/counters** use tabular figures (`font-feature-settings: "tnum"`).
-- **Never bold for emphasis inside body copy.** Use weight to denote role (e.g. card title) only.
+| Surface | Background | Radius | Border | Shadow |
+|---|---|---|---|---|
+| Page canvas | `#EEF2F8` | — | — | — |
+| Default card | `#FFFFFF` | 24 px | none | `shadow/card` |
+| Hero card | `#F4F8FF` | 28 px | none | `shadow/card` |
+| Floating chrome (status overlays, tab bar) | `rgba(255,255,255,0.72)` + 24 px backdrop blur | 0 / variable | 1 px `rgba(255,255,255,0.6)` top | `shadow/glass` |
+| Bottom sheet | `#FFFFFF` | 28 px top | none | `shadow/sheet` |
 
-### 2.3 Dynamic Type
+### 2.3 Liquid glass — used in three places, never more
 
-All text styles map to iOS text-style tokens (`UIFont.TextStyle.body`, etc.) and respect the user's preferred size from XS to AX5. The alarm countdown is the only exception: it scales with the viewport, not Dynamic Type, because legibility at distance matters more than label-level customization.
+Apple's translucent material is a signature of modern iOS. We adopt it **only where it earns its keep**:
+
+1. **The active alarm halo** — a soft, translucent blue ring behind the scan target. It pulses, but stays subtle.
+2. **The floating tab bar** — when content scrolls beneath it, the bar uses backdrop blur so the content shows through faintly.
+3. **The status overlay** during the NFC scan flash — a brief translucent veil, 220 ms.
+
+Everywhere else, surfaces are solid. **No frosted modals, no glassmorphic cards, no glass buttons.** The product is light, not slick.
+
+### 2.4 Depth & shadow
+
+Shadows are large, soft, and slightly cool-toned to match the canvas. Never harsh, never directional.
+
+| Token | Value | Use |
+|---|---|---|
+| `shadow/card` | `0 4px 24px rgba(31,77,138,0.06), 0 1px 2px rgba(31,77,138,0.04)` | Default card and hero card |
+| `shadow/raised` | `0 12px 36px rgba(31,77,138,0.10), 0 2px 6px rgba(31,77,138,0.06)` | The primary CTA button (gives it lift on the page) |
+| `shadow/sheet` | `0 -8px 32px rgba(31,77,138,0.08)` | Bottom sheet top edge |
+| `shadow/glass` | `0 8px 24px rgba(31,77,138,0.08)` | Floating chrome (tab bar, sticky header) |
+| `shadow/halo` | `0 0 64px rgba(0,112,232,0.18)` | Behind the active scan target |
+| `shadow/none` | none | List rows, dense interior elements |
+
+### 2.5 Corner radius system
+
+| Token | Value | Use |
+|---|---|---|
+| `radius/xs` | 6 px | Tags, badges |
+| `radius/sm` | 12 px | Pills inside cards, input fields |
+| `radius/md` | 16 px | Icon containers, day chips |
+| `radius/lg` | 20 px | Secondary buttons, search field |
+| `radius/xl` | 24 px | Default cards |
+| `radius/2xl` | 28 px | Hero cards, modal sheet top |
+| `radius/full` | 999 px | Primary buttons, status dots, day-of-week selectors |
+
+**The rule:** the larger the surface, the larger the radius. Pill buttons read as actions; rounded cards read as zones; subtle radii read as components.
+
+### 2.6 Borders
+
+Borders are used sparingly — only on the **secondary button** and on **input fields**. Default border is 1 px `color/border` (`#E6EAF0`). Cards rely on shadow + background contrast for separation; they have no border.
 
 ---
 
-## 3. Spacing System
+## 3. Typography
 
-A single 4-pt scale governs all spacing — internal padding, gaps between siblings, and the gutter between cards.
+GetUp uses **Inter** (the typeface from dataleap.ai) as its single type family across the entire app. Inter is a clean, contemporary, highly-legible sans-serif designed for screens — it has the open apertures and tight metrics modern product UI needs, plus full weight coverage (100–900) and tabular figures for time displays. Use Inter Display (the optical cut tuned for ≥ 20 pt) for any text at headline scale or larger; Inter for everything below.
 
-| Token | Value | Primary use |
-|---|---|---|
-| `space/2xs` | **4 px** | Icon ↔ adjacent label, hairline separations |
-| `space/xs` | **8 px** | Tag inner padding, dense list row vertical gap |
-| `space/sm` | **12 px** | Button inner padding (vertical), small card padding |
-| `space/md` | **16 px** | Screen edge gutter, list row vertical padding |
-| `space/lg` | **20 px** | Card internal padding, comfortable group gap |
-| `space/xl` | **24 px** | Section gap, card external margin |
-| `space/2xl` | **32 px** | Hero block spacing, top of screen padding |
-| `space/3xl` | **40 px** | Onboarding screen verticals, modal top padding |
-| `space/4xl` | **56 px** | Major moment dividers (between hero and CTA) |
+> **Font source note.** Pulling the exact webfont from dataleap.ai directly wasn't possible (their CSS is served cross-origin and the page blocks iframe embedding), so this spec commits to Inter — Framer's default and the closest matching open-source typeface to dataleap.ai's visual character. If the actual face is named (e.g. Geist, PP Neue Montreal, Söhne), swap the family in §15.2; nothing else changes.
 
-### 3.1 Layout grid
+### 3.0 Loading Inter
 
-- **Edge gutter**: `space/md` (16 px) on phones < 390 pt wide; `space/lg` (20 px) on 390+.
-- **Vertical rhythm**: prefer 8-pt multiples. 4 px is reserved for icon-to-text relationships and hairlines.
-- **Safe areas**: never crowd within 8 px of the home indicator or the dynamic island.
-- **One-thumb reach**: primary actions sit within the bottom 280 pt of the screen.
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
+```
+
+On iOS, ship Inter as a bundled font (TTF or variable WOFF2 in the app bundle) and register via `UIFontDescriptor` so it works offline and respects Dynamic Type. Use **SF Pro** as the system fallback if Inter fails to load.
+
+### 3.1 Type scale
+
+| Token | Style | Size / Line height | Weight | Tracking | Usage |
+|---|---|---|---|---|---|
+| `type/largeTitle` | Large Title | 34 / 41 | Bold (700) | +0.37 | Onboarding hero, "Good morning" |
+| `type/screenTitle` | Screen Title | 28 / 34 | Bold (700) | +0.36 | Page titles ("Your alarms") |
+| `type/sectionHeader` | Section Header | 20 / 25 | Semibold (600) | +0.38 | Section titles inside lists |
+| `type/headline` | Headline | 17 / 22 | Semibold (600) | -0.43 | Card titles, list row primary |
+| `type/body` | Body | 17 / 22 | Regular (400) | -0.43 | Default paragraph, list row body |
+| `type/secondaryBody` | Secondary Body | 15 / 20 | Regular (400) | -0.24 | Secondary text, metadata, helpers |
+| `type/caption` | Caption | 13 / 18 | Regular (400) | -0.08 | Labels, timestamps, footnotes |
+| `type/microCaption` | Micro Caption | 11 / 13 | Medium (500) | +0.06 | Badge labels, micro-tags |
+| `type/button` | Button | 17 / 22 | Semibold (600) | -0.43 | All button labels |
+| `type/ringValue` | Progress Ring Value | 56 / 60 | Bold (700), tabular nums | -0.8 | Big number inside a progress ring |
+| `type/countdown` | Alarm Countdown | 96 / 96 | Semibold (600), Inter Tight, tabular nums | -1.2 | Active alarm time display |
+
+### 3.2 Usage rules
+
+- **One title per screen.** Never stack `largeTitle` with `screenTitle`.
+- **Use `screenTitle` left-aligned for tab roots** (e.g. "Your alarms"). For modal/pushed screens, center a `headline`-sized title in the nav bar.
+- **Body text color is `text.primary`** unless deliberately demoted.
+- **Line length** stays 40–70 characters for `body`.
+- **Numbers** in time, counters, and ring values use tabular figures (`font-feature-settings: "tnum"`).
+- **Never use bold inside body copy for emphasis.** Use weight only to denote role.
+
+### 3.3 Dynamic Type
+
+Every text token maps to an iOS text style (`UIFont.TextStyle.title1`, `.body`, etc.) and respects user preference from XS to AX5. The alarm countdown is the only exception: it scales with the viewport, not Dynamic Type, because distance legibility wins.
+
+Because Inter is a custom (non-system) font, register each Inter weight with a corresponding `UIFontMetrics` instance so Dynamic Type scaling still applies — `UIFontMetrics(forTextStyle: .body).scaledFont(for: interRegular17)` and so on. Do *not* hard-code point sizes.
 
 ---
 
 ## 4. Color System
 
-White is the canvas. Black is meaning. Blue is action. Every other color is a functional exception.
+White is the floor, blue is action, black is meaning. Every other color is a functional exception used at small scale.
 
 ### 4.1 Primary palette
 
 | Token | Hex | Role |
 |---|---|---|
-| `color/primary` | `#0070E8` | All primary actions, active toggles, focused inputs, key icons |
-| `color/primaryPressed` | `#005FC4` | Pressed and hover state for primary action |
-| `color/primaryLight` | `#EAF4FF` | Selected row highlight, tag fill, NFC pulse mid-ring |
-| `color/primarySoft` | `#F3F8FF` | Page-level emphasis background (e.g. NFC setup card) |
+| `color/primary` | `#0070E8` | All primary actions, active toggles, focused inputs, key icons, progress ring stroke |
+| `color/primaryPressed` | `#005FC4` | Pressed state for primary action |
+| `color/primaryLight` | `#EAF4FF` | Tinted icon containers, selected row highlight, ring track |
+| `color/primarySoft` | `#F4F8FF` | Hero card backgrounds, scan screen background |
 
 ### 4.2 Neutrals
 
 | Token | Hex | Role |
 |---|---|---|
-| `color/white` | `#FFFFFF` | Card surface, modal surface, button fill (secondary) |
-| `color/offWhite` | `#FAFAFA` | App background |
-| `color/surface` | `#F5F6F7` | Inactive chips, input fields, time picker wheel |
-| `color/border` | `#E5E7EB` | Card border, secondary button stroke |
-| `color/divider` | `#EEEEEE` | List separators, group dividers |
+| `color/white` | `#FFFFFF` | Card surface, modal surface, button label (primary) |
+| `color/canvas` | `#EEF2F8` | App page background — the cool tinted ambient surface |
+| `color/offWhite` | `#FAFBFC` | Alternative background for screens that need to read pure |
+| `color/surface` | `#F5F7FA` | Inactive chips, input fields, time picker |
+| `color/border` | `#E6EAF0` | Secondary button stroke, input border |
+| `color/divider` | `#EEF1F5` | List separators (used only when necessary; gap-based separation is preferred) |
 | `color/textPrimary` | `#111111` | Headlines, body, primary content |
-| `color/textSecondary` | `#4A4A4A` | Subheads, secondary list text |
-| `color/textTertiary` | `#7A7A7A` | Captions, metadata, helper text |
-| `color/textDisabled` | `#B8B8B8` | Disabled label, placeholder |
+| `color/textSecondary` | `#5B6573` | Subheads, secondary list text |
+| `color/textTertiary` | `#8A94A3` | Captions, metadata, helper text |
+| `color/textDisabled` | `#B8C0CC` | Disabled label, placeholder |
 
 ### 4.3 Functional
 
-Used only when the meaning is truly green, orange, or red. Never for decoration.
+Used only when meaning is truly green / orange / red. Never decoration.
 
 | Token | Hex | Background | Role |
 |---|---|---|---|
-| `color/success` | `#19A463` | `#EAF8F1` | Streak confirmed, NFC scan accepted, success screen accent |
-| `color/warning` | `#FF9500` | `#FFF4E5` | "Tag is too close to bed" advisory, weak NFC signal |
-| `color/error` | `#E5484D` | `#FFF0F0` | Failed scan banner, destructive confirm, validation |
+| `color/success` | `#18A957` | `#E8F7EF` | Streak confirmed, scan accepted, success accent |
+| `color/warning` | `#FF9F0A` | `#FFF4E0` | "Tag is too close to bed" advisory, weak NFC signal |
+| `color/error` | `#E5484D` | `#FFEEEF` | Failed scan banner, destructive confirm, validation |
 
-### 4.4 Usage rules
+### 4.4 Accent badges (used only in list rows for category icons)
 
-- **No more than two non-neutral colors per screen.** Blue + one functional color, never three.
-- **Backgrounds for status colors are paired tints** — never use the saturated hex as a fill larger than 24 × 24.
-- **Never combine blue and green as adjacent CTAs** — confusion of intent.
+These are the only place GetUp uses warm color. They appear *inside* a 40 × 40 circle as an icon badge, never as a fill larger than that.
+
+| Token | Hex | Used for |
+|---|---|---|
+| `accent/orange` | `#FF8A3D` | Streak / morning category |
+| `accent/violet` | `#8B5CF6` | Wind-down / evening category |
+| `accent/teal` | `#14B8A6` | Routine / hydration category |
+| `accent/rose` | `#F43F5E` | Personal records |
+
+### 4.5 Usage rules
+
+- **No more than two non-neutral colors per screen.** Blue + one functional/accent color.
+- **Backgrounds for status colors are paired tints** — never use the saturated hex as a fill larger than 40 × 40.
+- **Never combine blue and green as adjacent CTAs** — they read as competing intents.
+- **Saturated accent colors only appear inside circles.** Outside of those badges, accents are not allowed.
 
 ---
 
-## 5. Core UI Components
+## 5. Spacing System
 
-Every component below is defined by its anatomy, default state, interactive states, and the tokens it consumes. Components are listed roughly in order of importance to the product.
+A single 4-pt scale governs all spacing.
 
-### 5.1 Primary Button
+| Token | Value | Primary use |
+|---|---|---|
+| `space/2xs` | **4 px** | Icon ↔ adjacent label, hairline separations |
+| `space/xs` | **8 px** | Tag inner padding, dense vertical gap |
+| `space/sm` | **12 px** | Button inner padding, small card interior |
+| `space/md` | **16 px** | Screen edge gutter, list row vertical padding |
+| `space/lg` | **20 px** | Card internal padding, comfortable group gap |
+| `space/xl` | **24 px** | Section gap, card external margin |
+| `space/2xl` | **32 px** | Hero block spacing, top of screen padding |
+| `space/3xl` | **40 px** | Onboarding screen verticals, modal top padding |
+| `space/4xl` | **56 px** | Major moment dividers |
 
-The single most important component. Used for the one primary action on a screen.
+### 5.1 Layout rules for iPhone
+
+- **Edge gutter:** `space/lg` (20 px) on phones ≥ 390 pt; `space/md` (16 px) on smaller devices.
+- **Card external margin:** `space/lg` from the edge gutter; cards never touch screen edges.
+- **Card-to-card gap:** `space/md` (16 px).
+- **Section gap (header → cards):** `space/xl` (24 px).
+- **Vertical rhythm:** 8-pt multiples. 4 px is reserved for icon-to-text relationships only.
+- **Safe areas:** never crowd within 8 px of the home indicator or the dynamic island.
+- **One-thumb reach:** primary actions sit within the bottom 280 pt.
+
+---
+
+## 6. Components
+
+Every component below is defined by its anatomy, default state, interactive states, and the tokens it consumes. Components are listed roughly in order of importance.
+
+### 6.1 Primary Button (pill)
+
+The signature action element. Fully-rounded pill, vivid blue, with `shadow/raised` for lift.
 
 | Property | Value |
 |---|---|
-| Height | 52 px |
-| Min width | 120 px (or stretch full-width with `space/md` insets) |
-| Radius | `radius/lg` (14 px) |
-| Padding | 16 vertical, 20 horizontal |
+| Shape | Pill — `radius/full` (height ÷ 2) |
+| Height | 56 px |
+| Min width | 160 px, or full-width with `space/lg` insets |
+| Padding | 16 vertical, 28 horizontal |
 | Background | `color/primary` |
 | Label | `type/button`, `color/white` |
-| Pressed | Background → `color/primaryPressed`, scale 0.98, 120 ms ease-out |
-| Disabled | Background `color/surface`, label `color/textDisabled` |
-| Loading | Spinner (18 × 18) replaces label, scale 1, no scale press feedback |
+| Shadow | `shadow/raised` (lifts off the canvas) |
+| Pressed | Background → `color/primaryPressed`, scale 0.98, shadow drops to `shadow/card`, 120 ms ease-out |
+| Disabled | Background `color/surface`, label `color/textDisabled`, no shadow |
+| Loading | 20 × 20 indeterminate spinner replaces label, no scale press |
 | Haptic | `.impact(.medium)` on tap, `.notification(.success)` on completion |
 
-### 5.2 Secondary Button
+Optional **leading icon** (20 × 20, white) sits 8 px before the label. Used sparingly — typically only on the alarm-ringing primary action.
 
-Used as the "alternative" to a primary, never alone.
+### 6.2 Secondary Button
+
+White pill with a thin border. Used as an alternative, never alone.
 
 | Property | Value |
 |---|---|
-| Height | 52 px |
+| Shape | Pill — `radius/full` |
+| Height | 56 px |
 | Background | `color/white` |
 | Border | 1 px solid `color/border` |
 | Label | `type/button`, `color/textPrimary` |
 | Pressed | Background → `color/surface`, scale 0.98 |
 | Disabled | Border `color/divider`, label `color/textDisabled` |
+| Shadow | none |
 
-### 5.3 Text Button
+### 6.3 Ghost / Text Button
 
-Inline action, used for low-weight choices like "Skip", "Not now", "Help".
+Inline action, low weight.
 
 | Property | Value |
 |---|---|
-| Height | 44 px tap target, label sits centered |
+| Height | 44 px tap target, label centered |
 | Background | None |
 | Label | `type/button`, `color/primary` |
-| Pressed | Label `color/primaryPressed`, opacity 1, no scale |
+| Pressed | Label `color/primaryPressed`, no scale |
 | Disabled | Label `color/textDisabled` |
 
-### 5.4 Destructive Button
+### 6.4 Destructive Button
 
-Reserved for irreversible actions ("Delete alarm", "Reset all"). Never appears unless the action truly removes data.
+White pill with red label. Reserved for irreversible actions.
+
+| Property | Value |
+|---|---|
+| Shape | Pill — `radius/full` |
+| Background | `color/white` |
+| Border | 1 px solid `color/border` |
+| Label | `type/button`, `color/error` |
+| Pressed | Background `color/error` tint background (`#FFEEEF`), label remains `color/error` |
+| Inverted form | Used inside an action sheet confirming an already-committed delete: solid `color/error` background, white label, pill shape. |
+
+### 6.5 Icon Button
+
+A square 44 × 44 tap target with a 24 × 24 icon centered.
+
+| Property | Value |
+|---|---|
+| Shape | `radius/md` (16 px) |
+| Background | `color/white` (default) or `color/primaryLight` (active) |
+| Shadow | `shadow/card` when sitting on the canvas (e.g. the floating back button) |
+| Icon | 24 × 24, stroke 2 px, `color/textPrimary` (default) or `color/primary` (active) |
+| Pressed | Background `color/surface`, scale 0.96 |
+
+Used for nav (back, settings), filter toggles, and the floating-chrome utility buttons.
+
+### 6.6 Pills & Chips
+
+| Variant | Background | Label | Border | Use |
+|---|---|---|---|---|
+| Day chip (unselected) | `color/surface` | `type/secondaryBody`, `textPrimary` | none | Day-of-week picker |
+| Day chip (selected) | `color/primary` | `type/secondaryBody`, `color/white` | none | Selected day |
+| Filter chip | `color/white` | `type/caption`, `textPrimary` | 1 px `color/border` | Inline filters |
+| Tag pill | `color/primaryLight` | `type/microCaption`, `color/primary` | none | Metadata tags |
+| Status pill | functional background | functional foreground | none | Active state indicator |
+
+Day chips are 40 × 40, fully rounded (`radius/full`). Filter and tag pills are 28 px tall, `radius/full`, 12 px horizontal padding.
+
+### 6.7 Cards
+
+The default container of the system.
+
+| Property | Value |
+|---|---|
+| Background | `color/white` |
+| Radius | `radius/xl` (24 px) for standard; `radius/2xl` (28 px) for hero |
+| Padding | `space/lg` (20 px) standard; `space/xl` (24 px) hero |
+| Shadow | `shadow/card` |
+| Border | none |
+| Pressed (if tappable) | Background → `#F8FAFD`, scale 0.99, 120 ms ease-out |
+
+Cards never sit edge-to-edge; they always have at least `space/lg` margin from the screen gutter.
+
+### 6.8 Input Field
 
 | Property | Value |
 |---|---|
 | Height | 52 px |
-| Background | `color/white` |
-| Border | 1 px `color/border` |
-| Label | `type/button`, `color/error` |
-| Pressed | Background `#FFF0F0`, label `color/error` |
-| Inverted form | Used inside an action sheet: solid `color/error` background, white label — only when confirming an already-committed delete. |
+| Background | `color/surface` |
+| Radius | `radius/md` (16 px) |
+| Padding | 14 vertical, 16 horizontal |
+| Label | `type/body`, `color/textPrimary` |
+| Placeholder | `type/body`, `color/textTertiary` |
+| Focused | Background `color/white`, 2 px ring `color/primary` at 100% (inset), no border |
+| Error | 2 px ring `color/error`, inline message in `type/caption`, `color/error` below |
 
-### 5.5 NFC Setup Card
+### 6.9 Toggle
 
-The single card that walks the user through placing the NFC tag.
-
-```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   ◎  ←  blue ring icon (32 px)             │
-│                                             │
-│   Place your tag far from bed               │ ← title3
-│                                             │
-│   The bathroom or kitchen works best.       │ ← body, textSecondary
-│   You'll need to walk to it each morning.   │
-│                                             │
-│   [ Set up tag ]                            │ ← primary button, full width
-│                                             │
-└─────────────────────────────────────────────┘
-```
-
-- Surface: `color/primarySoft`, no border
-- Radius: `radius/xl` (20 px)
-- Padding: `space/xl` (24 px)
-- Spacing inside: 12 / 8 / 20 (icon → title → body → CTA)
-- Used only on Home when no tag exists, and on the dedicated NFC setup screen.
-
-### 5.6 Alarm Card
-
-A row representing one configured alarm.
-
-| Element | Spec |
-|---|---|
-| Container | `color/white` surface, `radius/lg` 14 px, 1 px `color/border`, no shadow |
-| Padding | `space/lg` 20 px vertical, `space/lg` horizontal |
-| Time | `type/title1` (28 / 34 bold), tabular nums |
-| Label | `type/subhead`, `color/textSecondary` ("Weekdays · Bathroom tag") |
-| Toggle | Right-aligned, vertically centered |
-| Pressed | Background → `color/surface`, 120 ms |
-| Drag-to-reorder | Hidden by default, surfaced via long-press |
-
-### 5.7 Morning Routine Card
-
-A configurable step displayed under an alarm (e.g. "Drink water → Stretch → Open curtains").
-
-- Visual: horizontal pill row with `color/surface` chips, 36 px tall, 12 px horizontal padding, 8 px gap.
-- Each chip: leading 16 px icon, `type/subhead` label.
-- Reorder via drag; remove via swipe.
-
-### 5.8 Progress Card
-
-Shown on Home and on the Progress screen.
-
-```
-┌────────────────────────────────────┐
-│   12-day streak                    │ ← headline
-│                                    │
-│   ●●●●●●●●●●●●○○○○○○○             │ ← 21 dots, 8 px, 4 px gap
-│                                    │
-│   You've gotten up on time         │ ← subhead, textSecondary
-│   12 mornings in a row.            │
-└────────────────────────────────────┘
-```
-
-- Dot filled: `color/primary`. Dot empty: `color/border`.
-- Today's dot pulses softly (opacity 0.6 → 1.0, 1.6 s ease-in-out, infinite, only on this card on Home).
-
-### 5.9 Bottom Navigation
-
-Three tabs only. No more.
-
-| Tab | Icon | Label |
-|---|---|---|
-| Alarms | bell line, 24 px | Alarms |
-| Progress | chart line, 24 px | Progress |
-| Settings | gear line, 24 px | Settings |
-
-- Bar height: 49 pt + safe area
-- Surface: `color/white` with 1 px top border `color/divider`
-- Active: icon + label `color/primary`, weight unchanged
-- Inactive: icon + label `color/textTertiary`
-- Tap haptic: `.selection`
-
-### 5.10 Toggle
-
-iOS-native UISwitch metrics.
+iOS-native UISwitch dimensions.
 
 | State | Spec |
 |---|---|
 | On | Track `color/primary`, thumb `color/white` |
-| Off | Track `color/surface`, thumb `color/white`, 1 px border `color/border` on track |
+| Off | Track `color/surface`, thumb `color/white`, 1 px `color/border` |
 | Disabled on | Track at 40% opacity |
 | Animation | 220 ms `easing/standard` |
 
-### 5.11 Time Picker
+### 6.10 Time Picker
 
-A custom three-wheel picker (hours, minutes, period) for alarm setup. The wheels visually inherit iOS native picker behavior but use GetUp tokens.
+Three-wheel picker (hours / minutes / period) for alarm setup.
 
-- Wheel width: 96 px each, gap 8 px
-- Surface behind the selected row: `color/primarySoft`, 14 px radius, full wheel width
-- Selected value: `type/title1` (28 / 34 bold), `color/textPrimary`
-- Adjacent values: `type/title3`, `color/textTertiary`, scale 0.9
-- Spin haptic: `.selection` per tick
-- Bottom CTA: primary "Save" button
+| Property | Value |
+|---|---|
+| Wheel width | 96 px each, gap 8 px |
+| Surface behind selected row | `color/primarySoft`, `radius/lg` (20 px), full picker width |
+| Selected value | `type/screenTitle` (28 / 34), tabular nums |
+| Adjacent values | `type/sectionHeader`, `color/textTertiary`, scale 0.9, opacity 0.5 |
+| Spin haptic | `.selection` per tick |
 
-### 5.12 Modal Sheet
+### 6.11 Alarm Card
 
-iOS sheet presentation, with custom chrome.
+| Element | Spec |
+|---|---|
+| Container | Card, `radius/xl`, `shadow/card`, padding 20 vertical / 20 horizontal |
+| Layout | Row: time (left) — label (center) — toggle (right) |
+| Time | `type/screenTitle` (28 px bold), tabular nums |
+| Label | `type/secondaryBody`, `color/textSecondary` (e.g. "Weekdays · Bathroom tag") |
+| Toggle | Right-aligned, vertically centered |
+| Pressed | Background → `#F8FAFD`, scale 0.99 |
+| Drag-to-reorder | Surfaced via long-press; row floats with `shadow/raised` while dragged |
+
+### 6.12 NFC Setup Card
+
+A hero card walking the user through pairing the tag.
+
+```
+┌────────────────────────────────────────────┐
+│                                            │
+│  ┌──┐                                      │
+│  │◎ │  ← 48×48 tinted icon container       │
+│  └──┘                                      │
+│                                            │
+│  Place your tag far from bed               │  ← sectionHeader
+│                                            │
+│  The bathroom or kitchen works best.       │  ← body, textSecondary
+│  You'll need to walk to it each morning.   │
+│                                            │
+│  [          Set up tag          ]          │  ← primary pill, full width
+│                                            │
+└────────────────────────────────────────────┘
+```
+
+- Surface: `color/primarySoft`
+- Radius: `radius/2xl`
+- Padding: `space/xl` (24 px)
+- Spacing inside: 16 / 12 / 8 / 20 (icon → title → body → CTA)
+
+### 6.13 Progress Ring (signature component)
+
+The hero of the home screen and the heart of the active-alarm screen.
+
+| Property | Value |
+|---|---|
+| Outer diameter | 240 px (home), 280 px (alarm) |
+| Stroke width | 14 px |
+| Track color | `color/primaryLight` |
+| Progress color | `color/primary` |
+| Cap | round |
+| Start angle | -90° (12 o'clock) |
+| End cap dot | A 14 px filled `color/primary` dot at the end of the arc, with `shadow/halo` |
+| Tick dots | Optional 4 px `color/primary` dots floating at 25 / 50 / 75% positions |
+| Center label | `type/ringValue` (56 / 60 bold) above `type/secondaryBody` `color/textSecondary` |
+| Background | Sits on a hero card (`color/primarySoft`) so the soft halo reads |
+
+The end-cap dot is what makes the ring feel modern — it gives the progress a tactile, light-source quality, matching the reference visual direction.
+
+### 6.14 Bottom Navigation (floating tab bar)
+
+| Property | Value |
+|---|---|
+| Position | Floating, 16 px from bottom safe area |
+| Width | Hugs content with 24 px horizontal padding |
+| Height | 64 px |
+| Shape | Pill — `radius/full` |
+| Background | `rgba(255,255,255,0.84)` + 24 px backdrop blur |
+| Border | 1 px `rgba(255,255,255,0.6)` (inner top) — gives the glass edge |
+| Shadow | `shadow/glass` |
+| Tabs | Three: Alarms, Progress, Settings |
+| Tab anatomy | 24 × 24 icon stacked above `type/microCaption`; vertical padding 10 px |
+| Active | Icon + label `color/primary`; subtle 32-px wide `color/primaryLight` capsule behind it |
+| Inactive | Icon + label `color/textTertiary` |
+| Tap haptic | `.selection` |
+
+This is the **one place** where liquid glass appears in the main app surface. The floating pill reads as a contemporary iOS element without feeling like a gimmick.
+
+### 6.15 Modal Sheet
 
 | Property | Value |
 |---|---|
 | Background | `color/white` |
-| Top radius | 20 px |
-| Grabber | 36 × 5 px, `color/border`, 5.5 px radius, 8 px from top |
+| Top radius | `radius/2xl` (28 px) |
+| Grabber | 36 × 5 px, `color/border`, 2.5 px radius, 8 px from top |
 | Title padding | 24 px top, 16 px bottom |
 | Default detent | `medium` (50%) — `large` only when content demands |
-| Backdrop | rgba(17,17,17,0.32) |
+| Backdrop | `rgba(17,17,17,0.32)` |
+| Shadow | `shadow/sheet` |
 
-### 5.13 Confirmation Screen
+### 6.16 Toast / Banner
 
-A full-screen confirmation moment (e.g. tag paired, alarm dismissed).
+Slides down from the top safe area, auto-dismisses after 4 s.
 
-- 100% viewport, `color/white` background
-- Centered icon: 64 × 64, `color/success` for positive confirms
-- Title: `type/largeTitle`, 1 line max
-- Subtitle: `type/body`, `color/textSecondary`, max 2 lines
-- CTA: primary "Done"
-- Auto-dismiss only when triggered by a system event (e.g. alarm dismissed), never on user-initiated confirms.
+| Property | Value |
+|---|---|
+| Width | full width minus `space/lg` gutters |
+| Padding | 14 vertical, 16 horizontal |
+| Radius | `radius/lg` (20 px) |
+| Background | `color/white` |
+| Shadow | `shadow/raised` |
+| Layout | leading 20 × 20 status icon — `type/body` headline — trailing close X (icon button 32 × 32) |
+| Variants | Success (icon `color/success`), Error (icon `color/error`), Info (icon `color/primary`) |
+| Haptic | matches variant |
 
-### 5.14 Empty State
-
-Used when a list has no content.
+### 6.17 Empty State
 
 ```
-        ◎       ← outlined icon, 48 px, color/textTertiary
+        ◎              ← 64 × 64 tinted icon container, primaryLight bg, primary line icon
+
+   No alarms yet            ← sectionHeader, textPrimary
    
-   No alarms yet           ← title3, textPrimary
-   
-   Tap + to create your    ← body, textSecondary
+   Tap + to create your     ← body, textSecondary
    first morning alarm.
-   
-   [ Create alarm ]        ← primary button
+
+   [    Create alarm    ]   ← primary pill
 ```
 
-Centered vertically within the available scrollable region, with `space/2xl` between elements.
+Centered vertically within the available scrollable region; `space/2xl` between elements.
 
-### 5.15 Error State
+### 6.18 Error State
 
-Two variants:
+**Inline error** (under a field): 8 px below the field; `type/caption`; `color/error`; leading 14 px alert icon.
 
-**Inline error** (under a field):
-- 12 px above field bottom; `type/footnote`; `color/error`; leading 14 px alert icon.
+**Banner error** (top of screen): same anatomy as Toast (6.16) with the Error variant; auto-dismisses after 4 s; tappable to retry; haptic `.notification(.error)`.
 
-**Banner error** (top of screen, transient):
-- 56 px tall, full width, `color/error` background (8% opacity tint = `#FFF0F0`)
-- 1 px top border `color/error`
-- Body: `type/subhead`, `color/error`
-- Auto-dismisses after 4 s; tappable to retry
-- Haptic: `.notification(.error)`
-
----
-
-## 6. Button System
-
-### 6.1 Visual specs at a glance
-
-| Variant | Bg | Label | Border | Use this when… |
-|---|---|---|---|---|
-| Primary | `#0070E8` | `#FFFFFF` | none | The screen has one job |
-| Secondary | `#FFFFFF` | `#111111` | 1 px `#E5E7EB` | Offering an alternative |
-| Text | none | `#0070E8` | none | Low-weight or nav action |
-| Destructive | `#FFFFFF` | `#E5484D` | 1 px `#E5E7EB` | Irreversible action |
-| Disabled | `#F5F6F7` | `#B8B8B8` | none | Action not yet available |
-
-### 6.2 Sizing
-
-| Size | Height | Horizontal padding | Use |
-|---|---|---|---|
-| `lg` | 52 px | 24 px | Default for screen-bottom CTAs |
-| `md` | 44 px | 20 px | Inline forms, modals |
-| `sm` | 36 px | 16 px | Card-internal actions, dense lists |
-
-Radius always `radius/lg` (14 px). Min tap target 44 × 44 regardless of visual size.
-
-### 6.3 States
-
-Every variant supports: **default**, **pressed**, **disabled**, **loading**, **focused (keyboard)**.
-
-- **Pressed** = scale 0.98 + background dim, 120 ms ease-out
-- **Loading** = 18 px circular spinner replaces label; button is non-interactive
-- **Focused** = 2 px ring `color/primary` at 40% opacity, 4 px offset
-
-### 6.4 Composition rules
-
-- Primary and secondary may share a screen, side by side, only at the screen's bottom. Primary always to the right.
-- Never stack two primary buttons.
-- Destructive buttons are isolated — they get their own row with no companion.
-
-### 6.5 Examples
-
-```
-[ Set tag location ]                   ← primary, full-width, lg
-
-[ Skip ]  [ Continue ]                 ← secondary + primary, 50/50, lg
-                                          gap = space/sm
-
-[ Delete alarm ]                       ← destructive, full-width, lg
-```
+**Full-screen error** (rare): card-style layout centered on screen — 64 × 64 alert icon container with `color/errorBg` background and `color/error` icon, `screenTitle` heading, `body` `textSecondary` description, primary "Try again" pill.
 
 ---
 
@@ -419,178 +514,240 @@ Every variant supports: **default**, **pressed**, **disabled**, **loading**, **f
 
 Each screen below has a one-line purpose, the dominant components, and a layout sketch.
 
-### 7.1 Onboarding Intro
+### 7.1 Welcome / Onboarding
 
-**Purpose**: Explain the premise in one sentence; ask for permissions later, not now.
+**Purpose**: Explain the premise in one sentence; defer permissions.
 
 ```
-   (top safe area)
+   ── page bg: color/canvas ──
    
    ↑ 56 px
    
-   ◎ ◎ ◎              ← three primary-light dots, spacer
+   ◎ ◎ ◎                                   ← three 8-px primaryLight dots
    
    ↑ 32 px
    
-   Get out of bed.        ← largeTitle, primary text
-   Actually.              ← largeTitle
+   Get out of bed.                         ← largeTitle (34/41 bold)
+   Actually.                               ← largeTitle
    
    ↑ 16 px
    
-   GetUp turns off only   ← body, textSecondary
-   when you walk to a tag
-   in another room.
+   GetUp only turns off when you walk      ← body, textSecondary
+   your phone to a tag in another room.    ← max 60ch
    
-   (flex spacer)
+   (flex spacer; an animated illustration  
+    placeholder fills this region — see §10.1)
    
-   [ Get started ]         ← primary, full-width
+   [       Get started       ]             ← primary pill, full-width
    
    ↑ 12 px
    
-   [ I already have an account ]  ← text button
+   I already have an account               ← ghost button
    
    ↓ 24 px (bottom safe)
 ```
+
+Three slides total. Dot indicator (8 px filled, 6 px empty, 8 px gap) sits 16 px above the primary CTA.
 
 ### 7.2 NFC Tag Setup
 
 **Purpose**: Pair the physical tag and confirm location.
 
-- Step header: "1 of 2" caption, then title2 "Place the tag"
-- NFC Setup Card (5.5) explaining placement away from bed
-- Animated illustration placeholder: 240 × 240 area, dashed border, monospace label "phone + tag illustration"
-- Primary CTA "Hold phone near tag"
-- Text button "I'll do this later"
+- Floating back button (icon button, white, `shadow/card`) at top-left.
+- Step header: `type/microCaption` "Step 1 of 2", then `type/screenTitle` "Place the tag".
+- **NFC Setup Card** (§6.12) explaining placement, 24 px below the header.
+- Animated placement illustration: 240 × 240, sits inside the hero card, dashed border, monospace label "phone + tag illustration".
+- Primary pill "Hold phone near tag" at screen bottom.
+- Ghost button "I'll do this later" below.
 
-After successful pairing → Step 2: "Name this location" (Bathroom / Kitchen / Hallway / Custom).
+After successful pairing → Step 2: "Name this location" — a single input field with day-chip-style suggestions (Bathroom / Kitchen / Hallway / Custom).
 
 ### 7.3 Alarm Creation
 
 **Purpose**: Pick a time, days, and routine.
 
-- Page title "New alarm" (title1), centered, with text-button "Cancel" left and "Save" right (primary text color → enabled when valid).
-- Time picker (5.11), centered
-- Days row: seven 40 × 40 circular chips, S M T W T F S
-  - Default chip: `color/surface` background, `type/subhead` label, `color/textPrimary`
-  - Selected: `color/primary` background, `color/white` label
-- Section "Tag" — list row showing paired tag location, chevron to change
-- Section "Routine" — Morning Routine Card (5.7)
-- Section "Sound" — list row, chevron
+- Modal sheet, `large` detent.
+- Top: grabber, then "Cancel" (ghost, left) / "New alarm" (centered headline) / "Save" (ghost, right, `color/primary`).
+- **Time picker** centered, 24 px top margin inside sheet.
+- Day picker: seven 40 × 40 day chips, S M T W T F S, gap 6 px, centered.
+- **Tag row** card (tappable): leading 48 × 48 tinted icon container (NFC glyph), `headline` "Bathroom tag", `secondaryBody` `textSecondary` "Paired May 12", trailing chevron.
+- **Routine row** card (tappable): tinted icon container (water-drop), `headline` "Morning routine", `secondaryBody` `textSecondary` "3 steps", trailing chevron.
+- **Sound row** card (tappable): tinted icon container (waveform), `headline` "Sound", `secondaryBody` `textSecondary` "Sunrise · gradual".
 
 ### 7.4 Alarm Overview (Home)
 
-**Purpose**: At-a-glance status; the most-used screen.
+**Purpose**: At-a-glance status. The most-used screen.
 
 ```
-   (header)
-   Good morning, Mads     ← title1
-   Tuesday, May 26        ← subhead, textSecondary
+   ── page bg: color/canvas ──
    
-   ─ space/xl ─
+   ↑ 56 px
    
-   Progress Card (12-day streak)
+   Good morning, Mads                      ← screenTitle (28 bold)
+   Tuesday, May 26                         ← secondaryBody, textSecondary
    
-   ─ space/xl ─
+   ↑ space/xl
    
-   Your alarms            ← title3
+   ┌─ Hero card (primarySoft, radius/2xl) ────────────┐
+   │                                                  │
+   │              ╭───── 240 px ─────╮                │
+   │              │                  │                │
+   │              │       47         │  ← ringValue   │
+   │              │    on time       │  ← secondary   │
+   │              │                  │                │
+   │              ╰──────────────────╯                │
+   │              ↑ progress ring §6.13               │
+   │                                                  │
+   │   12-day streak · Best yet                       │  ← headline center
+   │                                                  │
+   └──────────────────────────────────────────────────┘
    
-   Alarm Card  06:30 · Weekdays · Bathroom tag       [ • ]
-   Alarm Card  09:15 · Weekends · Kitchen tag        [ • ]
+   ↑ space/xl
    
-   ─ space/xl ─
+   Your alarms                              ← sectionHeader, left-aligned
    
-   Add alarm              ← secondary button, full-width with leading +
+   ↑ space/md
    
-   (bottom nav)
+   Alarm Card  06:30 · Weekdays · Bathroom        [⬤]
+   Alarm Card  09:15 · Weekends · Kitchen         [○]
+   
+   ↑ space/md
+   
+   [  + Add alarm  ]                        ← secondary pill, full-width
+   
+   ↓ floating tab bar (bottom)
 ```
 
 ### 7.5 Active Alarm Ringing
 
-**Purpose**: Wake the user. Move them physically.
+**Purpose**: Wake the user. Move them physically. This is the most important screen in the app.
 
-- Full-screen takeover (presented over the lock screen via critical alert)
-- Background: `color/white`, no decoration
-- Center: `type/countdown` showing current time
-- Below: title2 "Go scan your tag"
-- Subhead: `color/textSecondary` "Bathroom · about 12 steps away"
-- Bottom: NFC ring animation (see §9.4), 200 px diameter
-- No dismiss button. No snooze button in the default config. (Snooze, if enabled in settings, appears as text-button only — see §10.)
+- Full-screen takeover (over lock screen via critical alert).
+- Background: `color/canvas`, with a slow ambient pulse (see §9.4).
+- **Top safe area:** `screenTitle` "Go scan your tag", centered. Below: `secondaryBody` `textSecondary` "Bathroom · about 12 steps away."
+- **Center:** the 280 px progress ring. Inside it:
+  - `type/countdown` showing **current time** (e.g. "06:30") — large, calm.
+  - Below the time: `type/secondaryBody` `textTertiary` "Alarm" (small, almost a watermark).
+- **Halo:** `shadow/halo` behind the ring; the ring's stroke gently rotates (0.5° per frame, continuous, see §9.4).
+- **Bottom safe area:** no buttons by default. If "Snooze" is enabled in Settings, a single ghost text-button "Snooze 5 min" appears above the safe area.
+- No dismiss button. No giant red wake button.
 
-### 7.6 NFC Scanning Confirmation
+### 7.6 NFC Scan Screen (live scanning state)
 
-**Purpose**: Confirm the tag was read.
+Same layout as §7.5 with two changes:
 
-- Trigger: NFC reader picks up the paired tag.
-- Full-screen flash: background animates `color/white` → `color/primarySoft` over 220 ms
-- Centered checkmark icon, 96 × 96, `color/primary` stroke, drawn-in over 300 ms
-- Title `type/largeTitle`: "You're up."
-- Haptic: `.notification(.success)`
-- Auto-advance to Success screen after 800 ms.
+1. The ring stroke pulses faster (1.2 s loop) and the end-cap dot grows to 18 px with `shadow/halo` intensified.
+2. The center text changes to `screenTitle` "Hold steady…" with `type/secondaryBody` "Reading tag" beneath.
 
-### 7.7 Success Screen
+This state is brief (typically < 1 second).
 
-**Purpose**: Reward and motivate the next morning.
+### 7.7 Scan Success Screen
 
-- Background `color/white`
-- Top: `type/largeTitle` "Day 13."
-- `type/body` `color/textSecondary` "Best streak yet."
-- Progress dot row (8 px dots) showing the last 14 days
-- Optional Morning Routine list — checkable items the user can mark as they complete them
-- Bottom: text button "Close"
+**Purpose**: Confirm the read.
 
-### 7.8 Morning Streak / Progress
+Triggered the instant a valid tag is read.
+
+- Full-screen flash: background `color/canvas` → `color/primarySoft` over 220 ms.
+- The progress ring is replaced by an **animated check** — 96 × 96 stroked check, `color/primary`, drawn in over 300 ms, centered inside a `color/primaryLight` 160 × 160 circle.
+- 6 light particles burst outward (see §9.5).
+- `type/largeTitle` "You're up." appears beneath, fading in over 220 ms.
+- Haptic: `.notification(.success)`.
+- Auto-advances to the **Morning Success** screen (§7.8) after 800 ms.
+
+### 7.8 Morning Success / Streak Screen
+
+**Purpose**: Reward consistency, motivate the next morning.
+
+```
+   ── page bg: color/canvas ──
+   
+   Day 13.                                  ← largeTitle, textPrimary
+   Best streak yet.                         ← body, textSecondary
+   
+   ↑ space/2xl
+   
+   ┌─ Hero card (primarySoft) ─────────────────────┐
+   │                                               │
+   │  ◯ ● ● ● ● ● ● ● ● ● ● ● ● ● ●     14 dots   │
+   │  (today highlighted; past 14 days)            │
+   │                                               │
+   │  You've gotten up on time 13 mornings         │
+   │  in a row.                                    │
+   │                                               │
+   └───────────────────────────────────────────────┘
+   
+   ↑ space/xl
+   
+   This morning                             ← sectionHeader
+   
+   Card row · 06:30 woke up
+   Card row · 06:32 scanned bathroom tag
+   Card row · 38s time to scan  (your fastest)
+   
+   ↓ flex
+   
+   [        Close        ]                  ← secondary pill
+```
+
+### 7.9 Progress / Habit Overview
 
 **Purpose**: Long-view of consistency.
 
-- Title1 "Progress"
-- Big number callout: "**47** mornings on time" (largeTitle + body)
-- 12-week heatmap grid: 7 × 12 cells, each 16 × 16, 4 px gap
-  - Filled cell `color/primary`, missed `color/border`, future `color/surface`
-- Statistics list:
-  - "Average wake time — 06:34"
-  - "Longest streak — 21 days"
-  - "Time to scan — 38 s avg"
-- Each row: `type/headline` value, `type/subhead` `color/textSecondary` label
+- `screenTitle` "Progress" (left-aligned).
+- Stat row (3 columns of cards, gap 12 px):
+  - Card 1: `ringValue` "47", `caption` `textSecondary` "Mornings on time"
+  - Card 2: `ringValue` "21", `caption` "Longest streak"
+  - Card 3: `ringValue` "06:34", `caption` "Avg wake time"
+- **Hero card** "Last 12 weeks" containing a heatmap grid: 7 × 12 cells, each 18 × 18, gap 4 px. Filled `color/primary`, missed `color/border`, future `color/surface`.
+- **Section "Insights"** — cards with subtle leading 48 × 48 tinted icon containers (orange, violet, teal accents from §4.4):
+  - "Your streak peaks on weekdays."
+  - "Scans are fastest in the bathroom."
+  - "You're 14 minutes earlier than last month."
 
-### 7.9 Settings
+### 7.10 Settings
 
 **Purpose**: Configure permissions, behavior, and personal preferences.
 
-Grouped list, iOS-native style with GetUp tokens.
+Grouped list, iOS-native style but using GetUp cards instead of native UITableView grouped style. Each group is a card; rows inside it are separated by `color/divider` hairlines.
 
-- **Account**: Name, email, sign out
-- **Alarms**: Default sound, Snooze (Off / 5 min once), Vibration
-- **NFC**: Paired tags (list), Add new tag
-- **Notifications**: Bedtime reminders, Streak nudges
-- **Appearance**: Theme (Auto / Light / Dark)
-- **Accessibility**: Reduce motion, Large text, Haptics
-- **Support**: Help, Contact, Terms, Privacy
-- **Danger zone**: "Reset all data" (destructive)
+Groups, in order:
+- **Account** — Name, Email, Sign out
+- **Alarms** — Default sound, Snooze (Off / 5 min once), Vibration pattern
+- **NFC** — Paired tags (list), Add new tag
+- **Notifications** — Bedtime reminders, Streak nudges
+- **Appearance** — Theme (Auto / Light / Dark)
+- **Accessibility** — Reduce motion, Larger text, Haptics
+- **Support** — Help, Contact, Terms, Privacy
+- **Danger zone** — "Reset all data" (destructive pill, full width inside its own card)
 
-### 7.10 Help / Troubleshooting
+### 7.11 Help / Troubleshooting
 
 **Purpose**: Self-serve answers, calmly written.
 
-- Search field at top (40 px height, `color/surface` background, 10 px radius)
-- Featured cards: "NFC not scanning?", "Battery and background", "Why does the app need critical alerts?"
-- Below: alphabetical FAQ list
-- Last item: "Still stuck → Contact support" (text button)
+- Search field at top (52 px height, `color/surface` background, `radius/md` 16 px, leading 20 × 20 search icon).
+- **Featured cards** — three side-by-side hero cards (`primarySoft`, `radius/2xl`):
+  - "NFC not scanning?"
+  - "Battery and background"
+  - "Why critical alerts?"
+- Below: alphabetical FAQ list (cards with leading tinted icon container, headline title, secondary helper text, trailing chevron).
+- Last item: "Still stuck → Contact support" (ghost button).
 
 ---
 
-## 8. Navigation Logic
+## 8. iPhone UX & Navigation
 
 ### 8.1 First-time user flow
 
 ```
 Splash (200 ms)
-  → Onboarding 1: Premise
-  → Onboarding 2: How it works (3 dots, swipe)
-  → Permission ask: Notifications (system sheet)
-  → Permission ask: Critical alerts (system sheet, explained first)
-  → NFC tag setup (paired in this run, optional skip)
-  → First alarm creation
-  → Home
+  → Onboarding 1: Premise (§7.1, slide 1)
+  → Onboarding 2: How it works (§7.1, slide 2)
+  → Onboarding 3: What you'll need (§7.1, slide 3)
+  → Permission ask: Notifications (system sheet, explained inline first)
+  → Permission ask: Critical alerts (system sheet, explained inline first)
+  → NFC tag setup (§7.2, skippable)
+  → First alarm creation (§7.3)
+  → Home (§7.4)
 ```
 
 ### 8.2 Returning user flow
@@ -605,25 +762,28 @@ No login wall. Account sync is optional, surfaced under Settings.
 
 ```
 [Alarm fires (critical alert)]
-  → Active Alarm screen (full-screen takeover)
+  → Active Alarm screen (§7.5)
   → User physically walks to tag
-  → Phone enters NFC read range
-  → Scanning confirmation flash (220 ms)
-  → Success screen
-  → Auto-return to Home after 4 s or on tap
+  → NFC reader picks up tag
+  → Scan screen (§7.6) — transient
+  → Scan Success (§7.7) — 800 ms
+  → Morning Success (§7.8)
+  → On tap "Close" or 4 s of idle → Home
 ```
 
-### 8.4 Failed NFC scan flow
+### 8.4 Failed NFC flow
 
 ```
 Active Alarm
   → User taps phone to tag
   → Tag UID mismatch OR weak read
   → Inline shake (see §9.6) + banner: "That's not your tag. Try again."
-  → Alarm keeps ringing
-  → 3 consecutive failures within 60 s → guidance modal: "Trouble scanning?"
-     - Tip list: hold phone flat, top edge to tag, remove case
-     - "Use backup unlock" link (only if enabled in Settings — see §10)
+  → Alarm continues to ring
+  → After 3 consecutive failures within 60 s → modal sheet with tips:
+     - "Hold phone flat against the tag"
+     - "Touch the top edge of your phone"
+     - "Remove your case if it's thick"
+     - "Use backup unlock" link (only if enabled in Settings)
 ```
 
 ### 8.5 Edit alarm flow
@@ -631,25 +791,25 @@ Active Alarm
 ```
 Home → tap Alarm Card
   → Alarm detail (same layout as Creation, prefilled)
-  → Save (returns to Home with confirmation toast: "Alarm updated")
-  → Or "Delete alarm" (destructive button, confirm action sheet)
+  → Save → toast "Alarm updated"
+  → Or "Delete alarm" (destructive pill, confirm action sheet)
 ```
 
-### 8.6 Disable alarm flow
+### 8.6 Settings flow
 
 ```
-Home → toggle off on Alarm Card
-  → Toggle animates off
-  → Subtle haptic .selection
-  → No confirmation modal (it's reversible)
-  → Card label updates to grey, dimmed to 50%
+Tab bar → Settings → grouped cards (§7.10)
+  → Tap a row → push detail screen (each row that has detail uses a new push)
+  → Toggles change in place (no detail screen)
 ```
+
+All navigation uses standard iOS push (right-to-left slide). Modal flows (Alarm Creation, NFC pairing) use bottom-sheet presentation.
 
 ---
 
-## 9. Motion & Animation
+## 9. Motion & Transitions
 
-Motion in GetUp is short, decisive, and ignorable. Every animation has a job: to confirm a state change, never to entertain.
+Motion in GetUp is short, decisive, and ignorable. Every animation has a job — confirm a state change, never entertain.
 
 ### 9.1 Easing curves
 
@@ -658,37 +818,37 @@ Motion in GetUp is short, decisive, and ignorable. Every animation has a job: to
 | `easing/standard` | `(0.2, 0, 0, 1)` | Default for entrances and most transitions |
 | `easing/decelerate` | `(0, 0, 0, 1)` | Sheet entry, card reveal |
 | `easing/accelerate` | `(0.3, 0, 1, 1)` | Sheet exit, dismiss |
-| `easing/emphasized` | `(0.2, 0, 0, 1)` + 500 ms | Hero moments (success screen) |
+| `easing/emphasized` | `(0.2, 0, 0, 1)` over 500 ms | Hero moments (success screen) |
+| `easing/spring` | spring(stiffness 380, damping 30) | Button press, toggle thumb, pill state changes |
 
 ### 9.2 Durations
 
 | Token | Value | Use |
 |---|---|---|
-| `motion/fast` | 150 ms | Toggles, button press scale |
-| `motion/base` | 220 ms | Page transitions, modal show/hide |
-| `motion/slow` | 300 ms | NFC confirmation flash, checkmark draw |
+| `motion/fast` | 150 ms | Toggles, button press scale, icon button feedback |
+| `motion/base` | 220 ms | Page transitions, modal fade, card reveals |
+| `motion/slow` | 300 ms | NFC confirmation flash, checkmark draw, hero-card entrance |
 | `motion/hero` | 500 ms | Success screen entry, streak reveal |
+| `motion/ambient` | 1.6 s — 2.4 s | Background pulses, ring rotation |
 
 ### 9.3 Page transitions
 
-- Push: new screen slides from right, 220 ms `easing/standard`; current screen drifts left 16 px and dims to 60% white overlay.
-- Modal sheet: bottom-up slide, 300 ms `easing/decelerate`; backdrop fades in over 220 ms.
-- Tab switch: cross-fade, 150 ms — no slide.
+- **Push**: new screen slides from right, 220 ms `easing/standard`; current screen drifts left 16 px and dims to a 60% white overlay.
+- **Modal sheet**: bottom-up slide, 300 ms `easing/decelerate`; backdrop fades in over 220 ms.
+- **Tab switch**: cross-fade only, 150 ms — no slide. (The floating tab bar stays put.)
 
-### 9.4 Alarm ringing state
+### 9.4 Active alarm motion
 
-- Background subtle pulse: `color/white` → `color/primarySoft` → `color/white`, 2.0 s loop, `easing/standard`.
-- NFC ring animation:
-  - Two concentric rings, 1.5 px stroke `color/primary`.
-  - Inner ring: scale 1 → 1.4 → 1, opacity 0.9 → 0, 1.6 s loop.
-  - Outer ring: scale 1 → 1.7 → 1, opacity 0.6 → 0, 1.6 s loop, 200 ms delay.
-- Countdown digits do not animate; they reflect device time.
+- **Ambient page pulse**: `color/canvas` ↔ a slightly cooler `#E8EEF6`, 2.4 s loop, `easing/standard`. Very subtle — visible mainly out of the corner of the eye.
+- **Ring stroke rotation**: 360° over 8 s, linear, looping. Continuous but slow — gives the screen quiet life.
+- **End-cap dot halo pulse**: shadow blur 48 → 72 → 48 px, 1.6 s loop, ease-in-out.
+- **Countdown digits**: do not animate; they reflect device time.
 
-### 9.5 NFC scan animation
+### 9.5 NFC scan motion
 
-1. **Reading state** (while phone is near tag): inner ring becomes solid `color/primaryLight`, scaling 1 → 1.1 → 1 every 600 ms.
-2. **Read success**: background flash → checkmark draws in over 300 ms (stroke-dasharray animation), `easing/decelerate`.
-3. **Haptic**: `.impact(.light)` on first detection, `.notification(.success)` on confirmed read.
+1. **Reading state** (phone near tag): ring stroke speeds to 4 s rotation, end-cap dot grows to 18 px, halo intensifies.
+2. **Read success**: background flash to `color/primarySoft` over 220 ms → check draws in over 300 ms (`stroke-dasharray` animation), `easing/emphasized` → 6 particles burst outward 32 px over 400 ms ease-out, fading to 0.
+3. **Haptics**: `.impact(.light)` on first detection, `.notification(.success)` on confirmed read.
 
 ### 9.6 Error shake
 
@@ -696,83 +856,87 @@ Motion in GetUp is short, decisive, and ignorable. Every animation has a job: to
 - Horizontal translate: 0, -8, 8, -6, 6, -3, 3, 0 px.
 - Duration 320 ms total.
 - Accompanied by `.notification(.error)` haptic.
-- Reduce motion: replaced by a 200 ms background flash to `#FFF0F0`.
+- **Reduce motion**: replaced by a 200 ms background flash to `#FFEEEF`.
 
 ### 9.7 Card entrance
 
 - Cards in a list fade in (opacity 0 → 1) and translate Y +8 px → 0.
-- Stagger 40 ms per card, max 5 cards animated; the rest appear instantly.
-- Duration 220 ms each, `easing/decelerate`.
+- Stagger 40 ms per card, max 5 animated; rest appear instantly.
+- 220 ms each, `easing/decelerate`.
 - Disabled when "Reduce motion" is on.
 
 ### 9.8 Button press
 
 - Scale 1 → 0.98, 120 ms ease-out on touch down.
-- On release: scale → 1, 180 ms `easing/standard`, simultaneously background returns to default.
-- No bounce on release.
+- On release: spring back to 1 over 180 ms with `easing/spring`.
+- Primary button shadow drops from `shadow/raised` to `shadow/card` while pressed, lifts back on release.
 
-### 9.9 Success animation
+### 9.9 Bottom sheet motion
 
-- Checkmark: stroke 4 px `color/success`, drawn over 300 ms with `easing/emphasized`.
-- After draw: 6 light particles burst — 4 px circles `color/primaryLight`, animated outward 24 px over 400 ms with ease-out, fading to 0.
-- Reduce motion: static checkmark, no particles.
+- Enter: 300 ms `easing/decelerate`; backdrop opacity 0 → 0.32 over 220 ms.
+- Exit: 220 ms `easing/accelerate`; backdrop fades over 180 ms.
+- Drag: 1:1 follow, with rubber-banding at the top (resists past `large` detent).
+- Detent settle: spring(stiffness 280, damping 26).
+
+### 9.10 Floating tab bar
+
+- On scroll down: stays put.
+- Active tab change: the `primaryLight` capsule slides under the new tab over 220 ms `easing/standard`; icon color cross-fades over 150 ms.
 
 ---
 
-## 10. NFC-Specific Experience
+## 10. NFC Experience
 
 NFC is the heart of the product. Treat it with care: explain *why* before you ask *how*.
 
 ### 10.1 Guiding the user to place the tag
 
-During setup, the app presents three suggested locations (Bathroom, Kitchen, Hallway) with one-line rationales:
+During setup, the app presents three suggested locations as day-chip-style suggestions with one-line rationales:
 
-> **Bathroom.** Most consistent — you'll go there anyway.
-> **Kitchen.** Good for people who eat breakfast.
-> **Hallway.** Furthest from bed, hardest to cheat.
+- **Bathroom** — Most consistent. You'll go there anyway.
+- **Kitchen** — Good for people who eat breakfast.
+- **Hallway** — Furthest from bed, hardest to cheat.
 
-The user can also pick "Custom" and name the spot.
+The user can also pick **Custom** and name the spot.
 
 ### 10.2 Why the tag must be away from bed
 
-Explained once during onboarding, never repeated nagging-style:
+Explained once during onboarding, never repeated nag-style:
 
 > The tag works because it makes you walk. Place it somewhere you have to stand up, take steps, and open your eyes. About 10 feet from your bed is the sweet spot — far enough to wake you, close enough to be realistic.
 
-### 10.3 Scanning screen
+### 10.3 The scan screen
 
 See §7.5 and §7.6. Key UX details:
 
-- The reader is **always listening** while the active alarm screen is up. No "tap to scan" button.
-- Visual NFC ring animation indicates the reader is on.
-- iOS does not allow background NFC reading on lock screen for arbitrary apps. Implementation note: the alarm presents a critical alert that, when interacted with, opens the app into the scanning state. The user only needs to tap the notification once (or use the dynamic island) to bring the reader online — see §14.5.
+- The reader is **always listening** while the active alarm screen is up — no "tap to scan" button.
+- The progress ring's halo and rotation indicate the reader is on.
+- iOS does not allow background NFC reading on the lock screen for arbitrary apps. Implementation: the alarm presents a critical alert that, when interacted with, opens the app into the scanning state. The user only needs to tap the notification once (or use the dynamic island) to bring the reader online — see §14.5.
 
 ### 10.4 Failed scan
 
 | Failure type | UI response | Copy |
 |---|---|---|
 | Unrecognized tag | Banner + shake | "That's not your tag. Try again." |
-| Weak read (started but lost signal) | Banner only | "Almost — hold steady for a second." |
+| Weak read (started, lost) | Banner only | "Almost — hold steady for a second." |
 | Read timeout (3 s no signal after attempt) | Banner | "Bring your phone closer to the tag." |
-| 3 fails / 60 s | Modal sheet with tips | "Trouble scanning?" |
+| 3 fails in 60 s | Modal sheet with tips | "Trouble scanning?" |
 
-Failures never end the alarm. The alarm continues until a real scan happens (or backup unlock, see §10.6).
+Failures never end the alarm. The alarm continues until a real scan happens (or Backup Unlock — §10.6).
 
 ### 10.5 NFC unavailable
 
-If the device lacks NFC support (iPhone 6 and earlier) or NFC is disabled by MDM:
+If the device lacks NFC support or it is disabled by MDM:
 
-- During onboarding: a clear modal: "GetUp needs NFC. Your iPhone doesn't support it." with a link to the help article.
-- The user can continue in "Trial mode" using a backup unlock challenge (see §10.6) — but the app is honest that it's not the real experience.
+- During onboarding: a modal — "GetUp needs NFC. Your iPhone doesn't support it." — with a link to the help article.
+- The user can continue in **Trial mode** using the Backup Unlock challenge (§10.6), with a clear note that it's not the full experience.
 
 ### 10.6 Preventing cheating without hostility
 
-GetUp is a tool, not a prison guard. Guardrails:
-
-- **No screenshot dismiss**: dismissing the alarm requires the NFC read or the Backup Unlock challenge.
-- **Backup Unlock** (Settings → Alarms): a single configurable physical-motion alternative (e.g. 30 squats counted via Core Motion). Off by default. Available only after the user opts in, with a clear note: "Use this only when your tag is broken or missing."
-- **Phone movement check** (optional): if the user is suspiciously still when the alarm dismisses (i.e. did *not* walk), the app shows a non-blocking "Are you up?" prompt 30 s later. No punishment, just a nudge.
-- **No public shaming**: no "you cheated 3 times this week" surfaces. Streaks count *successful walks only*, but missed days are shown neutrally.
+- **No screenshot dismiss.** Dismissing requires the NFC read or Backup Unlock.
+- **Backup Unlock** (Settings → Alarms): a single configurable physical-motion alternative (e.g. 30 squats counted via Core Motion). Off by default. Available only after opt-in, with a clear note: "Use this only when your tag is broken or missing."
+- **Phone movement check** (optional): if the user is suspiciously still when the alarm dismisses, the app shows a non-blocking "Are you up?" prompt 30 s later. No punishment, just a nudge.
+- **No public shaming.** No "you cheated 3 times this week." Streaks count successful walks only; missed days are shown neutrally.
 
 ---
 
@@ -796,50 +960,40 @@ The voice is **a steady friend, not a coach**. Confident, warm, brief.
 | "Time to crush the day! 💪" | "Good morning." |
 | "You failed yesterday." | "Yesterday slipped. Today's a fresh day." |
 | "WAKE UP NOW!" | "Go scan your tag." |
-| "Are you really going to oversleep again?" | "Your alarm is set for 06:30." |
 | "Tap to dismiss" | "Scan the tag to turn this off." |
 
-### 11.3 Example copy
+### 11.3 Sample copy
 
-**Onboarding**
-
+**Onboarding hero**
 > Get out of bed. Actually.
-> GetUp turns off only when you walk to a tag in another room.
+> GetUp only turns off when you walk your phone to a tag in another room.
 
-**Alarm setup**
-
+**Alarm creation**
 > When should we get you up?
 > Pick a time. We'll handle the rest.
 
 **Active alarm**
-
 > Go scan your tag.
 > Bathroom · about 12 steps away.
 
-**NFC scan success**
-
+**Scan success**
 > You're up.
 
-**Error state**
+**Streak success**
+> Day 13.
+> Best streak yet.
 
+**Permissions ask**
+> GetUp needs to wake you reliably.
+> Allow critical alerts so the alarm rings even on silent.
+
+**Error**
 > That's not your tag. Try again.
 > *(or)*
 > Bring your phone closer to the tag.
 
-**Success state (post-alarm)**
-
-> Day 13.
-> Best streak yet.
-
-**Settings**
-
-> Snooze
+**Settings — Snooze description**
 > One five-minute snooze, then the alarm comes back.
-
-**Permissions ask**
-
-> GetUp needs to wake you reliably.
-> Allow critical alerts so the alarm rings even on silent.
 
 ---
 
@@ -850,29 +1004,34 @@ The voice is **a steady friend, not a coach**. Confident, warm, brief.
 | Property | Value |
 |---|---|
 | Default size | 24 × 24 px |
-| Other sizes | 16, 20, 24, 32, 48, 64 |
+| Other sizes | 16, 20, 24, 32, 48 |
 | Stroke | 2 px |
 | Caps & joins | Rounded |
-| Fill | None — line only, except for filled-state status (e.g. checkmark inside a circle) |
-| Default color | `color/textPrimary` for neutral, `color/primary` for active |
+| Fill | None — line only, except for status glyphs (filled check, filled alert) at small sizes |
+| Default color | `color/textPrimary` for neutral; `color/primary` for active/key |
 | Pixel grid | All paths align to 1 px grid at 24 base |
 
-### 12.2 Core icon set (v1)
+### 12.2 Tinted icon container (signature pattern)
 
-`bell` `alarm` `clock` `nfc` `tag` `signal-radio` `home` `chart` `gear` `chevron-right` `chevron-down` `arrow-left` `plus` `check` `x` `info` `alert` `question` `sun` `moon` `eye` `eye-off` `vibration` `volume` `volume-mute` `pencil` `trash` `share`
+Throughout the app, icons appear inside a soft tinted container — this is the reference image's defining visual idiom.
 
-### 12.3 Hierarchy
+| Property | Value |
+|---|---|
+| Size | 48 × 48 (default), 40 × 40 (compact), 64 × 64 (empty state hero) |
+| Background | `color/primaryLight` (default) — or an accent tint per §4.4 |
+| Radius | `radius/md` (16 px) for default, `radius/full` for accent badges in list rows |
+| Icon | 24 × 24 inside, `color/primary` (default) or matching accent foreground |
 
-- Primary action icon → `color/primary`
-- Decorative or navigational icon → `color/textPrimary`
-- Disabled → `color/textDisabled`
-- On a colored surface → `color/white`
+### 12.3 Core icon set (v1)
+
+`bell` `alarm` `clock` `nfc` `tag` `radio-signal` `home` `chart` `gear` `chevron-right` `chevron-down` `arrow-left` `plus` `check` `x` `info` `alert-triangle` `question` `sun` `moon` `eye` `eye-off` `vibration` `volume-up` `volume-mute` `pencil` `trash` `share` `water-drop` `wind` `bed` `bath` `kitchen`
 
 ### 12.4 Composition rules
 
 - Icons never sit alone as actions in the bottom nav — always paired with a label.
-- Within a button, icon precedes the label with 8 px gap.
+- Within a button, an optional leading icon precedes the label with 8 px gap.
 - Status icons (alert, info, check) use the functional color for the stroke.
+- Saturated accent colors only appear *inside* tinted containers (badge style), never as a standalone fill.
 
 ---
 
@@ -882,15 +1041,16 @@ GetUp is most-used by people who are barely awake. Accessibility *is* usability.
 
 ### 13.1 Contrast
 
-- All text meets WCAG AA (4.5:1 for body, 3:1 for ≥18 pt or bold ≥14 pt).
-- Primary blue `#0070E8` on white = 4.55 : 1. ✅
-- Text secondary `#4A4A4A` on white = 9.45 : 1. ✅
-- Text tertiary `#7A7A7A` on white = 4.69 : 1. ✅ (only used for non-critical helper text)
-- Disabled `#B8B8B8` is intentionally below AA; never used for actionable text.
+All text meets WCAG AA (4.5:1 for body, 3:1 for ≥18 pt or bold ≥14 pt).
+- `color/primary` `#0070E8` on white = 4.55 : 1. ✅
+- `color/textSecondary` `#5B6573` on white = 7.21 : 1. ✅
+- `color/textSecondary` on `color/canvas` (`#EEF2F8`) = 6.78 : 1. ✅
+- `color/textTertiary` `#8A94A3` on white = 4.04 : 1. ✅ (used for non-critical helper text only)
+- `color/textDisabled` is intentionally below AA; never used for actionable text.
 
 ### 13.2 Dynamic Type
 
-Every text style maps to an iOS text style. Layouts are tested through AX5. Cards and rows grow vertically; no truncation of primary content.
+Every text style maps to an iOS text style. Layouts grow vertically through AX5; cards expand, no truncation of primary content. The countdown digits and ring values are the only sizes that do not scale with Dynamic Type — they scale with viewport instead.
 
 ### 13.3 VoiceOver
 
@@ -900,11 +1060,12 @@ Every interactive element has a label, value (where dynamic), and hint when non-
 |---|---|---|
 | Alarm Card | "Alarm, 06:30, weekdays, bathroom tag, enabled" | "Double tap to edit" |
 | Toggle | "Alarm enabled" / "disabled" | "Double tap to toggle" |
-| NFC scanning area | "Scanning for tag" | "Hold the top of your phone near the tag" |
-| Primary button | label as displayed | omit hint unless needed |
-| Bottom tab | "Alarms tab, selected" | omit |
+| Progress ring | "47 mornings on time, 12-day streak" | omit |
+| NFC scan area | "Scanning for tag" | "Hold the top of your phone near the tag" |
+| Primary button | label as displayed | omit unless ambiguous |
+| Tab | "Alarms tab, selected" | omit |
 
-The active alarm screen uses `accessibilityViewIsModal = true` and announces "Alarm ringing. Go scan your tag." on appear.
+The active alarm screen sets `accessibilityViewIsModal = true` and announces "Alarm ringing. Go scan your tag." on appear.
 
 ### 13.4 Haptics
 
@@ -916,24 +1077,33 @@ The active alarm screen uses `accessibilityViewIsModal = true` and announces "Al
 | NFC first detection | `.impact(.light)` |
 | NFC confirmed | `.notification(.success)` |
 | Error / failed scan | `.notification(.error)` |
-| Alarm fire (in-app) | continuous pattern (heart-like, 0.4 s on / 0.6 s off) |
+| Alarm fire (in-app) | continuous heart-like pattern, 0.4 s on / 0.6 s off |
 
 ### 13.5 Reduced motion
 
 When `UIAccessibility.isReduceMotionEnabled`:
-- Disable card stagger entrance.
-- Replace NFC pulsing rings with a static ring + a 1 px blinking dot at center (1 Hz).
-- Replace error shake with background flash.
+- Disable card stagger entrance and progress-ring rotation.
+- Replace ring pulse with a static state — the end-cap dot does not pulse.
+- Replace error shake with a background flash to `#FFEEEF`.
 - Page transitions become cross-fade only.
+- Ambient page pulse is disabled.
 
 ### 13.6 Touch targets
 
-Minimum 44 × 44 pt for every interactive element. Where a visual is smaller (e.g. a day-of-week chip at 40 px), the tap region is expanded invisibly.
+Minimum 44 × 44 pt for every interactive element. Where a visual is smaller (e.g. a 40 px day chip), the tap region is expanded invisibly.
 
 ### 13.7 Color-blind safety
 
-- Status is never communicated by color alone. Success = checkmark + green. Error = alert icon + red. Warning = warning icon + orange.
+- Status is never communicated by color alone. Success = check + green. Error = alert + red. Warning = warning + orange.
 - Streak dots include a today-marker stroke ring, not just a different fill.
+- Active tab uses both color and a `primaryLight` capsule behind the icon — never color alone.
+
+### 13.8 Morning usability
+
+- Default text scales generously (Body at 17 pt, never below).
+- Time picker numbers are large enough to read from arm's length.
+- The active-alarm screen contains exactly one tappable element (the snooze ghost button, if enabled), and even that is optional.
+- Critical alert text is set in `screenTitle` so it's legible at 18 inches with one eye open.
 
 ---
 
@@ -941,49 +1111,61 @@ Minimum 44 × 44 pt for every interactive element. Where a visual is smaller (e.
 
 ### 14.1 SwiftUI components
 
-- Adopt SwiftUI for all new surfaces; UIKit only for the alarm presentation layer (which needs `UNNotificationContentExtension` and critical alert handling).
-- Define design tokens as a `DesignSystem` namespace (`DesignSystem.Color.primary`, etc.) backed by an asset catalog with light/dark variants.
-- Components are SwiftUI views matching the names in §5: `PrimaryButton`, `AlarmCard`, `NFCSetupCard`, etc.
+- Adopt SwiftUI for all new surfaces; UIKit only for the alarm presentation layer (`UNNotificationContentExtension`, critical alert handling).
+- Design tokens live in a `DesignSystem` namespace (`DesignSystem.Color.primary`, `DesignSystem.Font.body`, etc.) backed by an asset catalog with light/dark variants.
+- Components in §6 map 1:1 to SwiftUI views: `PrimaryPillButton`, `AlarmCard`, `NFCSetupCard`, `ProgressRing`, etc.
 
-### 14.2 Safe area
+### 14.1.1 Inter font bundling
 
-All screens respect `safeAreaInsets`. The active alarm screen explicitly extends to the full screen (ignores safe area for background fill) but keeps content within the safe insets.
+- Ship Inter (Regular / Medium / Semibold / Bold) and Inter Tight (Semibold / Bold) as `.ttf` or variable `.woff2` files inside the app bundle.
+- Register fonts in `Info.plist` via `UIAppFonts` and expose them through a `DesignSystem.Font` namespace returning `UIFontMetrics`-scaled fonts so Dynamic Type still applies.
+- Provide an SF Pro fallback for every token: `Font.custom("Inter", size: 17, relativeTo: .body).fallback(.system(.body))`.
+- Verify rendering at every text style XS → AX5 before release; Inter at extreme Dynamic Type sizes can drift if line heights aren't pinned.
 
-### 14.3 Dark mode
+### 14.2 Safe areas
 
-Dark mode is **roadmapped, not v1**. Tokens are defined as semantic, so the future dark palette will map cleanly. Until then, the app forces light mode (`overrideUserInterfaceStyle = .light`) and we communicate this honestly in settings: "Dark mode coming soon."
+All screens respect `safeAreaInsets`. The active alarm screen extends to the full screen (ignores safe area for background fill) but keeps content within the safe insets. The floating tab bar sits 16 px above the bottom safe area.
 
-When dark mode ships, neutrals invert: background `#0E0E0E`, surface `#1A1B1D`, border `#2A2C30`. Blue remains `#0070E8` (sufficient contrast on dark surfaces).
+### 14.3 Tab bars
+
+The floating tab bar is a custom SwiftUI component, not `TabView` with default chrome. Use `ZStack` with the tab bar overlaid and `safeAreaInset(edge: .bottom)` providing 80 px of clearance to the scroll content. The blur uses `Material.ultraThinMaterial` on iOS 17+; on iOS 15–16, fall back to a solid `color/white` at 95% opacity.
 
 ### 14.4 Haptics
 
-Use `UIImpactFeedbackGenerator`, `UINotificationFeedbackGenerator`, `UISelectionFeedbackGenerator`. Prepare the generator a frame before the event (e.g. when alarm screen mounts, prepare the success generator).
+Use `UIImpactFeedbackGenerator`, `UINotificationFeedbackGenerator`, `UISelectionFeedbackGenerator`. Prepare the generator a frame before the event (e.g. when the alarm screen mounts, prepare the success generator).
 
-### 14.5 NFC permission handling
+### 14.5 NFC permissions
 
-- Use `CoreNFC` `NFCNDEFReaderSession` for read.
+- Use `CoreNFC` `NFCNDEFReaderSession` for reads.
 - Trigger the session when the active alarm screen appears.
 - iOS requires a UI-initiated scan; the critical alert tap satisfies this.
-- The Info.plist key `NFCReaderUsageDescription` reads: "GetUp uses NFC to read your tag and turn off the alarm."
+- `Info.plist` key `NFCReaderUsageDescription`: "GetUp uses NFC to read your tag and turn off the alarm."
 
-### 14.6 Alarm permission handling
+### 14.6 Alarm permissions
 
 - Use `UNUserNotificationCenter` with `.criticalAlert`, `.alert`, `.sound`, `.providesAppNotificationSettings`.
-- Critical alert entitlement requires an Apple entitlement — onboarding explains the *why* before showing the system prompt.
-- If critical alert is denied, the app degrades gracefully: a standard notification + a stern but clear screen explaining the alarm may not ring in silent mode.
+- Critical-alert entitlement requires an Apple entitlement — onboarding explains *why* before showing the system prompt.
+- If critical alert is denied, the app degrades gracefully: standard notification + a clear screen explaining the alarm may not ring in silent mode.
 
-### 14.7 Notification behavior
+### 14.7 Alarm behavior on iPhone
 
 - Each alarm corresponds to one or more scheduled `UNNotificationRequest`s with a custom category (`ALARM_RING`).
-- The category has one action: "Open" — tapping it brings the user into the active alarm screen and starts NFC.
-- Sound is a 30-second loop (`alarm.caf`) that auto-repeats up to 10 minutes by chaining 20 notifications 30 s apart.
-
-### 14.8 Locked / backgrounded behavior
-
-- When the app is locked: the alarm appears as a critical notification on the lock screen. The user taps it (or uses dynamic island) to enter scanning mode.
+- The category has one action: **Open** — tapping it brings the user into the active alarm screen and starts NFC.
+- Sound is a 30-second loop (`alarm.caf`) chained across 20 notifications 30 s apart for up to 10 minutes of ring time.
+- When the app is locked: alarm appears as a critical notification. The user taps it (or uses dynamic island) to enter scanning mode.
 - When backgrounded: same path.
 - When in foreground: the active alarm screen presents immediately.
-- The NFC reader cannot run continuously in background — this is an OS limit, not a design choice. We explain this in Help.
+
+### 14.8 Dark mode
+
+Dark mode is roadmapped, not v1. Tokens are semantic so the future palette will map cleanly. Until then, the app forces light mode (`overrideUserInterfaceStyle = .light`). Settings notes: "Dark mode coming soon."
+
+Planned dark palette (preview):
+- `canvas` → `#0C0E12`
+- Card surface → `#16191F`
+- Hero card → `#10141B`
+- Border → `#252932`
+- Primary blue remains `#0070E8` (sufficient contrast on dark surfaces).
 
 ---
 
@@ -993,99 +1175,157 @@ The complete token table. Every value in this document is a token; nothing in th
 
 ### 15.1 Color tokens
 
-| Token | Hex | Alpha |
-|---|---|---|
-| `color/primary` | `#0070E8` | 1.0 |
-| `color/primaryPressed` | `#005FC4` | 1.0 |
-| `color/primaryLight` | `#EAF4FF` | 1.0 |
-| `color/primarySoft` | `#F3F8FF` | 1.0 |
-| `color/white` | `#FFFFFF` | 1.0 |
-| `color/offWhite` | `#FAFAFA` | 1.0 |
-| `color/surface` | `#F5F6F7` | 1.0 |
-| `color/border` | `#E5E7EB` | 1.0 |
-| `color/divider` | `#EEEEEE` | 1.0 |
-| `color/textPrimary` | `#111111` | 1.0 |
-| `color/textSecondary` | `#4A4A4A` | 1.0 |
-| `color/textTertiary` | `#7A7A7A` | 1.0 |
-| `color/textDisabled` | `#B8B8B8` | 1.0 |
-| `color/success` | `#19A463` | 1.0 |
-| `color/successBg` | `#EAF8F1` | 1.0 |
-| `color/warning` | `#FF9500` | 1.0 |
-| `color/warningBg` | `#FFF4E5` | 1.0 |
-| `color/error` | `#E5484D` | 1.0 |
-| `color/errorBg` | `#FFF0F0` | 1.0 |
-| `color/backdrop` | `#111111` | 0.32 |
+| Token | Hex / value |
+|---|---|
+| `color/primary` | `#0070E8` |
+| `color/primaryPressed` | `#005FC4` |
+| `color/primaryLight` | `#EAF4FF` |
+| `color/primarySoft` | `#F4F8FF` |
+| `color/white` | `#FFFFFF` |
+| `color/canvas` | `#EEF2F8` |
+| `color/offWhite` | `#FAFBFC` |
+| `color/surface` | `#F5F7FA` |
+| `color/border` | `#E6EAF0` |
+| `color/divider` | `#EEF1F5` |
+| `color/textPrimary` | `#111111` |
+| `color/textSecondary` | `#5B6573` |
+| `color/textTertiary` | `#8A94A3` |
+| `color/textDisabled` | `#B8C0CC` |
+| `color/success` | `#18A957` |
+| `color/successBg` | `#E8F7EF` |
+| `color/warning` | `#FF9F0A` |
+| `color/warningBg` | `#FFF4E0` |
+| `color/error` | `#E5484D` |
+| `color/errorBg` | `#FFEEEF` |
+| `color/backdrop` | `rgba(17,17,17,0.32)` |
+| `accent/orange` | `#FF8A3D` |
+| `accent/violet` | `#8B5CF6` |
+| `accent/teal` | `#14B8A6` |
+| `accent/rose` | `#F43F5E` |
 
 ### 15.2 Typography tokens
 
-See §2 — each row in the type scale is a token. Names follow `type/<role>`.
+See §3 — each row in the type scale is a token, named `type/<role>`. Each token carries `size`, `lineHeight`, `weight`, `tracking`, and an `iosTextStyle` mapping.
 
 ### 15.3 Radius tokens
 
 | Token | Value | Use |
 |---|---|---|
-| `radius/xs` | 4 px | Inline tags |
-| `radius/sm` | 8 px | Pills, chips, input fields |
-| `radius/md` | 10 px | Search field |
-| `radius/lg` | 14 px | Buttons, alarm card |
-| `radius/xl` | 20 px | Modal sheets, NFC setup card |
-| `radius/full` | 999 px | Day-of-week chips, status dots |
+| `radius/xs` | 6 px | Tags, badges |
+| `radius/sm` | 12 px | Pills inside cards |
+| `radius/md` | 16 px | Icon containers, day chips |
+| `radius/lg` | 20 px | Search field, secondary surfaces |
+| `radius/xl` | 24 px | Default cards |
+| `radius/2xl` | 28 px | Hero cards, modal sheet top |
+| `radius/full` | 999 px | Primary buttons, status dots, day-of-week selectors |
 
 ### 15.4 Shadow tokens
 
-GetUp uses **almost no shadows**. Elevation is communicated by surface color and border, not blur.
+| Token | Value |
+|---|---|
+| `shadow/none` | none |
+| `shadow/card` | `0 4px 24px rgba(31,77,138,0.06), 0 1px 2px rgba(31,77,138,0.04)` |
+| `shadow/raised` | `0 12px 36px rgba(31,77,138,0.10), 0 2px 6px rgba(31,77,138,0.06)` |
+| `shadow/sheet` | `0 -8px 32px rgba(31,77,138,0.08)` |
+| `shadow/glass` | `0 8px 24px rgba(31,77,138,0.08)` |
+| `shadow/halo` | `0 0 64px rgba(0,112,232,0.18)` |
+
+### 15.5 Border tokens
 
 | Token | Value | Use |
 |---|---|---|
-| `shadow/none` | none | Default for cards and rows |
-| `shadow/sheet` | `0 -2px 12px rgba(17,17,17,0.04)` | Bottom nav, modal sheet top edge |
-| `shadow/floating` | `0 8px 24px rgba(17,17,17,0.08)` | Reserved for the floating action button if one is ever introduced (not in v1) |
+| `border/default` | 1 px solid `color/border` | Secondary button, input field |
+| `border/glass` | 1 px solid `rgba(255,255,255,0.6)` | Floating tab bar inner highlight |
+| `border/focus` | 2 px inset `color/primary` | Focused input |
+| `border/error` | 2 px inset `color/error` | Invalid input |
 
-### 15.5 Spacing tokens
+### 15.6 Spacing tokens
 
-See §3. `space/2xs` (4) → `space/4xl` (56).
+See §5. `space/2xs` (4) → `space/4xl` (56).
 
-### 15.6 Motion tokens
+### 15.7 Motion tokens
 
-See §9. `motion/fast` (150) → `motion/hero` (500). Easing tokens `easing/standard`, `easing/decelerate`, `easing/accelerate`, `easing/emphasized`.
+| Token | Value |
+|---|---|
+| `motion/duration/fast` | 150 ms |
+| `motion/duration/base` | 220 ms |
+| `motion/duration/slow` | 300 ms |
+| `motion/duration/hero` | 500 ms |
+| `motion/duration/ambient` | 1600 ms (configurable; ring pulse uses 1600, page pulse 2400, ring rotation 8000) |
+| `motion/easing/standard` | `cubic-bezier(0.2, 0, 0, 1)` |
+| `motion/easing/decelerate` | `cubic-bezier(0, 0, 0, 1)` |
+| `motion/easing/accelerate` | `cubic-bezier(0.3, 0, 1, 1)` |
+| `motion/easing/emphasized` | `cubic-bezier(0.2, 0, 0, 1)` over 500 ms |
+| `motion/easing/spring` | spring(stiffness 380, damping 30) |
 
-### 15.7 Z-index / elevation
+### 15.8 Z-index / elevation
 
 | Token | Value | Use |
 |---|---|---|
 | `z/base` | 0 | Content |
 | `z/sticky` | 100 | Section sticky headers |
-| `z/nav` | 200 | Bottom navigation |
+| `z/floatingNav` | 200 | Floating tab bar |
 | `z/sheet` | 300 | Modal sheets |
-| `z/banner` | 400 | Error / success banners |
+| `z/banner` | 400 | Top toasts and banners |
 | `z/alarm` | 900 | Active alarm full-screen takeover |
 | `z/toast` | 1000 | Top-level toasts (above everything) |
 
-### 15.8 Token file shape (reference)
+### 15.9 Token file shape (reference)
 
 ```json
 {
+  "fontFamily": {
+    "body": "\"Inter\", -apple-system, \"SF Pro\", system-ui, sans-serif",
+    "display": "\"Inter Tight\", \"Inter\", -apple-system, \"SF Pro\", system-ui, sans-serif"
+  },
   "color": {
     "primary": "#0070E8",
     "primaryPressed": "#005FC4",
-    "...": "..."
+    "primaryLight": "#EAF4FF",
+    "primarySoft": "#F4F8FF",
+    "canvas": "#EEF2F8",
+    "white": "#FFFFFF",
+    "surface": "#F5F7FA",
+    "border": "#E6EAF0",
+    "textPrimary": "#111111",
+    "textSecondary": "#5B6573",
+    "textTertiary": "#8A94A3",
+    "success": "#18A957",
+    "warning": "#FF9F0A",
+    "error": "#E5484D"
   },
   "type": {
-    "largeTitle": { "size": 34, "lineHeight": 41, "weight": 700, "tracking": 0.37 },
-    "...": {}
+    "largeTitle": { "size": 34, "lineHeight": 41, "weight": 700, "tracking": 0.37, "iosTextStyle": "largeTitle" },
+    "screenTitle": { "size": 28, "lineHeight": 34, "weight": 700, "tracking": 0.36, "iosTextStyle": "title1" },
+    "sectionHeader": { "size": 20, "lineHeight": 25, "weight": 600, "tracking": 0.38, "iosTextStyle": "title3" },
+    "headline": { "size": 17, "lineHeight": 22, "weight": 600, "tracking": -0.43, "iosTextStyle": "headline" },
+    "body": { "size": 17, "lineHeight": 22, "weight": 400, "tracking": -0.43, "iosTextStyle": "body" },
+    "secondaryBody": { "size": 15, "lineHeight": 20, "weight": 400, "tracking": -0.24, "iosTextStyle": "subheadline" },
+    "caption": { "size": 13, "lineHeight": 18, "weight": 400, "tracking": -0.08, "iosTextStyle": "footnote" },
+    "button": { "size": 17, "lineHeight": 22, "weight": 600, "tracking": -0.43 },
+    "ringValue": { "size": 56, "lineHeight": 60, "weight": 700, "tracking": -0.8, "tabular": true },
+    "countdown": { "size": 96, "lineHeight": 96, "weight": 600, "tracking": -1.2, "tabular": true, "family": "Inter Tight" }
   },
   "space": { "2xs": 4, "xs": 8, "sm": 12, "md": 16, "lg": 20, "xl": 24, "2xl": 32, "3xl": 40, "4xl": 56 },
-  "radius": { "xs": 4, "sm": 8, "md": 10, "lg": 14, "xl": 20, "full": 999 },
+  "radius": { "xs": 6, "sm": 12, "md": 16, "lg": 20, "xl": 24, "2xl": 28, "full": 999 },
+  "shadow": {
+    "card": "0 4px 24px rgba(31,77,138,0.06), 0 1px 2px rgba(31,77,138,0.04)",
+    "raised": "0 12px 36px rgba(31,77,138,0.10), 0 2px 6px rgba(31,77,138,0.06)",
+    "sheet": "0 -8px 32px rgba(31,77,138,0.08)",
+    "glass": "0 8px 24px rgba(31,77,138,0.08)",
+    "halo": "0 0 64px rgba(0,112,232,0.18)"
+  },
   "motion": {
-    "duration": { "fast": 150, "base": 220, "slow": 300, "hero": 500 },
+    "duration": { "fast": 150, "base": 220, "slow": 300, "hero": 500, "ambientPagePulse": 2400, "ambientRingPulse": 1600, "ambientRingRotation": 8000 },
     "easing": {
       "standard": [0.2, 0, 0, 1],
       "decelerate": [0, 0, 0, 1],
       "accelerate": [0.3, 0, 1, 1],
-      "emphasized": [0.2, 0, 0, 1]
+      "emphasized": [0.2, 0, 0, 1],
+      "spring": { "stiffness": 380, "damping": 30 }
     }
   },
-  "z": { "base": 0, "sticky": 100, "nav": 200, "sheet": 300, "banner": 400, "alarm": 900, "toast": 1000 }
+  "z": { "base": 0, "sticky": 100, "floatingNav": 200, "sheet": 300, "banner": 400, "alarm": 900, "toast": 1000 }
 }
 ```
 
@@ -1095,35 +1335,38 @@ See §9. `motion/fast` (150) → `motion/hero` (500). Easing tokens `easing/stan
 
 | Component | Used on |
 |---|---|
-| Primary Button | Every screen with a main action |
-| Secondary Button | Onboarding, alarm overview ("Add alarm"), settings rows |
-| Text Button | Onboarding skip, modal cancel, help links |
-| Destructive Button | Alarm edit (delete), settings danger zone |
-| NFC Setup Card | Home (when no tag), NFC setup screen |
+| Primary pill button | Every screen with a main action |
+| Secondary pill button | Onboarding, alarm overview ("Add alarm"), settings rows |
+| Ghost button | Onboarding skip, modal cancel, help links |
+| Icon button | Floating back, settings entry, filter |
+| Destructive pill button | Alarm edit (delete), settings danger zone |
+| Card | All list rows, hero sections |
+| Hero card | Home (progress), alarm-ringing background, NFC setup |
+| Progress ring | Home, Active alarm, NFC scan |
+| Tinted icon container | List rows, empty states, NFC setup card |
+| Day chip | Alarm creation |
 | Alarm Card | Home |
-| Morning Routine Card | Alarm creation, Success screen |
-| Progress Card | Home, Progress screen |
-| Bottom Navigation | All top-level screens (hidden during active alarm and modal flows) |
+| Floating tab bar | All top-level screens (hidden during active alarm and modal flows) |
 | Toggle | Alarm card, Settings |
-| Time Picker | Alarm creation, Alarm edit |
-| Modal Sheet | NFC troubleshooting, change tag, sound picker |
-| Confirmation Screen | Tag paired, Alarm dismissed, Streak milestones |
-| Empty State | Alarms tab (no alarms), Progress (no data) |
-| Error State | NFC fail, validation, network |
+| Time picker | Alarm creation, Alarm edit |
+| Modal sheet | Alarm creation, NFC troubleshooting, change tag, sound picker |
+| Toast / banner | Save confirmations, NFC failures |
+| Empty state | Alarms tab (no alarms), Progress (no data) |
+| Error state | NFC fail, validation, network |
 
 ## Appendix B — Open questions / v2 candidates
 
-These are intentionally **out of scope** for the v1 specified above:
+These are intentionally **out of scope** for v1:
 
 - Dark mode token set (mapped, not designed)
-- iPad layout (currently phone-only)
+- iPad layout (currently iPhone-only)
 - Apple Watch companion (start/stop scan from wrist)
 - Family / household shared accountability
 - Sleep score integration via HealthKit
 - Multi-tag-per-alarm routes ("scan bathroom, then kitchen")
 
-These should reuse the system above; nothing in this document needs to be rewritten to accommodate them.
+These reuse the system above; nothing in this document needs to be rewritten to accommodate them.
 
 ---
 
-*End of design.md — v1.0*
+*End of design.md — v2.0 — Modern iOS visual language*
