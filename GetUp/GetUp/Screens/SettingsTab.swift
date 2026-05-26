@@ -44,6 +44,7 @@ struct SettingsTab: View {
                     // Clearance for the floating tab bar
                     .padding(.bottom, 120)
                 }
+                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)

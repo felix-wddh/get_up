@@ -70,6 +70,7 @@ struct RootView: View {
 
 /// Main tab-based navigation — uses a custom floating pill tab bar (v2).
 struct MainTabView: View {
+    @EnvironmentObject private var appState: AppState
     @State private var selectedTab: Tab = .alarms
 
     enum Tab: Hashable {
@@ -104,15 +105,33 @@ struct MainTabView: View {
             .animation(DesignSystem.Animation.fast, value: selectedTab)
 
             // Floating pill tab bar — 16-pt above the bottom safe area.
+            // Slides off-screen + fades when `isTabBarHidden` is set by a
+            // tab's scroll observer; reappears smoothly on a downward pan.
             FloatingTabBar(selection: $selectedTab, items: items)
                 .padding(.bottom, DesignSystem.Spacing.md)
+                .offset(y: appState.isTabBarHidden ? 160 : 0)
+                .opacity(appState.isTabBarHidden ? 0 : 1)
+                .animation(.easeInOut(duration: 0.28), value: appState.isTabBarHidden)
         }
         .background(DesignSystem.Colors.canvas.ignoresSafeArea())
+        .onChange(of: selectedTab) { _, _ in
+            // Landing on a new tab should always present the bar.
+            if appState.isTabBarHidden {
+                appState.isTabBarHidden = false
+            }
+        }
     }
 }
 
-/// Stub Progress tab — previews the v2 hero element with placeholder data.
+/// Progress tab — opens with the horizontal streak card (Duolingo-style,
+/// brand blue) and leaves room below for additional habit widgets as the
+/// data layer comes online.
 struct ProgressTab: View {
+    @EnvironmentObject private var appState: AppState
+
+    // Placeholder data — wire to the real habit store when it ships.
+    private let streakCount = 12
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -120,30 +139,18 @@ struct ProgressTab: View {
 
                 ScrollView {
                     VStack(spacing: DesignSystem.Spacing.xl) {
-                        HeroCard {
-                            VStack(spacing: DesignSystem.Spacing.lg) {
-                                ProgressRing(
-                                    progress: 0.62,
-                                    diameter: 240,
-                                    value: "47",
-                                    caption: "mornings on time"
-                                )
-                                Text("Progress coming soon")
-                                    .font(DesignSystem.Font.headline)
-                                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                                Text("We're building habit insights, streak heatmaps, and average wake time. For now, here's a preview.")
-                                    .font(DesignSystem.Font.secondaryBody)
-                                    .foregroundColor(DesignSystem.Colors.textSecondary)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal, DesignSystem.Spacing.sm)
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
+                        StreakCard(
+                            streakCount: streakCount,
+                            title: "Streak",
+                            subtitle: "Get up on time every day to build your streak.",
+                            weekDays: StreakCard.placeholderWeek()
+                        )
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
                     .padding(.bottom, 120)  // clearance for floating tab bar
                 }
+                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("Progress")
             .navigationBarTitleDisplayMode(.large)
@@ -163,6 +170,11 @@ final class AppState: ObservableObject {
     @Published var shouldShowNFCScan = false
     @Published var pendingAlarmId: String?
     @Published var showDataResetAlert = false
+    /// Toggled by scrollable tabs via the `hidesTabBarOnScroll(_:)` modifier.
+    /// `MainTabView` watches this to slide the floating pill tab bar off
+    /// screen while the user pulls more content up, then reveal it again
+    /// on a downward pan.
+    @Published var isTabBarHidden: Bool = false
     @Published var getUpModeEnabled: Bool = true {
         didSet {
             UserDefaults.standard.set(getUpModeEnabled, forKey: "getUpModeEnabled")

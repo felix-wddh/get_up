@@ -10,7 +10,6 @@ struct AlarmsTab: View {
     private var alarms: [AlarmEntity]
     
     @State private var showingCreateAlarm = false
-    @State private var showingOnboarding = false
     @State private var selectedAlarm: AlarmEntity?
     @State private var authState: AlarmManager.AuthorizationState = .notDetermined
     @State private var showAuthAlert = false
@@ -30,15 +29,6 @@ struct AlarmsTab: View {
                             authWarningCard
                         }
 
-                        // Hero card: streak preview with the signature ring.
-                        streakHeroCard
-
-                        getUpModeCard
-
-                        if !alarms.isEmpty {
-                            onboardingInfoCard
-                        }
-
                         alarmsSection
 
                         addAlarmButton
@@ -49,6 +39,7 @@ struct AlarmsTab: View {
                     // Clearance for the floating tab bar.
                     .padding(.bottom, 120)
                 }
+                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("GetUp")
             .navigationBarTitleDisplayMode(.large)
@@ -59,9 +50,6 @@ struct AlarmsTab: View {
             }
             .sheet(item: $selectedAlarm) { alarm in
                 EditAlarmSheet(alarm: alarm)
-            }
-            .sheet(isPresented: $showingOnboarding) {
-                OnboardingView()
             }
             .alert("Alarms Disabled", isPresented: $showAuthAlert) {
                 Button("Open Settings") {
@@ -112,94 +100,6 @@ struct AlarmsTab: View {
                 .foregroundColor(DesignSystem.Colors.primary)
             }
         }
-    }
-
-    // MARK: - Streak Hero (preview)
-
-    /// Placeholder hero showing the v2 progress ring. The streak number is
-    /// derived from the count of enabled alarms today as a soft proxy; the
-    /// real habit data layer ships with the Progress tab.
-    private var streakHeroCard: some View {
-        HeroCard {
-            VStack(spacing: DesignSystem.Spacing.md) {
-                ProgressRing(
-                    progress: 0.4,
-                    diameter: 240,
-                    value: "12",
-                    caption: "day streak"
-                )
-                Text("Best yet — keep it going.")
-                    .font(DesignSystem.Font.headline)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-
-    // MARK: - GetUp Mode Card
-
-    private var getUpModeCard: some View {
-        Card {
-            HStack(spacing: DesignSystem.Spacing.md) {
-                TintedIconContainer(
-                    "wave.3.right",
-                    size: 48,
-                    tint: appState.getUpModeEnabled ? DesignSystem.Colors.primaryLight : DesignSystem.Colors.surface,
-                    foreground: appState.getUpModeEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.textTertiary
-                )
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("GetUp Mode")
-                        .font(DesignSystem.Font.headline)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
-
-                    Text(appState.getUpModeEnabled ? "NFC required to stop alarms" : "Alarms stop normally")
-                        .font(DesignSystem.Font.caption)
-                        .foregroundColor(DesignSystem.Colors.textSecondary)
-                }
-
-                Spacer()
-
-                Toggle("", isOn: $appState.getUpModeEnabled)
-                    .tint(DesignSystem.Colors.primary)
-                    .labelsHidden()
-            }
-        }
-    }
-
-    // MARK: - Onboarding Info Card
-
-    private var onboardingInfoCard: some View {
-        Button(action: { showingOnboarding = true }) {
-            Card {
-                HStack(spacing: DesignSystem.Spacing.md) {
-                    TintedIconContainer(
-                        "lightbulb.fill",
-                        size: 40,
-                        shape: .circle,
-                        tint: DesignSystem.Colors.primaryLight,
-                        foreground: DesignSystem.Colors.primary
-                    )
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("How it works")
-                            .font(DesignSystem.Font.headline)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                        Text("Review the 3-step GetUp guide")
-                            .font(DesignSystem.Font.caption)
-                            .foregroundColor(DesignSystem.Colors.textSecondary)
-                    }
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(DesignSystem.Colors.textTertiary)
-                }
-            }
-        }
-        .buttonStyle(.plain)
     }
 
     private var alarmsSection: some View {
