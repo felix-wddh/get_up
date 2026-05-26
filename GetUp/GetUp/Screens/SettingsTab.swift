@@ -2,50 +2,52 @@ import SwiftUI
 import StoreKit
 import SwiftData
 
-/// Settings tab with app configuration and about info
+/// Settings tab — v2 grouped cards. Each group is one card; rows inside it
+/// are separated by hairline `divider` color.
 struct SettingsTab: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.modelContext) private var modelContext
     @StateObject private var safetyService = SafetyService.shared
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
-                DesignSystem.Colors.background
+                // Background — v2 canvas
+                DesignSystem.Colors.canvas
                     .ignoresSafeArea()
-                
+
                 ScrollView {
-                    VStack(spacing: DesignSystem.Spacing.lg) {
+                    VStack(spacing: DesignSystem.Spacing.xl) {
                         // Profile/App Header
                         appHeader
-                        
+
                         // GetUp Mode Section
                         getUpModeSection
-                        
+
                         // Emergency History Section
                         emergencyHistorySection
-                        
+
                         // About Section
                         aboutSection
-                        
+
                         // Support Section
                         supportSection
-                        
+
                         // Footer
-                        Text("Made with ❤️ for heavy sleepers")
-                            .font(DesignSystem.Typography.caption)
+                        Text("Made for heavy sleepers.")
+                            .font(DesignSystem.Font.caption)
                             .foregroundColor(DesignSystem.Colors.textTertiary)
                             .padding(.top, DesignSystem.Spacing.lg)
-                            .padding(.bottom, DesignSystem.Spacing.xxl)
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
+                    // Clearance for the floating tab bar
+                    .padding(.bottom, 120)
                 }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
+            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .alert("Data reset complete", isPresented: $appState.showDataResetAlert) {
                 Button("OK") {}
@@ -54,153 +56,138 @@ struct SettingsTab: View {
             }
         }
     }
-    
+
     // MARK: - App Header
-    
+
     private var appHeader: some View {
         HStack(spacing: DesignSystem.Spacing.md) {
-            ZStack {
-                GlowCircle(color: DesignSystem.Colors.accent, size: 60, blur: 20)
-                Image(systemName: "alarm.fill")
-                    .font(.system(size: 30))
-                    .foregroundColor(DesignSystem.Colors.accent)
-            }
-            
+            TintedIconContainer("alarm.fill", size: 56)
+
             VStack(alignment: .leading, spacing: 2) {
                 Text("GetUp")
-                    .font(DesignSystem.Typography.title2)
+                    .font(DesignSystem.Font.screenTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                Text("Premium Alarm Utility")
-                    .font(DesignSystem.Typography.subheadline)
+                Text("Premium alarm utility")
+                    .font(DesignSystem.Font.secondaryBody)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
-            
+
             Spacer()
         }
-        .padding(.vertical, DesignSystem.Spacing.md)
+        .padding(.vertical, DesignSystem.Spacing.sm)
     }
-    
+
     // MARK: - GetUp Mode Section
-    
+
     private var getUpModeSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-            SectionHeader("Enforcement", icon: "shield.fill")
-            
-            GlassCard {
-                VStack(spacing: DesignSystem.Spacing.md) {
-                    // Toggle row
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("GetUp Mode")
-                                .font(DesignSystem.Typography.body)
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
-                            
-                            Text("Require NFC scan to silence alarms")
-                                .font(DesignSystem.Typography.caption)
-                                .foregroundColor(DesignSystem.Colors.textSecondary)
-                        }
-                        
-                        Spacer()
-                        
-                        Toggle("", isOn: $appState.getUpModeEnabled)
-                            .tint(DesignSystem.Colors.accent)
-                            .labelsHidden()
-                            .accessibilityLabel("GetUp Mode")
-                            .accessibilityHint("Require NFC scan to silence alarms")
+            SectionHeader("Enforcement")
+
+            Card(padding: DesignSystem.Spacing.lg) {
+                HStack(spacing: DesignSystem.Spacing.md) {
+                    TintedIconContainer("shield.fill", size: 40, shape: .circle)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("GetUp Mode")
+                            .font(DesignSystem.Font.headline)
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                        Text("Require NFC scan to silence alarms")
+                            .font(DesignSystem.Font.caption)
+                            .foregroundColor(DesignSystem.Colors.textSecondary)
                     }
+
+                    Spacer()
+
+                    Toggle("", isOn: $appState.getUpModeEnabled)
+                        .tint(DesignSystem.Colors.primary)
+                        .labelsHidden()
+                        .accessibilityLabel("GetUp Mode")
+                        .accessibilityHint("Require NFC scan to silence alarms")
                 }
             }
         }
     }
-    
+
     // MARK: - Emergency History Section
-    
+
     private var emergencyHistorySection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-            SectionHeader("Emergency Bypasses", icon: "exclamationmark.shield.fill")
-            
-            GlassCard {
+            SectionHeader("Emergency bypasses")
+
+            Card(padding: DesignSystem.Spacing.lg) {
                 VStack(spacing: DesignSystem.Spacing.md) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Bypass History")
-                                .font(DesignSystem.Typography.body)
+                    HStack(spacing: DesignSystem.Spacing.md) {
+                        TintedIconContainer(
+                            "exclamationmark.shield.fill",
+                            size: 40,
+                            shape: .circle,
+                            tint: DesignSystem.Colors.warningBg,
+                            foreground: DesignSystem.Colors.warning
+                        )
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Bypass history")
+                                .font(DesignSystem.Font.headline)
                                 .foregroundColor(DesignSystem.Colors.textPrimary)
-                            
                             Text("Last 30 days")
-                                .font(DesignSystem.Typography.caption)
+                                .font(DesignSystem.Font.caption)
                                 .foregroundColor(DesignSystem.Colors.textSecondary)
                         }
-                        
+
                         Spacer()
-                        
+
                         Text("\(safetyService.bypassCount)")
-                            .font(DesignSystem.Typography.headline)
+                            .font(DesignSystem.Font.sectionHeader)
                             .foregroundColor(DesignSystem.Colors.textPrimary)
                     }
-                    
+
+                    settingsDivider
+
                     if let last = safetyService.lastBypassDate {
-                        Divider().background(DesignSystem.Colors.glassBorder)
-                        
                         HStack {
-                            Text("Last Used")
-                                .font(DesignSystem.Typography.caption)
+                            Text("Last used")
+                                .font(DesignSystem.Font.body)
                                 .foregroundColor(DesignSystem.Colors.textSecondary)
                             Spacer()
                             Text(last.formatted(date: .omitted, time: .shortened))
-                                .font(DesignSystem.Typography.caption)
+                                .font(DesignSystem.Font.body)
                                 .foregroundColor(DesignSystem.Colors.textTertiary)
                         }
                     } else {
-                        Divider().background(DesignSystem.Colors.glassBorder)
-                        Text("No emergency stops used yet. Good job!")
-                            .font(DesignSystem.Typography.caption)
-                            .foregroundColor(DesignSystem.Colors.textTertiary)
+                        Text("No emergency stops used yet. Good job.")
+                            .font(DesignSystem.Font.body)
+                            .foregroundColor(DesignSystem.Colors.textSecondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
             }
         }
     }
-    
+
     // MARK: - About Section
-    
+
     private var aboutSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-            SectionHeader("About", icon: "info.circle.fill")
-            
+            SectionHeader("About")
+
             UserGuidanceCard()
-            
-            GlassCard {
+
+            Card(padding: DesignSystem.Spacing.lg) {
                 VStack(spacing: DesignSystem.Spacing.md) {
-                    // Version
-                    HStack {
-                        Text("Version")
-                            .foregroundColor(DesignSystem.Colors.textSecondary)
-                        Spacer()
-                        Text("1.0.0 (Build 1)")
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                    }
-                    
-                    Divider().background(DesignSystem.Colors.glassBorder)
-                    
-                    // Privacy Policy
+                    rowVersion
+
+                    settingsDivider
+
                     Button(action: openPrivacyPolicy) {
-                        HStack {
-                            Text("Privacy Policy")
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
-                            Spacer()
-                            Image(systemName: "safari")
-                                .foregroundColor(DesignSystem.Colors.textTertiary)
-                        }
+                        settingsRow(title: "Privacy policy", trailing: "safari")
                     }
                     .buttonStyle(.plain)
-                    
-                    Divider().background(DesignSystem.Colors.glassBorder)
-                    
-                    // Accessibility
+
+                    settingsDivider
+
                     HStack {
                         Text("Accessibility")
+                            .font(DesignSystem.Font.body)
                             .foregroundColor(DesignSystem.Colors.textPrimary)
                         Spacer()
                         StatusIndicator(.active)
@@ -209,62 +196,64 @@ struct SettingsTab: View {
             }
         }
     }
-    
+
+    private var rowVersion: some View {
+        HStack {
+            Text("Version")
+                .font(DesignSystem.Font.body)
+                .foregroundColor(DesignSystem.Colors.textSecondary)
+            Spacer()
+            Text("1.0.0 (Build 1)")
+                .font(DesignSystem.Font.body)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+        }
+    }
+
     // MARK: - Support Section
-    
+
     private var supportSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-            SectionHeader("Support", icon: "help.circle.fill")
-            
-            GlassCard {
+            SectionHeader("Support")
+
+            Card(padding: DesignSystem.Spacing.lg) {
                 VStack(spacing: DesignSystem.Spacing.md) {
                     Button(action: contactSupport) {
-                        HStack {
-                            Text("Contact Support")
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
-                            Spacer()
-                            Image(systemName: "envelope.fill")
-                                .foregroundColor(DesignSystem.Colors.textTertiary)
-                        }
+                        settingsRow(title: "Contact support", trailing: "envelope.fill")
                     }
                     .buttonStyle(.plain)
-                    
-                    Divider().background(DesignSystem.Colors.glassBorder)
-                    
+
+                    settingsDivider
+
                     Button(action: rateApp) {
-                        HStack {
-                            Text("Rate GetUp")
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
-                            Spacer()
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(DesignSystem.Colors.textTertiary)
-                        }
+                        settingsRow(title: "Rate GetUp", trailing: "heart.fill")
                     }
                     .buttonStyle(.plain)
-                    
+
                     #if DEBUG
-                    Divider().background(DesignSystem.Colors.glassBorder)
+                    settingsDivider
 
                     Button(action: triggerAlarmNow) {
                         HStack {
                             Text("Trigger Alarm Now (Debug)")
-                                .foregroundColor(DesignSystem.Colors.accent)
+                                .font(DesignSystem.Font.body)
+                                .foregroundColor(DesignSystem.Colors.primary)
                             Spacer()
                             Image(systemName: "bolt.fill")
-                                .foregroundColor(DesignSystem.Colors.accent.opacity(0.7))
+                                .foregroundColor(DesignSystem.Colors.primary.opacity(0.7))
                         }
                     }
                     .buttonStyle(.plain)
 
-                    Divider().background(DesignSystem.Colors.glassBorder)
+                    settingsDivider
 
                     Button(role: .destructive, action: { appState.resetData() }) {
                         HStack {
-                            Text("Reset Local Data")
-                                .foregroundColor(DesignSystem.Colors.danger)
+                            Text("Reset local data")
+                                .font(DesignSystem.Font.body)
+                                .foregroundColor(DesignSystem.Colors.error)
                             Spacer()
                             Image(systemName: "trash.fill")
-                                .foregroundColor(DesignSystem.Colors.danger.opacity(0.7))
+                                .foregroundColor(DesignSystem.Colors.error.opacity(0.7))
                         }
                     }
                     .buttonStyle(.plain)
@@ -273,22 +262,42 @@ struct SettingsTab: View {
             }
         }
     }
-    
+
+    // MARK: - Settings row helpers
+
+    private var settingsDivider: some View {
+        Rectangle()
+            .fill(DesignSystem.Colors.divider)
+            .frame(height: 1)
+    }
+
+    private func settingsRow(title: String, trailing icon: String) -> some View {
+        HStack {
+            Text(title)
+                .font(DesignSystem.Font.body)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+            Spacer()
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(DesignSystem.Colors.textTertiary)
+        }
+    }
+
     // MARK: - Actions
-    
+
     private func openPrivacyPolicy() {
         // TODO: Replace with hosted privacy policy URL before submission
         if let url = URL(string: "mailto:support@getupapp.de?subject=Privacy%20Policy%20Request") {
             UIApplication.shared.open(url)
         }
     }
-    
+
     private func contactSupport() {
         if let url = URL(string: "mailto:support@getupapp.de?subject=GetUp%20Support") {
             UIApplication.shared.open(url)
         }
     }
-    
+
     @MainActor
     private func rateApp() {
         if let scene = UIApplication.shared.connectedScenes

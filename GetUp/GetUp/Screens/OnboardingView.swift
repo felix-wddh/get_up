@@ -1,6 +1,9 @@
 import SwiftUI
 
-/// Onboarding View for GetUp
+/// Onboarding for GetUp — v2 visual language.
+///
+/// Welcome slide: large title hero, body copy, primary pill at the bottom,
+/// ghost button below. Subsequent steps reuse the same canvas + card style.
 struct OnboardingView: View {
     @EnvironmentObject private var appState: AppState
     @State private var currentStep = 0
@@ -16,27 +19,7 @@ struct OnboardingView: View {
             topBar
 
             if currentStep == 0 {
-                // Welcome screen content
-                Spacer()
-
-                heroLogo
-                    .padding(.bottom, DesignSystem.Spacing.lg)
-
-                Text("Get out of bed.\nActually.")
-                    .font(DesignSystem.Typography.largeTitle)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.bottom, DesignSystem.Spacing.md)
-
-                Text("GetUp turns off only when you walk\nto a tag in another room.")
-                    .font(DesignSystem.Typography.body)
-                    .foregroundColor(DesignSystem.Colors.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, DesignSystem.Spacing.xl)
-
-                Spacer()
+                welcomeScreen
             } else {
                 // Progress bar for steps 1-4
                 progressBar
@@ -51,15 +34,66 @@ struct OnboardingView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
 
-            // Navigation button at bottom
+            // Navigation actions at bottom
             if showsNavButton {
-                navigationButton
-                    .padding(.horizontal, DesignSystem.Spacing.xl)
-                    .padding(.bottom, DesignSystem.Spacing.xxl)
+                VStack(spacing: DesignSystem.Spacing.sm) {
+                    PrimaryPillButton(
+                        currentStep == 0 ? "Get started" :
+                        (currentStep == 4 ? "Start getting up" : "Next"),
+                        icon: currentStep == 4 ? nil : "arrow.right",
+                        action: nextStep
+                    )
+
+                    if currentStep == 0 {
+                        GhostButton("I already have an account") {
+                            // Placeholder — wired up when account sync ships.
+                            DesignSystem.Haptics.selection()
+                        }
+                    }
+                }
+                .padding(.horizontal, DesignSystem.Spacing.xl)
+                .padding(.bottom, DesignSystem.Spacing.xl)
             }
         }
-        .background(DesignSystem.Colors.background.ignoresSafeArea())
-        .animation(DesignSystem.Animation.smooth, value: currentStep)
+        .background(DesignSystem.Colors.canvas.ignoresSafeArea())
+        .animation(DesignSystem.Animation.base, value: currentStep)
+    }
+
+    // MARK: - Welcome screen
+
+    private var welcomeScreen: some View {
+        VStack(spacing: 0) {
+            Spacer().frame(height: DesignSystem.Spacing.spacing4xl)
+
+            // Three dot indicator — soft brand mark.
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                ForEach(0..<3, id: \.self) { _ in
+                    Circle()
+                        .fill(DesignSystem.Colors.primaryLight)
+                        .frame(width: 8, height: 8)
+                }
+            }
+            .padding(.bottom, DesignSystem.Spacing.spacing2xl)
+
+            heroLogo
+                .padding(.bottom, DesignSystem.Spacing.lg)
+
+            Text("Get out of bed.\nActually.")
+                .font(DesignSystem.Font.largeTitle)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, DesignSystem.Spacing.md)
+
+            Text("GetUp only turns off when you walk\nyour phone to a tag in another room.")
+                .font(DesignSystem.Font.body)
+                .foregroundColor(DesignSystem.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
+
+            Spacer()
+        }
     }
 
     // MARK: - Top Bar (back navigation)
@@ -77,8 +111,6 @@ struct OnboardingView: View {
                 }
                 .accessibilityLabel("Back")
             } else {
-                // Reserve the same height as the back button so subsequent
-                // content doesn't jump when stepping into step 1.
                 Color.clear.frame(width: 44, height: 44)
             }
             Spacer()
@@ -93,7 +125,7 @@ struct OnboardingView: View {
         Image("AppLogoInApp")
             .resizable()
             .scaledToFit()
-            .frame(width: 160, height: 160)
+            .frame(width: 144, height: 144)
     }
 
     // MARK: - Progress Bar
@@ -101,11 +133,11 @@ struct OnboardingView: View {
     @ViewBuilder
     private var progressBar: some View {
         if currentStep > 0 {
-            HStack(spacing: DesignSystem.Spacing.sm) {
+            HStack(spacing: DesignSystem.Spacing.xs) {
                 ForEach(1...4, id: \.self) { step in
                     Capsule()
-                        .fill(step <= currentStep ? DesignSystem.Colors.accent : DesignSystem.Colors.glassFill)
-                        .frame(width: 40, height: 4)
+                        .fill(step <= currentStep ? DesignSystem.Colors.primary : DesignSystem.Colors.primaryLight)
+                        .frame(width: 32, height: 4)
                 }
             }
             .padding(.top, DesignSystem.Spacing.xl)
@@ -119,13 +151,13 @@ struct OnboardingView: View {
         VStack(spacing: DesignSystem.Spacing.xl) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 Text("Connection")
-                    .font(DesignSystem.Typography.title1)
+                    .font(DesignSystem.Font.screenTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
 
                 Text("First, let's link your GetUp Tag to your iPhone.")
-                    .font(DesignSystem.Typography.body)
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -137,13 +169,16 @@ struct OnboardingView: View {
                 }
                 .padding(.horizontal, DesignSystem.Spacing.xl)
             } else {
-                GlassCard {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(DesignSystem.Colors.success)
-                            .font(.title2)
-                        Text("Tag successfully linked!")
-                            .font(DesignSystem.Typography.headline)
+                HeroCard {
+                    HStack(spacing: DesignSystem.Spacing.md) {
+                        TintedIconContainer(
+                            "checkmark",
+                            size: 48,
+                            tint: DesignSystem.Colors.successBg,
+                            foreground: DesignSystem.Colors.success
+                        )
+                        Text("Tag successfully linked.")
+                            .font(DesignSystem.Font.headline)
                             .foregroundColor(DesignSystem.Colors.textPrimary)
                         Spacer()
                     }
@@ -164,25 +199,27 @@ struct OnboardingView: View {
         VStack(spacing: DesignSystem.Spacing.xl) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 Text("Configuration")
-                    .font(DesignSystem.Typography.title1)
+                    .font(DesignSystem.Font.screenTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
 
                 Text("When do you want to start your day?")
-                    .font(DesignSystem.Typography.body)
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            DatePicker("", selection: $alarmTime, displayedComponents: .hourAndMinute)
-                .datePickerStyle(.wheel)
-                .labelsHidden()
-                .scaleEffect(1.2)
-                .padding()
+            Card {
+                DatePicker("", selection: $alarmTime, displayedComponents: .hourAndMinute)
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            GlassButton("Set Alarm Time") {
+            PrimaryPillButton("Set alarm time") {
                 nextStep()
             }
             .padding(.horizontal, DesignSystem.Spacing.xl)
@@ -195,13 +232,13 @@ struct OnboardingView: View {
         VStack(spacing: DesignSystem.Spacing.xl) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 Text("Placement")
-                    .font(DesignSystem.Typography.title1)
+                    .font(DesignSystem.Font.screenTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
 
-                Text("Place your tag ~3m away from your bed. You must walk to stop the alarm!")
-                    .font(DesignSystem.Typography.body)
+                Text("Place your tag ~3m away from your bed. You must walk to stop the alarm.")
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -218,51 +255,33 @@ struct OnboardingView: View {
         VStack(spacing: DesignSystem.Spacing.xl) {
             Spacer()
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 Text("Verification")
-                    .font(DesignSystem.Typography.title1)
+                    .font(DesignSystem.Font.screenTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
 
                 Text("Ready? Let's verify everything works.")
-                    .font(DesignSystem.Typography.body)
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            ZStack {
-                GlowCircle(color: DesignSystem.Colors.accent, size: 200, blur: 40)
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.system(size: 80))
-                    .foregroundColor(DesignSystem.Colors.accent)
-            }
+            HeroCard {
+                VStack(spacing: DesignSystem.Spacing.md) {
+                    TintedIconContainer("checkmark.seal.fill", size: 64)
+                        .designShadow(.halo)
 
-            Text("Test and Start")
-                .font(DesignSystem.Typography.headline)
-                .foregroundColor(DesignSystem.Colors.textPrimary)
+                    Text("Test and start")
+                        .font(DesignSystem.Font.headline)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, DesignSystem.Spacing.xl)
 
             Spacer()
         }
-    }
-
-    // MARK: - Navigation Button
-
-    private var navigationButton: some View {
-        Button(action: nextStep) {
-            HStack {
-                Text(currentStep == 0 ? "Get started" : (currentStep == 4 ? "Start Getting Up" : "Next"))
-                    .font(DesignSystem.Typography.headline)
-                Image(systemName: "arrow.right")
-            }
-            .foregroundColor(DesignSystem.Colors.white)
-            .padding(.vertical, DesignSystem.Spacing.md)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
-                    .fill(DesignSystem.Colors.primary)
-            )
-        }
-        .buttonStyle(ScaleButtonStyle())
     }
 
     // MARK: - Actions

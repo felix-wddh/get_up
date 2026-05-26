@@ -25,44 +25,53 @@ struct CreateAlarmSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
-                DesignSystem.Colors.background
+                // Background — v2 canvas.
+                DesignSystem.Colors.canvas
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(spacing: DesignSystem.Spacing.xl) {
                         // Time Picker
                         timePickerSection
-                        
+
                         // Label
                         labelSection
-                        
+
                         // Repeat
                         repeatSection
-                        
+
                         // NFC Binding
                         if appState.getUpModeEnabled && requiresNFC {
                             nfcBindingSection
                         }
+
+                        // Save (primary pill, full width)
+                        PrimaryPillButton(
+                            "Save alarm",
+                            isLoading: isSaving,
+                            isEnabled: !(appState.getUpModeEnabled && requiresNFC && boundTagHash == nil),
+                            action: { saveAlarm() }
+                        )
+                        .padding(.top, DesignSystem.Spacing.sm)
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.xl)
-                    .padding(.bottom, DesignSystem.Spacing.xxl)
+                    .padding(.bottom, DesignSystem.Spacing.spacing3xl)
                 }
             }
             .navigationTitle("New Alarm")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
+            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { saveAlarm() }
-                        .foregroundColor(DesignSystem.Colors.accent)
+                        .foregroundColor(DesignSystem.Colors.primary)
                         .disabled(isSaving || (appState.getUpModeEnabled && requiresNFC && boundTagHash == nil))
                 }
             }
@@ -126,83 +135,79 @@ struct CreateAlarmSheet: View {
     }
 
     private var timePickerSection: some View {
-        GlassCard(padding: DesignSystem.Spacing.md) {
+        HeroCard(padding: DesignSystem.Spacing.lg) {
             VStack(spacing: DesignSystem.Spacing.sm) {
                 // Large time preview
-                ZStack {
-                    GlowCircle(color: DesignSystem.Colors.accent, size: 160, blur: 60)
-                        .opacity(0.45)
-
-                    Text(formattedTime)
-                        .font(.system(size: 72, weight: .thin, design: .rounded))
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
-                        .monospacedDigit()
-                        .accessibilityLabel("Selected alarm time: \(formattedTime)")
-                }
-                .frame(height: 80)
+                Text(formattedTime)
+                    .font(DesignSystem.Font.preferred(size: 64, weight: .bold, relativeTo: .largeTitle))
+                    .monospacedDigit()
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .accessibilityLabel("Selected alarm time: \(formattedTime)")
+                    .frame(height: 76)
 
                 // "Rings in..." subtitle
                 Text(ringsInText)
-                    .font(DesignSystem.Typography.subheadline)
-                    .foregroundColor(DesignSystem.Colors.accent)
+                    .font(DesignSystem.Font.secondaryBody)
+                    .foregroundColor(DesignSystem.Colors.primary)
 
                 // Wheel pickers
                 HStack(spacing: DesignSystem.Spacing.xs) {
                     Picker("Hour", selection: $hour) {
                         ForEach(0..<24, id: \.self) { h in
                             Text(String(format: "%02d", h))
-                                .font(DesignSystem.Typography.title3)
+                                .font(DesignSystem.Font.sectionHeader)
                                 .tag(h)
                                 .foregroundColor(DesignSystem.Colors.textPrimary)
                         }
                     }
                     .pickerStyle(.wheel)
-                    .frame(width: 80)
+                    .frame(width: 96)
 
                     Text(":")
-                        .font(DesignSystem.Typography.title2)
+                        .font(DesignSystem.Font.sectionHeader)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
 
                     Picker("Minute", selection: $minute) {
                         ForEach(0..<60, id: \.self) { m in
                             Text(String(format: "%02d", m))
-                                .font(DesignSystem.Typography.title3)
+                                .font(DesignSystem.Font.sectionHeader)
                                 .tag(m)
                                 .foregroundColor(DesignSystem.Colors.textPrimary)
                         }
                     }
                     .pickerStyle(.wheel)
-                    .frame(width: 80)
+                    .frame(width: 96)
                 }
-                .frame(height: 110)
+                .frame(height: 120)
             }
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     // MARK: - Label Section
-    
+
     private var labelSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("Label", icon: "tag")
-            
-            GlassCard(padding: DesignSystem.Spacing.md) {
+            SectionHeader("Label")
+
+            Card(padding: DesignSystem.Spacing.md) {
                 TextField("Alarm label", text: $label)
-                    .font(DesignSystem.Typography.body)
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .tint(DesignSystem.Colors.accent)
+                    .tint(DesignSystem.Colors.primary)
+                    .frame(minHeight: 28)
             }
         }
     }
-    
+
     // MARK: - Repeat Section
-    
+
     private var repeatSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("Repeat", icon: "repeat")
-            
-            GlassCard {
-                HStack(spacing: DesignSystem.Spacing.sm) {
+            SectionHeader("Repeat")
+
+            Card {
+                HStack(spacing: DesignSystem.Spacing.xs) {
                     RepeatDayButton(label: "S", fullName: "Sunday", isSelected: repeatDays.sunday) { repeatDays.sunday.toggle() }
                     RepeatDayButton(label: "M", fullName: "Monday", isSelected: repeatDays.monday) { repeatDays.monday.toggle() }
                     RepeatDayButton(label: "T", fullName: "Tuesday", isSelected: repeatDays.tuesday) { repeatDays.tuesday.toggle() }
@@ -215,47 +220,50 @@ struct CreateAlarmSheet: View {
             }
         }
     }
-    
+
     // MARK: - NFC Binding Section
-    
+
     private var nfcBindingSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("NFC Tag", icon: "wave.3.right")
-            
-            GlassCard {
+            SectionHeader("NFC Tag")
+
+            Card {
                 VStack(spacing: DesignSystem.Spacing.md) {
                     if let tagHash = boundTagHash {
                         // Tag bound
-                        HStack {
-                            StatusIndicator(.active)
-                            Text("Tag bound")
-                                .font(DesignSystem.Typography.body)
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        HStack(spacing: DesignSystem.Spacing.md) {
+                            TintedIconContainer(
+                                "checkmark",
+                                size: 40,
+                                tint: DesignSystem.Colors.successBg,
+                                foreground: DesignSystem.Colors.success
+                            )
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Tag bound")
+                                    .font(DesignSystem.Font.headline)
+                                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                                Text("ID: \(tagHash.prefix(12))…")
+                                    .font(DesignSystem.Font.caption)
+                                    .foregroundColor(DesignSystem.Colors.textTertiary)
+                            }
                             Spacer()
                             Button("Change") {
                                 scanForTag()
                             }
-                            .font(DesignSystem.Typography.subheadline)
-                            .foregroundColor(DesignSystem.Colors.accent)
+                            .font(DesignSystem.Font.button)
+                            .foregroundColor(DesignSystem.Colors.primary)
                         }
-                        
-                        Text("ID: \(tagHash.prefix(12))...")
-                            .font(DesignSystem.Typography.caption)
-                            .foregroundColor(DesignSystem.Colors.textTertiary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         // No tag bound
                         VStack(spacing: DesignSystem.Spacing.md) {
-                            Image(systemName: "wave.3.right")
-                                .font(.system(size: 32, weight: .light))
-                                .foregroundColor(DesignSystem.Colors.textTertiary)
-                            
+                            TintedIconContainer("wave.3.right", size: 48)
+
                             Text("Bind an NFC tag to stop this alarm")
-                                .font(DesignSystem.Typography.subheadline)
+                                .font(DesignSystem.Font.secondaryBody)
                                 .foregroundColor(DesignSystem.Colors.textSecondary)
                                 .multilineTextAlignment(.center)
-                            
-                            GlassButton("Scan Tag", icon: "radiowaves.right") {
+
+                            PrimaryPillButton("Scan tag", icon: "wave.3.right") {
                                 scanForTag()
                             }
                         }

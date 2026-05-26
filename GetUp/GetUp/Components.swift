@@ -1,15 +1,460 @@
 import SwiftUI
 
-// MARK: - Glass Card
+// =============================================================================
+// MARK: - v2 Components
+// =============================================================================
+//
+// All new code should reach for these. The legacy GlassCard/GlassButton/etc.
+// further down render with the v2 visual language so they remain visually
+// consistent for any call sites that haven't been migrated yet.
+//
+// See docs/design.md §6 for the spec.
 
-/// A Liquid Glass styled card container
+// MARK: - Card (v2)
+
+/// The default container of the v2 system. White surface, 24-px radius,
+/// no border, soft halo shadow.
+struct Card<Content: View>: View {
+    private let cornerRadius: CGFloat
+    private let padding: CGFloat
+    private let background: Color
+    private let content: Content
+
+    init(
+        cornerRadius: CGFloat = DesignSystem.CornerRadius.xl,
+        padding: CGFloat = DesignSystem.Spacing.lg,
+        background: Color = DesignSystem.Colors.white,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.background = background
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(background)
+            )
+            .designShadow(.card)
+    }
+}
+
+// MARK: - HeroCard (v2)
+
+/// Hero card: tinted `primarySoft` background, 28-px radius, 24-px padding.
+/// Used for the home progress ring host, NFC setup, and success surfaces.
+struct HeroCard<Content: View>: View {
+    private let content: Content
+    private let padding: CGFloat
+
+    init(
+        padding: CGFloat = DesignSystem.Spacing.xl,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.padding = padding
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .background(
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl, style: .continuous)
+                    .fill(DesignSystem.Colors.primarySoft)
+            )
+            .designShadow(.card)
+    }
+}
+
+// MARK: - Primary Pill Button (v2)
+
+/// Signature primary action. 56-pt pill, primary-blue fill, `shadow/raised`.
+struct PrimaryPillButton: View {
+    let title: String
+    let icon: String?
+    let isLoading: Bool
+    let isEnabled: Bool
+    let action: () -> Void
+
+    init(_ title: String,
+         icon: String? = nil,
+         isLoading: Bool = false,
+         isEnabled: Bool = true,
+         action: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.isLoading = isLoading
+        self.isEnabled = isEnabled
+        self.action = action
+    }
+
+    var body: some View {
+        Button {
+            DesignSystem.Haptics.triggerImpact(.medium)
+            action()
+        } label: {
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .tint(DesignSystem.Colors.white)
+                } else {
+                    if let icon = icon {
+                        Image(systemName: icon)
+                            .font(.system(size: 18, weight: .semibold))
+                    }
+                    Text(title)
+                        .font(DesignSystem.Font.button)
+                }
+            }
+            .foregroundColor(isEnabled ? DesignSystem.Colors.white : DesignSystem.Colors.textDisabled)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .padding(.horizontal, 28)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(isEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.surface)
+            )
+        }
+        .buttonStyle(PrimaryPillButtonStyle(isEnabled: isEnabled))
+        .disabled(!isEnabled || isLoading)
+        .accessibilityLabel(title)
+    }
+}
+
+/// Press behavior for `PrimaryPillButton`: scale 0.98, swap raised -> card.
+private struct PrimaryPillButtonStyle: SwiftUI.ButtonStyle {
+    let isEnabled: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .designShadow(isEnabled ? (configuration.isPressed ? .card : .raised) : .none)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+
+// MARK: - Secondary Pill Button (v2)
+
+/// White pill with thin border. Used alongside a primary action.
+struct SecondaryPillButton: View {
+    let title: String
+    let icon: String?
+    let action: () -> Void
+
+    init(_ title: String, icon: String? = nil, action: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.action = action
+    }
+
+    var body: some View {
+        Button {
+            DesignSystem.Haptics.triggerImpact(.light)
+            action()
+        } label: {
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(.system(size: 18, weight: .semibold))
+                }
+                Text(title)
+                    .font(DesignSystem.Font.button)
+            }
+            .foregroundColor(DesignSystem.Colors.textPrimary)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .padding(.horizontal, 28)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(DesignSystem.Colors.white)
+            )
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(DesignSystem.Colors.border, lineWidth: 1)
+            )
+        }
+        .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel(title)
+    }
+}
+
+// MARK: - Ghost Button (v2)
+
+/// Inline action with low weight. No background, primary-blue label.
+struct GhostButton: View {
+    let title: String
+    let action: () -> Void
+
+    init(_ title: String, action: @escaping () -> Void) {
+        self.title = title
+        self.action = action
+    }
+
+    var body: some View {
+        Button {
+            DesignSystem.Haptics.selection()
+            action()
+        } label: {
+            Text(title)
+                .font(DesignSystem.Font.button)
+                .foregroundColor(DesignSystem.Colors.primary)
+                .frame(maxWidth: .infinity, minHeight: 44)
+        }
+        .accessibilityLabel(title)
+    }
+}
+
+// MARK: - Tinted Icon Container (v2)
+
+/// The signature visual idiom: a soft tinted rounded-square housing an icon.
+///
+/// Default shape is a 16-pt rounded-square — pass `.circle` for the
+/// rounded-full variant used on accent badges per §4.4.
+struct TintedIconContainer: View {
+    enum ContainerShape { case rounded, circle }
+
+    let icon: String
+    let size: CGFloat
+    let shape: ContainerShape
+    let tint: Color
+    let foreground: Color
+
+    init(_ icon: String,
+         size: CGFloat = 48,
+         shape: ContainerShape = .rounded,
+         tint: Color = DesignSystem.Colors.primaryLight,
+         foreground: Color = DesignSystem.Colors.primary) {
+        self.icon = icon
+        self.size = size
+        self.shape = shape
+        self.tint = tint
+        self.foreground = foreground
+    }
+
+    var body: some View {
+        ZStack {
+            background
+            Image(systemName: icon)
+                .font(.system(size: size * 0.45, weight: .semibold))
+                .foregroundColor(foreground)
+        }
+        .frame(width: size, height: size)
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        switch shape {
+        case .rounded:
+            RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.md, style: .continuous)
+                .fill(tint)
+        case .circle:
+            Circle()
+                .fill(tint)
+        }
+    }
+}
+
+// MARK: - Progress Ring (v2 signature component)
+
+/// The hero of the home and active-alarm screens. Tracks progress 0…1, with
+/// a 14-px stroke, round caps, an end-cap blue dot with halo, and a center
+/// label composed of a large value + small caption.
+struct ProgressRing: View {
+    let progress: Double          // 0.0 ... 1.0
+    let diameter: CGFloat
+    let value: String
+    let caption: String?
+    let lineWidth: CGFloat
+    let showTickDots: Bool
+    let isPulsing: Bool
+
+    init(progress: Double,
+         diameter: CGFloat = 240,
+         value: String,
+         caption: String? = nil,
+         lineWidth: CGFloat = 14,
+         showTickDots: Bool = true,
+         isPulsing: Bool = false) {
+        self.progress = max(0, min(1, progress))
+        self.diameter = diameter
+        self.value = value
+        self.caption = caption
+        self.lineWidth = lineWidth
+        self.showTickDots = showTickDots
+        self.isPulsing = isPulsing
+    }
+
+    @State private var pulse: Bool = false
+
+    var body: some View {
+        ZStack {
+            // Track
+            Circle()
+                .stroke(DesignSystem.Colors.primaryLight, lineWidth: lineWidth)
+                .frame(width: diameter, height: diameter)
+
+            // Tick dots at 25/50/75% (optional)
+            if showTickDots {
+                ForEach([0.25, 0.5, 0.75], id: \.self) { fraction in
+                    tickDot(at: fraction)
+                }
+            }
+
+            // Progress arc
+            Circle()
+                .trim(from: 0, to: progress)
+                .stroke(
+                    DesignSystem.Colors.primary,
+                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .frame(width: diameter, height: diameter)
+
+            // End cap dot — sits at the tip of the arc, with halo shadow.
+            endCapDot
+
+            // Center label
+            VStack(spacing: 4) {
+                Text(value)
+                    .font(DesignSystem.Font.ringValue)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                if let caption = caption {
+                    Text(caption)
+                        .font(DesignSystem.Font.secondaryBody)
+                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                        .multilineTextAlignment(.center)
+                }
+            }
+        }
+        .frame(width: diameter, height: diameter)
+        .onAppear {
+            guard isPulsing else { return }
+            withAnimation(DesignSystem.Animation.ambientRingPulse.repeatForever(autoreverses: true)) {
+                pulse = true
+            }
+        }
+    }
+
+    private var endCapDot: some View {
+        let radius = diameter / 2
+        let angleRad = (progress * 2 * .pi) - .pi / 2  // start at -90°
+        let dotSize: CGFloat = 14 * (isPulsing && pulse ? 1.25 : 1.0)
+        return Circle()
+            .fill(DesignSystem.Colors.primary)
+            .frame(width: dotSize, height: dotSize)
+            .designShadow(.halo)
+            .offset(
+                x: cos(angleRad) * radius,
+                y: sin(angleRad) * radius
+            )
+            .opacity(progress > 0 ? 1 : 0)
+            .animation(DesignSystem.Animation.base, value: progress)
+    }
+
+    private func tickDot(at fraction: Double) -> some View {
+        let radius = diameter / 2
+        let angleRad = (fraction * 2 * .pi) - .pi / 2
+        return Circle()
+            .fill(DesignSystem.Colors.primary.opacity(0.4))
+            .frame(width: 4, height: 4)
+            .offset(
+                x: cos(angleRad) * radius,
+                y: sin(angleRad) * radius
+            )
+    }
+}
+
+// MARK: - Floating Tab Bar (v2)
+
+/// Custom floating pill tab bar. Sits 16-pt above the bottom safe area,
+/// `ultraThinMaterial` background, glass-edge highlight, soft shadow.
+struct FloatingTabBar<Tab: Hashable>: View {
+    struct Item: Identifiable {
+        let id: Tab
+        let icon: String
+        let label: String
+    }
+
+    @Binding var selection: Tab
+    let items: [Item]
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(items) { item in
+                tabButton(for: item)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.horizontal, DesignSystem.Spacing.sm)
+        .padding(.vertical, 10)
+        .frame(height: 64)
+        .background(
+            Capsule(style: .continuous)
+                .fill(.ultraThinMaterial)
+        )
+        .background(
+            // White wash so the chrome stays luminous on top of the canvas.
+            Capsule(style: .continuous)
+                .fill(DesignSystem.Colors.white.opacity(0.72))
+        )
+        .overlay(
+            Capsule(style: .continuous)
+                .stroke(DesignSystem.Colors.glassEdge, lineWidth: 1)
+        )
+        .designShadow(.glass)
+        .padding(.horizontal, DesignSystem.Spacing.xl)
+    }
+
+    @ViewBuilder
+    private func tabButton(for item: Item) -> some View {
+        let isActive = item.id == selection
+        Button {
+            DesignSystem.Haptics.selection()
+            withAnimation(DesignSystem.Animation.base) {
+                selection = item.id
+            }
+        } label: {
+            VStack(spacing: 2) {
+                Image(systemName: item.icon)
+                    .font(.system(size: 22, weight: .semibold))
+                Text(item.label)
+                    .font(DesignSystem.Font.microCaption)
+            }
+            .foregroundColor(isActive ? DesignSystem.Colors.primary : DesignSystem.Colors.textTertiary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(isActive ? DesignSystem.Colors.primaryLight : Color.clear)
+                    .padding(.horizontal, 4)
+            )
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(item.label)
+        .accessibilityAddTraits(isActive ? .isSelected : [])
+    }
+}
+
+// =============================================================================
+// MARK: - Legacy / preserved components (now rendered in v2 language)
+// =============================================================================
+
+// MARK: - Glass Card (legacy → renders as v2 Card)
+
+/// Legacy white card container. Internally now uses the v2 `Card` look
+/// (no border, soft halo shadow). Kept for binary compatibility with the
+/// existing call sites that pass `cornerRadius:` / `padding:`.
 struct GlassCard<Content: View>: View {
     let content: Content
-    var cornerRadius: CGFloat = DesignSystem.CornerRadius.large
-    var padding: CGFloat = DesignSystem.Spacing.lg
-    
+    var cornerRadius: CGFloat
+    var padding: CGFloat
+
     init(
-        cornerRadius: CGFloat = DesignSystem.CornerRadius.large,
+        cornerRadius: CGFloat = DesignSystem.CornerRadius.xl,
         padding: CGFloat = DesignSystem.Spacing.lg,
         @ViewBuilder content: () -> Content
     ) {
@@ -17,61 +462,35 @@ struct GlassCard<Content: View>: View {
         self.padding = padding
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding(padding)
             .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(DesignSystem.Colors.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(DesignSystem.Colors.border, lineWidth: 1)
-                    )
             )
+            .designShadow(.card)
     }
 }
 
-// MARK: - Glass Button
+// MARK: - Glass Button (legacy → v2 pill)
 
-/// A Liquid Glass styled button
+/// Legacy `GlassButton` API. Internally renders as a v2 pill so existing call
+/// sites pick up the new visual language without code changes.
 struct GlassButton: View {
     let title: String
     let icon: String?
     let accessibilityLabel: String?
     let style: ButtonStyle
     let action: () -> Void
-    
+
     enum ButtonStyle {
         case primary
         case secondary
         case danger
-        
-        var backgroundColor: Color {
-            switch self {
-            case .primary: return DesignSystem.Colors.primary
-            case .secondary: return DesignSystem.Colors.white
-            case .danger: return DesignSystem.Colors.white
-            }
-        }
-
-        var foregroundColor: Color {
-            switch self {
-            case .primary: return DesignSystem.Colors.white
-            case .secondary: return DesignSystem.Colors.textPrimary
-            case .danger: return DesignSystem.Colors.error
-            }
-        }
-
-        var borderColor: Color {
-            switch self {
-            case .primary: return .clear
-            case .secondary: return DesignSystem.Colors.border
-            case .danger: return DesignSystem.Colors.border
-            }
-        }
     }
-    
+
     init(
         _ title: String,
         icon: String? = nil,
@@ -85,56 +504,83 @@ struct GlassButton: View {
         self.style = style
         self.action = action
     }
-    
+
     var body: some View {
-        Button(action: {
-            DesignSystem.Haptics.triggerImpact(style == .primary ? .medium : .light)
-            action()
-        }) {
-            HStack(spacing: DesignSystem.Spacing.xs) {
-                if let icon = icon {
-                    Image(systemName: icon)
-                        .font(.body.weight(.semibold))
-                }
-                Text(title)
-                    .font(DesignSystem.Typography.button)
-            }
-            .foregroundColor(style.foregroundColor)
-            .frame(maxWidth: .infinity, minHeight: 52 - 2 * DesignSystem.Spacing.md)
-            .padding(.vertical, DesignSystem.Spacing.md)
-            .padding(.horizontal, DesignSystem.Spacing.xl)
-            .background(
-                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
-                    .fill(style.backgroundColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
-                            .stroke(style.borderColor, lineWidth: 1)
-                    )
-            )
+        switch style {
+        case .primary:
+            PrimaryPillButton(title, icon: icon, action: action)
+                .accessibilityLabel(accessibilityLabel ?? title)
+        case .secondary:
+            SecondaryPillButton(title, icon: icon, action: action)
+                .accessibilityLabel(accessibilityLabel ?? title)
+        case .danger:
+            DestructivePillButton(title, icon: icon, action: action)
+                .accessibilityLabel(accessibilityLabel ?? title)
         }
-        .buttonStyle(ScaleButtonStyle())
-        .accessibilityLabel(accessibilityLabel ?? title)
     }
 }
 
-// MARK: - Link CTA Button
+// MARK: - Destructive Pill (used by legacy `.danger` style)
 
-/// A blue CTA box for linking the NFC tag (v1 requirement)
+struct DestructivePillButton: View {
+    let title: String
+    let icon: String?
+    let action: () -> Void
+
+    init(_ title: String, icon: String? = nil, action: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.action = action
+    }
+
+    var body: some View {
+        Button {
+            DesignSystem.Haptics.triggerImpact(.light)
+            action()
+        } label: {
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(.system(size: 18, weight: .semibold))
+                }
+                Text(title)
+                    .font(DesignSystem.Font.button)
+            }
+            .foregroundColor(DesignSystem.Colors.error)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .padding(.horizontal, 28)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(DesignSystem.Colors.white)
+            )
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(DesignSystem.Colors.border, lineWidth: 1)
+            )
+        }
+        .buttonStyle(ScaleButtonStyle())
+    }
+}
+
+// MARK: - Link CTA Button (preserved)
+
+/// Onboarding-screen CTA used to start linking the NFC tag. Repainted in
+/// the v2 visual language: rounded-xl primary surface with soft shadow.
 struct LinkCTAButton: View {
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: {
             DesignSystem.Haptics.triggerImpact(.medium)
             action()
         }) {
             HStack(spacing: DesignSystem.Spacing.md) {
-                // Icon
+                // Tinted icon container repainted with white-on-white tint
+                // for primary-blue background contrast.
                 ZStack {
-                    Circle()
+                    RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.md, style: .continuous)
                         .fill(Color.white.opacity(0.18))
-                        .frame(width: 44, height: 44)
-
+                        .frame(width: 48, height: 48)
                     Image(systemName: "sensor.tag.radiowaves.forward.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -144,14 +590,13 @@ struct LinkCTAButton: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Link your GetUp")
-                        .font(DesignSystem.Typography.headline)
+                        .font(DesignSystem.Font.headline)
                         .foregroundColor(.white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.9)
-
                     Text("Securely connect your tag")
-                        .font(DesignSystem.Typography.caption)
-                        .foregroundColor(.white.opacity(0.8))
+                        .font(DesignSystem.Font.caption)
+                        .foregroundColor(.white.opacity(0.85))
                         .lineLimit(1)
                 }
 
@@ -164,40 +609,43 @@ struct LinkCTAButton: View {
             .padding(.vertical, DesignSystem.Spacing.md)
             .padding(.horizontal, DesignSystem.Spacing.md)
             .background(
-                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.xlarge)
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.xl, style: .continuous)
                     .fill(DesignSystem.Colors.primary)
             )
-            .frame(height: 72)
+            .designShadow(.raised)
+            .frame(minHeight: 72)
         }
         .buttonStyle(ScaleButtonStyle())
     }
 }
 
-// MARK: - Button Style
+// MARK: - Button Style (legacy press scale)
 
-/// A button style that scales down on press for a "liquid" feel
-struct ScaleButtonStyle: ButtonStyle {
+/// A button style that scales down on press. Preserved for call sites that
+/// reach for it directly; primary CTAs use `PrimaryPillButtonStyle` instead.
+struct ScaleButtonStyle: SwiftUI.ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
-            .animation(DesignSystem.Animation.quick, value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
 }
 
-// MARK: - Glow Effect
+// MARK: - Glow Circle (preserved)
 
-/// A glowing circle background for emphasis
+/// Decorative glow disc. Still used by the old time-picker preview area;
+/// new code should prefer `shadow/halo` via `designShadow(.halo)`.
 struct GlowCircle: View {
     let color: Color
     let size: CGFloat
     let blur: CGFloat
-    
-    init(color: Color = DesignSystem.Colors.accent, size: CGFloat = 200, blur: CGFloat = 60) {
+
+    init(color: Color = DesignSystem.Colors.primary, size: CGFloat = 200, blur: CGFloat = 60) {
         self.color = color
         self.size = size
         self.blur = blur
     }
-    
+
     var body: some View {
         Circle()
             .fill(
@@ -213,34 +661,29 @@ struct GlowCircle: View {
     }
 }
 
-// MARK: - Status Indicator
+// MARK: - Status Indicator (preserved)
 
-/// A small status dot indicator
 struct StatusIndicator: View {
     enum Status {
-        case active
-        case inactive
-        case warning
-        case error
-        
+        case active, inactive, warning, error
         var color: Color {
             switch self {
-            case .active: return DesignSystem.Colors.success
+            case .active:   return DesignSystem.Colors.success
             case .inactive: return DesignSystem.Colors.textTertiary
-            case .warning: return DesignSystem.Colors.warning
-            case .error: return DesignSystem.Colors.danger
+            case .warning:  return DesignSystem.Colors.warning
+            case .error:    return DesignSystem.Colors.error
             }
         }
     }
-    
+
     let status: Status
     let size: CGFloat
-    
+
     init(_ status: Status, size: CGFloat = 8) {
         self.status = status
         self.size = size
     }
-    
+
     var body: some View {
         Circle()
             .fill(status.color)
@@ -254,89 +697,85 @@ struct StatusIndicator: View {
     }
 }
 
-// MARK: - Section Header
+// MARK: - Section Header (preserved → v2 styling)
 
-/// A styled section header
 struct SectionHeader: View {
     let title: String
     let icon: String?
-    
+
     init(_ title: String, icon: String? = nil) {
         self.title = title
         self.icon = icon
     }
-    
+
     var body: some View {
         HStack(spacing: DesignSystem.Spacing.xs) {
             if let icon = icon {
                 Image(systemName: icon)
-                    .font(.subheadline)
-                    .foregroundColor(DesignSystem.Colors.accent)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(DesignSystem.Colors.primary)
             }
             Text(title)
-                .font(DesignSystem.Typography.subheadline)
-                .foregroundColor(DesignSystem.Colors.textSecondary)
-                .textCase(.uppercase)
-                .tracking(1)
-            
+                .font(DesignSystem.Font.sectionHeader)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
             Spacer()
         }
     }
 }
 
-// MARK: - Icon Button
+// MARK: - Icon Button (preserved → v2 rounded-square)
 
-/// A circular icon button with glass effect
+/// 44×44 utility button. v2 uses a 16-px rounded-square background — not
+/// a circle — to match the tinted icon container language.
 struct IconButton: View {
     let icon: String
     let size: CGFloat
     let accessibilityLabel: String?
     let action: () -> Void
-    
+
     init(_ icon: String, size: CGFloat = 44, accessibilityLabel: String? = nil, action: @escaping () -> Void) {
         self.icon = icon
         self.size = size
         self.accessibilityLabel = accessibilityLabel
         self.action = action
     }
-    
+
     var body: some View {
         Button(action: {
             DesignSystem.Haptics.triggerImpact(.light)
             action()
         }) {
             Image(systemName: icon)
-                .font(.system(size: size * 0.4, weight: .medium))
+                .font(.system(size: size * 0.42, weight: .semibold))
                 .foregroundColor(DesignSystem.Colors.textPrimary)
                 .frame(width: size, height: size)
                 .background(
-                    Circle()
+                    RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.md, style: .continuous)
                         .fill(DesignSystem.Colors.white)
-                        .overlay(
-                            Circle()
-                                .stroke(DesignSystem.Colors.border, lineWidth: 1)
-                        )
                 )
+                .designShadow(.card)
         }
         .buttonStyle(ScaleButtonStyle())
         .accessibilityLabel(accessibilityLabel ?? "Icon button")
     }
 }
 
-// MARK: - User Guidance Card
+// MARK: - User Guidance Card (preserved)
 
-/// A card explaining how to use GetUp
 struct UserGuidanceCard: View {
     var body: some View {
-        GlassCard {
+        Card {
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-                Text("How to get started")
-                    .font(DesignSystem.Typography.title3)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                
+                HStack(spacing: DesignSystem.Spacing.sm) {
+                    TintedIconContainer("lightbulb.fill", size: 40)
+                    Text("How to get started")
+                        .font(DesignSystem.Font.headline)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                }
+
                 VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                     GuidanceRow(number: 1, text: "Get a GetUp NFC Tag and place it >3m from your bed.")
-                    GuidanceRow(number: 2, text: "Open GetUp → “Link your GetUp” and hold your iPhone near the tag.")
+                    GuidanceRow(number: 2, text: "Open GetUp → \u{201C}Link your GetUp\u{201D} and hold your iPhone near the tag.")
                     GuidanceRow(number: 3, text: "Create your first GetUp alarm and turn GetUp Mode ON. Done.")
                 }
             }
@@ -347,18 +786,18 @@ struct UserGuidanceCard: View {
 private struct GuidanceRow: View {
     let number: Int
     let text: String
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: DesignSystem.Spacing.sm) {
             Text("\(number)")
-                .font(DesignSystem.Typography.caption)
+                .font(DesignSystem.Font.caption)
                 .bold()
                 .foregroundColor(DesignSystem.Colors.white)
-                .frame(width: 18, height: 18)
+                .frame(width: 20, height: 20)
                 .background(Circle().fill(DesignSystem.Colors.primary))
-            
+
             Text(text)
-                .font(DesignSystem.Typography.subheadline)
+                .font(DesignSystem.Font.secondaryBody)
                 .foregroundColor(DesignSystem.Colors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -367,18 +806,26 @@ private struct GuidanceRow: View {
 
 // MARK: - Previews
 
-#Preview("Glass Card") {
+#Preview("Cards") {
     ZStack {
-        DesignSystem.Colors.background.ignoresSafeArea()
-        
-        GlassCard {
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-                Text("Glass Card")
-                    .font(DesignSystem.Typography.title3)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                Text("This is a Liquid Glass styled card")
-                    .font(DesignSystem.Typography.body)
-                    .foregroundColor(DesignSystem.Colors.textSecondary)
+        DesignSystem.Colors.canvas.ignoresSafeArea()
+        VStack(spacing: DesignSystem.Spacing.md) {
+            Card {
+                VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
+                    Text("Default card")
+                        .font(DesignSystem.Font.headline)
+                    Text("Used for list rows and grouped content.")
+                        .font(DesignSystem.Font.secondaryBody)
+                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                }
+            }
+            HeroCard {
+                VStack(spacing: DesignSystem.Spacing.md) {
+                    ProgressRing(progress: 0.72, diameter: 200, value: "47", caption: "on time")
+                    Text("12-day streak")
+                        .font(DesignSystem.Font.headline)
+                }
+                .frame(maxWidth: .infinity)
             }
         }
         .padding()
@@ -387,12 +834,12 @@ private struct GuidanceRow: View {
 
 #Preview("Buttons") {
     ZStack {
-        DesignSystem.Colors.background.ignoresSafeArea()
-        
+        DesignSystem.Colors.canvas.ignoresSafeArea()
         VStack(spacing: DesignSystem.Spacing.md) {
-            GlassButton("Primary Button", icon: "checkmark") {}
-            GlassButton("Secondary Button", icon: "xmark", style: .secondary) {}
-            GlassButton("Danger Button", icon: "trash", style: .danger) {}
+            PrimaryPillButton("Get started", icon: "arrow.right") {}
+            SecondaryPillButton("Maybe later") {}
+            GhostButton("I already have an account") {}
+            DestructivePillButton("Delete alarm", icon: "trash") {}
         }
         .padding()
     }

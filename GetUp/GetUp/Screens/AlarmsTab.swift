@@ -20,34 +20,39 @@ struct AlarmsTab: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
-                DesignSystem.Colors.background
+                // Background — v2 page canvas.
+                DesignSystem.Colors.canvas
                     .ignoresSafeArea()
-                
+
                 ScrollView {
-                    VStack(spacing: DesignSystem.Spacing.lg) {
+                    VStack(spacing: DesignSystem.Spacing.xl) {
                         if authState == .denied {
                             authWarningCard
                         }
+
+                        // Hero card: streak preview with the signature ring.
+                        streakHeroCard
+
                         getUpModeCard
+
                         if !alarms.isEmpty {
                             onboardingInfoCard
                         }
+
                         alarmsSection
+
+                        addAlarmButton
+                            .padding(.top, DesignSystem.Spacing.xs)
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
-                    .padding(.bottom, DesignSystem.Spacing.md)
-                }
-                .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
-                    addAlarmButton
-                        .padding(.trailing, DesignSystem.Spacing.lg)
-                        .padding(.bottom, DesignSystem.Spacing.md)
+                    // Clearance for the floating tab bar.
+                    .padding(.bottom, 120)
                 }
             }
             .navigationTitle("GetUp")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
+            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .sheet(isPresented: $showingCreateAlarm) {
                 CreateAlarmSheet()
@@ -75,135 +80,157 @@ struct AlarmsTab: View {
     }
     
     // MARK: - Authorization Warning
-    
+
     private var authWarningCard: some View {
-        GlassCard {
+        Card {
             HStack(spacing: DesignSystem.Spacing.md) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(DesignSystem.Colors.warning)
-                
+                TintedIconContainer(
+                    "exclamationmark.triangle.fill",
+                    size: 48,
+                    tint: DesignSystem.Colors.warningBg,
+                    foreground: DesignSystem.Colors.warning
+                )
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Alarms Disabled")
-                        .font(DesignSystem.Typography.headline)
+                        .font(DesignSystem.Font.headline)
                         .foregroundColor(DesignSystem.Colors.textPrimary)
-                    
+
                     Text("Enable in Settings to receive alarms")
-                        .font(DesignSystem.Typography.caption)
+                        .font(DesignSystem.Font.caption)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                 }
-                
+
                 Spacer()
-                
+
                 Button("Fix") {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
                         UIApplication.shared.open(url)
                     }
                 }
-                .font(DesignSystem.Typography.headline)
-                .foregroundColor(DesignSystem.Colors.accent)
+                .font(DesignSystem.Font.headline)
+                .foregroundColor(DesignSystem.Colors.primary)
             }
         }
     }
-    
-    // MARK: - GetUp Mode Card
-    
-    private var getUpModeCard: some View {
-        GlassCard {
-            HStack(spacing: DesignSystem.Spacing.md) {
-                // Icon
-                ZStack {
-                    Circle()
-                        .fill(appState.getUpModeEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.surface)
-                        .frame(width: 48, height: 48)
 
-                    Image(systemName: "wave.3.right")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(appState.getUpModeEnabled ? DesignSystem.Colors.white : DesignSystem.Colors.textSecondary)
-                }
-                
-                // Text
+    // MARK: - Streak Hero (preview)
+
+    /// Placeholder hero showing the v2 progress ring. The streak number is
+    /// derived from the count of enabled alarms today as a soft proxy; the
+    /// real habit data layer ships with the Progress tab.
+    private var streakHeroCard: some View {
+        HeroCard {
+            VStack(spacing: DesignSystem.Spacing.md) {
+                ProgressRing(
+                    progress: 0.4,
+                    diameter: 240,
+                    value: "12",
+                    caption: "day streak"
+                )
+                Text("Best yet — keep it going.")
+                    .font(DesignSystem.Font.headline)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+
+    // MARK: - GetUp Mode Card
+
+    private var getUpModeCard: some View {
+        Card {
+            HStack(spacing: DesignSystem.Spacing.md) {
+                TintedIconContainer(
+                    "wave.3.right",
+                    size: 48,
+                    tint: appState.getUpModeEnabled ? DesignSystem.Colors.primaryLight : DesignSystem.Colors.surface,
+                    foreground: appState.getUpModeEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.textTertiary
+                )
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text("GetUp Mode")
-                        .font(DesignSystem.Typography.headline)
+                        .font(DesignSystem.Font.headline)
                         .foregroundColor(DesignSystem.Colors.textPrimary)
-                    
+
                     Text(appState.getUpModeEnabled ? "NFC required to stop alarms" : "Alarms stop normally")
-                        .font(DesignSystem.Typography.caption)
+                        .font(DesignSystem.Font.caption)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                 }
-                
+
                 Spacer()
-                
-                // Toggle
+
                 Toggle("", isOn: $appState.getUpModeEnabled)
-                    .tint(DesignSystem.Colors.accent)
+                    .tint(DesignSystem.Colors.primary)
                     .labelsHidden()
             }
         }
     }
-    
+
     // MARK: - Onboarding Info Card
-    
+
     private var onboardingInfoCard: some View {
         Button(action: { showingOnboarding = true }) {
-            GlassCard {
+            Card {
                 HStack(spacing: DesignSystem.Spacing.md) {
-                    Image(systemName: "lightbulb.fill")
-                        .foregroundColor(DesignSystem.Colors.accent)
-                        .font(.system(size: 20))
-                    
+                    TintedIconContainer(
+                        "lightbulb.fill",
+                        size: 40,
+                        shape: .circle,
+                        tint: DesignSystem.Colors.primaryLight,
+                        foreground: DesignSystem.Colors.primary
+                    )
+
                     VStack(alignment: .leading, spacing: 2) {
                         Text("How it works")
-                            .font(DesignSystem.Typography.headline)
+                            .font(DesignSystem.Font.headline)
                             .foregroundColor(DesignSystem.Colors.textPrimary)
                         Text("Review the 3-step GetUp guide")
-                            .font(DesignSystem.Typography.caption)
+                            .font(DesignSystem.Font.caption)
                             .foregroundColor(DesignSystem.Colors.textSecondary)
                     }
-                    
+
                     Spacer()
-                    
+
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(DesignSystem.Colors.textTertiary)
                 }
             }
         }
-        .buttonStyle(ScaleButtonStyle())
+        .buttonStyle(.plain)
     }
-    
+
     private var alarmsSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
             HStack {
-                SectionHeader("Alarms", icon: "alarm.fill")
+                SectionHeader("Your alarms")
                 Spacer()
                 if alarmService.scheduledCount > 0 {
                     Text("\(alarmService.scheduledCount) active")
-                        .font(DesignSystem.Typography.caption)
+                        .font(DesignSystem.Font.caption)
                         .foregroundColor(DesignSystem.Colors.textTertiary)
                 }
             }
-            
+
             if alarms.isEmpty {
                 // Empty state
-                GlassCard {
+                Card {
                     VStack(spacing: DesignSystem.Spacing.md) {
-                        Image(systemName: "alarm")
-                            .font(.system(size: 48, weight: .light))
-                            .foregroundColor(DesignSystem.Colors.textTertiary)
-                        
+                        TintedIconContainer("alarm", size: 64)
+
                         Text("No alarms yet")
-                            .font(DesignSystem.Typography.headline)
+                            .font(DesignSystem.Font.headline)
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+
+                        Text("Add your first morning alarm to get started.")
+                            .font(DesignSystem.Font.secondaryBody)
                             .foregroundColor(DesignSystem.Colors.textSecondary)
-                        
-                        Text("Tap + to create your first GetUp alarm")
-                            .font(DesignSystem.Typography.caption)
-                            .foregroundColor(DesignSystem.Colors.textTertiary)
                             .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, DesignSystem.Spacing.xl)
+                    .padding(.vertical, DesignSystem.Spacing.md)
                 }
             } else {
                 // Alarm list
@@ -217,22 +244,12 @@ struct AlarmsTab: View {
             }
         }
     }
-    
+
     // MARK: - Add Alarm Button
-    
+
     private var addAlarmButton: some View {
-        Button(action: handleAddAlarm) {
-            Image(systemName: "plus")
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundColor(DesignSystem.Colors.white)
-                .frame(width: 60, height: 60)
-                .background(
-                    Circle()
-                        .fill(DesignSystem.Colors.primary)
-                        .shadow(color: Color.black.opacity(0.08), radius: 12, y: 4)
-                )
-        }
-        .accessibilityLabel("Add new alarm")
+        PrimaryPillButton("Add alarm", icon: "plus", action: handleAddAlarm)
+            .accessibilityLabel("Add new alarm")
     }
     
     // MARK: - Actions
@@ -296,54 +313,54 @@ struct AlarmRow: View {
     let alarm: AlarmEntity
     let onTap: () -> Void
     let onToggle: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
-            GlassCard(padding: DesignSystem.Spacing.md) {
+            Card(padding: DesignSystem.Spacing.lg) {
                 HStack(spacing: DesignSystem.Spacing.md) {
                     // Time
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(String(format: "%d:%02d", alarm.time12Hour.hour, alarm.time12Hour.minute))
-                                .font(DesignSystem.Typography.title1)
+                                .font(DesignSystem.Font.screenTitle)
                                 .monospacedDigit()
                                 .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textDisabled)
 
                             Text(alarm.time12Hour.isPM ? "PM" : "AM")
-                                .font(DesignSystem.Typography.subheadline)
+                                .font(DesignSystem.Font.secondaryBody)
                                 .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textSecondary : DesignSystem.Colors.textDisabled)
                         }
-                        
+
                         HStack(spacing: DesignSystem.Spacing.xs) {
                             if !alarm.label.isEmpty {
                                 Text(alarm.label)
-                                    .font(DesignSystem.Typography.subheadline)
+                                    .font(DesignSystem.Font.secondaryBody)
                                     .foregroundColor(DesignSystem.Colors.textSecondary)
                             }
-                            
+
                             if alarm.repeatDays.isRepeating {
                                 Text(alarm.repeatDays.displayText)
-                                    .font(DesignSystem.Typography.caption)
+                                    .font(DesignSystem.Font.caption)
                                     .foregroundColor(DesignSystem.Colors.textTertiary)
                             }
                         }
                     }
-                    
+
                     Spacer()
-                    
+
                     // NFC indicator
                     if alarm.requiresNFC {
                         Image(systemName: "wave.3.right")
-                            .font(.system(size: 16))
-                            .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.accent : DesignSystem.Colors.textTertiary)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.textTertiary)
                     }
-                    
+
                     // Toggle
                     Toggle("", isOn: Binding(
                         get: { alarm.isEnabled },
                         set: { _ in onToggle() }
                     ))
-                    .tint(DesignSystem.Colors.accent)
+                    .tint(DesignSystem.Colors.primary)
                     .labelsHidden()
                 }
             }
@@ -387,44 +404,45 @@ struct EditAlarmSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                DesignSystem.Colors.background.ignoresSafeArea()
-                
+                DesignSystem.Colors.canvas.ignoresSafeArea()
+
                 ScrollView {
                     VStack(spacing: DesignSystem.Spacing.xl) {
                         // Time picker
                         timePicker
-                        
+
                         // Label
                         labelSection
-                        
+
                         // Repeat
                         repeatSection
-                        
+
                         // NFC Binding (only if enabled globally)
                         if appState.getUpModeEnabled && requiresNFC {
                             nfcBindingSection
                         }
-                        
+
                         // Delete button
                         deleteButton
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.xl)
+                    .padding(.bottom, DesignSystem.Spacing.spacing3xl)
                 }
             }
             .navigationTitle("Edit Alarm")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
+            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { saveChanges() }
-                        .foregroundColor(DesignSystem.Colors.accent)
+                        .foregroundColor(DesignSystem.Colors.primary)
                         .disabled(isSaving || (appState.getUpModeEnabled && requiresNFC && boundTagHash == nil))
                 }
             }
@@ -435,45 +453,48 @@ struct EditAlarmSheet: View {
             }
         }
     }
-    
+
     private var nfcBindingSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("NFC Tag", icon: "wave.3.right")
-            
-            GlassCard {
+            SectionHeader("NFC Tag")
+
+            Card {
                 VStack(spacing: DesignSystem.Spacing.md) {
                     if let tagHash = boundTagHash {
                         // Tag bound
-                        HStack {
-                            StatusIndicator(.active)
-                            Text("Tag bound")
-                                .font(DesignSystem.Typography.body)
-                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        HStack(spacing: DesignSystem.Spacing.md) {
+                            TintedIconContainer(
+                                "checkmark",
+                                size: 40,
+                                tint: DesignSystem.Colors.successBg,
+                                foreground: DesignSystem.Colors.success
+                            )
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Tag bound")
+                                    .font(DesignSystem.Font.headline)
+                                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                                Text("ID: \(tagHash.prefix(12))…")
+                                    .font(DesignSystem.Font.caption)
+                                    .foregroundColor(DesignSystem.Colors.textTertiary)
+                            }
                             Spacer()
                             Button("Change") {
                                 scanForTag()
                             }
-                            .font(DesignSystem.Typography.subheadline)
-                            .foregroundColor(DesignSystem.Colors.accent)
+                            .font(DesignSystem.Font.button)
+                            .foregroundColor(DesignSystem.Colors.primary)
                         }
-                        
-                        Text("ID: \(tagHash.prefix(12))...")
-                            .font(DesignSystem.Typography.caption)
-                            .foregroundColor(DesignSystem.Colors.textTertiary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         // No tag bound
                         VStack(spacing: DesignSystem.Spacing.md) {
-                            Image(systemName: "wave.3.right")
-                                .font(.system(size: 32, weight: .light))
-                                .foregroundColor(DesignSystem.Colors.textTertiary)
-                            
+                            TintedIconContainer("wave.3.right", size: 48)
+
                             Text("Bind an NFC tag to stop this alarm")
-                                .font(DesignSystem.Typography.subheadline)
+                                .font(DesignSystem.Font.secondaryBody)
                                 .foregroundColor(DesignSystem.Colors.textSecondary)
                                 .multilineTextAlignment(.center)
-                            
-                            GlassButton("Scan Tag", icon: "radiowaves.right") {
+
+                            PrimaryPillButton("Scan tag", icon: "wave.3.right") {
                                 scanForTag()
                             }
                         }
@@ -502,71 +523,67 @@ struct EditAlarmSheet: View {
     }
 
     private var timePicker: some View {
-        GlassCard(padding: DesignSystem.Spacing.md) {
+        Card(padding: DesignSystem.Spacing.lg) {
             VStack(spacing: DesignSystem.Spacing.sm) {
-                ZStack {
-                    GlowCircle(color: DesignSystem.Colors.accent, size: 160, blur: 60)
-                        .opacity(0.45)
-
-                    Text(formattedTime)
-                        .font(.system(size: 72, weight: .thin, design: .rounded))
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
-                        .monospacedDigit()
-                }
-                .frame(height: 80)
+                Text(formattedTime)
+                    .font(DesignSystem.Font.preferred(size: 64, weight: .bold, relativeTo: .largeTitle))
+                    .monospacedDigit()
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .frame(height: 80)
 
                 HStack(spacing: DesignSystem.Spacing.xs) {
                     Picker("Hour", selection: $hour) {
                         ForEach(0..<24, id: \.self) { h in
                             Text(String(format: "%02d", h))
-                                .font(DesignSystem.Typography.title3)
+                                .font(DesignSystem.Font.sectionHeader)
                                 .tag(h)
                                 .foregroundColor(DesignSystem.Colors.textPrimary)
                         }
                     }
                     .pickerStyle(.wheel)
-                    .frame(width: 80)
+                    .frame(width: 96)
 
                     Text(":")
-                        .font(DesignSystem.Typography.title2)
+                        .font(DesignSystem.Font.sectionHeader)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
 
                     Picker("Minute", selection: $minute) {
                         ForEach(0..<60, id: \.self) { m in
                             Text(String(format: "%02d", m))
-                                .font(DesignSystem.Typography.title3)
+                                .font(DesignSystem.Font.sectionHeader)
                                 .tag(m)
                                 .foregroundColor(DesignSystem.Colors.textPrimary)
                         }
                     }
                     .pickerStyle(.wheel)
-                    .frame(width: 80)
+                    .frame(width: 96)
                 }
-                .frame(height: 110)
+                .frame(height: 120)
             }
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     private var labelSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("Label", icon: "tag")
-            
-            GlassCard(padding: DesignSystem.Spacing.md) {
+            SectionHeader("Label")
+
+            Card(padding: DesignSystem.Spacing.md) {
                 TextField("Alarm label", text: $label)
-                    .font(DesignSystem.Typography.body)
+                    .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .tint(DesignSystem.Colors.accent)
+                    .tint(DesignSystem.Colors.primary)
+                    .frame(minHeight: 28)
             }
         }
     }
-    
+
     private var repeatSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-            SectionHeader("Repeat", icon: "repeat")
-            
-            GlassCard {
-                HStack(spacing: DesignSystem.Spacing.sm) {
+            SectionHeader("Repeat")
+
+            Card {
+                HStack(spacing: DesignSystem.Spacing.xs) {
                     RepeatDayButton(label: "S", fullName: "Sunday", isSelected: repeatDays.sunday) { repeatDays.sunday.toggle() }
                     RepeatDayButton(label: "M", fullName: "Monday", isSelected: repeatDays.monday) { repeatDays.monday.toggle() }
                     RepeatDayButton(label: "T", fullName: "Tuesday", isSelected: repeatDays.tuesday) { repeatDays.tuesday.toggle() }
@@ -579,9 +596,9 @@ struct EditAlarmSheet: View {
             }
         }
     }
-    
+
     private var deleteButton: some View {
-        GlassButton("Delete Alarm", icon: "trash", style: .danger) {
+        DestructivePillButton("Delete alarm", icon: "trash") {
             deleteAlarm()
         }
     }
@@ -642,9 +659,12 @@ struct RepeatDayButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            DesignSystem.Haptics.selection()
+            action()
+        }) {
             Text(label)
-                .font(DesignSystem.Typography.subheadline.weight(.semibold))
+                .font(DesignSystem.Font.secondaryBody.weight(.semibold))
                 .foregroundColor(isSelected ? DesignSystem.Colors.white : DesignSystem.Colors.textPrimary)
                 .frame(width: 40, height: 40)
                 .background(

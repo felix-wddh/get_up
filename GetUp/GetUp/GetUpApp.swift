@@ -68,30 +68,88 @@ struct RootView: View {
     }
 }
 
-/// Main tab-based navigation
+/// Main tab-based navigation — uses a custom floating pill tab bar (v2).
 struct MainTabView: View {
     @State private var selectedTab: Tab = .alarms
-    
+
     enum Tab: Hashable {
         case alarms
+        case progress
         case settings
     }
-    
+
+    private var items: [FloatingTabBar<Tab>.Item] {
+        [
+            .init(id: .alarms,   icon: "alarm.fill",     label: "Alarms"),
+            .init(id: .progress, icon: "chart.bar.fill", label: "Progress"),
+            .init(id: .settings, icon: "gearshape.fill", label: "Settings"),
+        ]
+    }
+
     var body: some View {
-        TabView(selection: $selectedTab) {
-            AlarmsTab()
-                .tabItem {
-                    Label("Alarms", systemImage: "alarm.fill")
-                }
-                .tag(Tab.alarms)
-            
-            SettingsTab()
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                }
-                .tag(Tab.settings)
+        ZStack(alignment: .bottom) {
+            // Active tab content. We keep all three mounted so SwiftData
+            // queries don't re-run on tab switches; tabs cross-fade.
+            ZStack {
+                AlarmsTab()
+                    .opacity(selectedTab == .alarms ? 1 : 0)
+                    .allowsHitTesting(selectedTab == .alarms)
+                ProgressTab()
+                    .opacity(selectedTab == .progress ? 1 : 0)
+                    .allowsHitTesting(selectedTab == .progress)
+                SettingsTab()
+                    .opacity(selectedTab == .settings ? 1 : 0)
+                    .allowsHitTesting(selectedTab == .settings)
+            }
+            .animation(DesignSystem.Animation.fast, value: selectedTab)
+
+            // Floating pill tab bar — 16-pt above the bottom safe area.
+            FloatingTabBar(selection: $selectedTab, items: items)
+                .padding(.bottom, DesignSystem.Spacing.md)
         }
-        .tint(DesignSystem.Colors.accent)
+        .background(DesignSystem.Colors.canvas.ignoresSafeArea())
+    }
+}
+
+/// Stub Progress tab — previews the v2 hero element with placeholder data.
+struct ProgressTab: View {
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                DesignSystem.Colors.canvas.ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: DesignSystem.Spacing.xl) {
+                        HeroCard {
+                            VStack(spacing: DesignSystem.Spacing.lg) {
+                                ProgressRing(
+                                    progress: 0.62,
+                                    diameter: 240,
+                                    value: "47",
+                                    caption: "mornings on time"
+                                )
+                                Text("Progress coming soon")
+                                    .font(DesignSystem.Font.headline)
+                                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                                Text("We're building habit insights, streak heatmaps, and average wake time. For now, here's a preview.")
+                                    .font(DesignSystem.Font.secondaryBody)
+                                    .foregroundColor(DesignSystem.Colors.textSecondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal, DesignSystem.Spacing.sm)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .padding(.horizontal, DesignSystem.Spacing.lg)
+                    .padding(.top, DesignSystem.Spacing.md)
+                    .padding(.bottom, 120)  // clearance for floating tab bar
+                }
+            }
+            .navigationTitle("Progress")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
+        }
     }
 }
 
