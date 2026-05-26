@@ -481,127 +481,43 @@ extension View {
     }
 }
 
-// MARK: - Streak Card (Duolingo-style, brand blue)
+// MARK: - Streak Card (brand blue, compact)
 
-/// A horizontal streak card: large flame icon with the streak count inside,
-/// title + subtitle on the right, and a 7-day completion row at the bottom.
-/// Uses the GetUp brand blue rather than orange — same visual cadence as
-/// Duolingo's streak widget, repurposed for habit-style consistency.
+/// A horizontal streak card: large blue streak number on the left, title +
+/// subtitle on the right. Deliberately compact — no flame icon, no week
+/// row. The month calendar below the card carries the day-by-day visual
+/// load.
 struct StreakCard: View {
     let streakCount: Int
     let title: String
     let subtitle: String
-    /// 7 entries, left-to-right, oldest → today.
-    let weekDays: [DayEntry]
-
-    struct DayEntry {
-        let label: String
-        let isCompleted: Bool
-        let isToday: Bool
-    }
 
     var body: some View {
         Card {
-            VStack(spacing: DesignSystem.Spacing.lg) {
-                HStack(alignment: .center, spacing: DesignSystem.Spacing.md) {
-                    flameWithNumber
+            HStack(alignment: .center, spacing: DesignSystem.Spacing.lg) {
+                Text("\(streakCount)")
+                    .font(.system(size: 72, weight: .heavy, design: .rounded))
+                    .foregroundColor(DesignSystem.Colors.primary)
+                    .monospacedDigit()
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .accessibilityHidden(true)
 
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(title)
-                            .font(DesignSystem.Font.screenTitle)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                        Text(subtitle)
-                            .font(DesignSystem.Font.body)
-                            .foregroundColor(DesignSystem.Colors.textSecondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    Spacer(minLength: 0)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title)
+                        .font(DesignSystem.Font.screenTitle)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                    Text(subtitle)
+                        .font(DesignSystem.Font.body)
+                        .foregroundColor(DesignSystem.Colors.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
-                weekRow
+                Spacer(minLength: 0)
             }
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(streakCount) day streak. \(title). \(subtitle)")
-    }
-
-    // MARK: Flame with overlaid count
-
-    private var flameWithNumber: some View {
-        ZStack {
-            Image(systemName: "flame.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 96, height: 110)
-                .foregroundColor(DesignSystem.Colors.primary)
-
-            Text("\(streakCount)")
-                .font(.system(size: 26, weight: .heavy, design: .rounded))
-                .foregroundColor(DesignSystem.Colors.white)
-                .offset(y: 10)
-        }
-        .frame(width: 96, height: 110)
-        .accessibilityHidden(true)
-    }
-
-    // MARK: Weekly checkmark row
-
-    private var weekRow: some View {
-        HStack(spacing: 0) {
-            ForEach(0..<weekDays.count, id: \.self) { i in
-                let day = weekDays[i]
-                VStack(spacing: 8) {
-                    Text(day.label)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(
-                            day.isToday
-                                ? DesignSystem.Colors.textPrimary
-                                : DesignSystem.Colors.textTertiary
-                        )
-
-                    ZStack {
-                        Circle()
-                            .fill(day.isCompleted
-                                  ? DesignSystem.Colors.primary
-                                  : DesignSystem.Colors.border)
-                            .frame(width: 36, height: 36)
-
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 16, weight: .heavy))
-                            .foregroundColor(
-                                day.isCompleted
-                                    ? DesignSystem.Colors.white
-                                    : DesignSystem.Colors.textTertiary.opacity(0.55)
-                            )
-                    }
-                }
-                .frame(maxWidth: .infinity)
-            }
-        }
-    }
-}
-
-extension StreakCard {
-    /// Build a placeholder 7-day window (oldest → today) where all past days
-    /// read as completed and today reads as pending. Uses Duolingo-style
-    /// 1–2-letter day labels (M, Tu, W, Th, F, Sa, Su) so each label is
-    /// visually distinct without ambiguity.
-    static func placeholderWeek(today: Date = Date()) -> [DayEntry] {
-        let calendar = Calendar.current
-        // weekday: 1=Sun, 2=Mon, 3=Tue, 4=Wed, 5=Thu, 6=Fri, 7=Sat
-        let abbrevs = ["Su", "M", "Tu", "W", "Th", "F", "Sa"]
-        var entries: [DayEntry] = []
-
-        for offset in (-6...0) {
-            guard let date = calendar.date(byAdding: .day, value: offset, to: today) else { continue }
-            let weekday = calendar.component(.weekday, from: date)
-            let label = abbrevs[weekday - 1]
-            let isToday = (offset == 0)
-            // Placeholder data: past = completed, today = pending.
-            entries.append(DayEntry(label: label, isCompleted: !isToday, isToday: isToday))
-        }
-        return entries
     }
 }
 

@@ -51,20 +51,21 @@ struct AlarmsTab: View {
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Label("Settings", systemImage: "gearshape")
-                        }
+                    // Plain bare-icon button — no chrome. iOS 26 toolbars
+                    // wrap items in a glass pill by default; `.buttonStyle(.plain)`
+                    // opts out so we get just the three lines.
+                    Button {
+                        DesignSystem.Haptics.selection()
+                        showingSettings = true
                     } label: {
                         Image(systemName: "line.3.horizontal")
-                            .font(.system(size: 17, weight: .semibold))
+                            .font(.system(size: 18, weight: .semibold))
                             .foregroundColor(DesignSystem.Colors.textPrimary)
                             .frame(width: 40, height: 40)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityLabel("Menu")
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Settings")
                 }
             }
             .sheet(isPresented: $showingCreateAlarm) {
@@ -108,8 +109,7 @@ struct AlarmsTab: View {
             StreakCard(
                 streakCount: 12,
                 title: "Streak",
-                subtitle: "Get up on time every day to build your streak.",
-                weekDays: StreakCard.placeholderWeek()
+                subtitle: "Get up on time every day to build your streak."
             )
 
             MonthCalendarCard(
