@@ -644,9 +644,11 @@ struct MonthCalendarCard: View {
             GeometryReader { proxy in
                 let cellWidth = proxy.size.width / 7
                 ZStack(alignment: .leading) {
-                    // Warm cream capsule behind the days that exist in this row.
+                    // Light-gray capsule behind the days that exist in this
+                    // row. Cool surface tone reads cleaner against the blue
+                    // wake badges than the warm cream from the reference.
                     Capsule()
-                        .fill(DesignSystem.Colors.warningBg)
+                        .fill(DesignSystem.Colors.surface)
                         .frame(
                             width: max(0, CGFloat(occupied) * cellWidth),
                             height: 36
