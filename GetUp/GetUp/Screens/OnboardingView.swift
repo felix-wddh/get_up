@@ -19,14 +19,15 @@ struct OnboardingView: View {
                 heroLogo
                     .padding(.bottom, DesignSystem.Spacing.lg)
 
-                Text("Congrats 🎉")
-                    .font(DesignSystem.Typography.title1)
+                Text("Get out of bed.\nActually.")
+                    .font(DesignSystem.Typography.largeTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .multilineTextAlignment(.center)
                     .padding(.bottom, DesignSystem.Spacing.md)
 
-                Text("You will get more\nout of your life now!")
-                    .font(DesignSystem.Typography.title2)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                Text("GetUp turns off only when you walk\nto a tag in another room.")
+                    .font(DesignSystem.Typography.body)
+                    .foregroundColor(DesignSystem.Colors.textSecondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, DesignSystem.Spacing.xl)
@@ -224,16 +225,16 @@ struct OnboardingView: View {
     private var navigationButton: some View {
         Button(action: nextStep) {
             HStack {
-                Text(currentStep == 0 ? "Let's Go" : (currentStep == 4 ? "Start Getting Up" : "Next"))
+                Text(currentStep == 0 ? "Get started" : (currentStep == 4 ? "Start Getting Up" : "Next"))
                     .font(DesignSystem.Typography.headline)
                 Image(systemName: "arrow.right")
             }
-            .foregroundColor(.black)
+            .foregroundColor(DesignSystem.Colors.white)
             .padding(.vertical, DesignSystem.Spacing.md)
             .frame(maxWidth: .infinity)
             .background(
-                Capsule()
-                    .fill(DesignSystem.Colors.accent)
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
+                    .fill(DesignSystem.Colors.primary)
             )
         }
         .buttonStyle(ScaleButtonStyle())

@@ -53,7 +53,7 @@ struct CreateAlarmSheet: View {
             .navigationTitle("New Alarm")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }

@@ -38,7 +38,7 @@ struct GetUpApp: App {
             RootView()
                 .environmentObject(appState)
                 .modelContainer(modelContainer)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
         }
     }
 }

@@ -27,15 +27,10 @@ struct NFCScanView: View {
     
     var body: some View {
         ZStack {
-            // Background with blur
-            DesignSystem.Colors.background
+            // White canvas per design.md §7.5
+            DesignSystem.Colors.white
                 .ignoresSafeArea()
-            
-            // Glass overlay
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .ignoresSafeArea()
-            
+
             VStack(spacing: DesignSystem.Spacing.xxl) {
                 Spacer()
                 
@@ -83,20 +78,11 @@ struct NFCScanView: View {
             
             // Inner circle with icon
             Circle()
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color.white.opacity(0.15),
-                            Color.white.opacity(0.05)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .fill(DesignSystem.Colors.primaryLight)
                 .frame(width: 160, height: 160)
                 .overlay(
                     Circle()
-                        .stroke(DesignSystem.Colors.glassBorder, lineWidth: 1)
+                        .stroke(statusColor.opacity(0.2), lineWidth: 2)
                 )
                 .overlay(
                     Image(systemName: nfcIcon)
@@ -238,19 +224,19 @@ struct NFCScanView: View {
     
     private var statusTitle: String {
         switch nfcService.scanState {
-        case .idle: return "Scan to Stop Alarm"
-        case .scanning: return "Scanning..."
-        case .success: return "Alarm Stopped!"
-        case .failed: return "Wrong Tag"
+        case .idle: return "Go scan your tag"
+        case .scanning: return "Go scan your tag"
+        case .success: return "You're up."
+        case .failed: return "That's not your tag."
         }
     }
-    
+
     private var statusSubtitle: String {
         switch nfcService.scanState {
-        case .idle: return "Hold your NFC tag near the top of your iPhone"
-        case .scanning: return "Hold your NFC tag near the top of your iPhone"
-        case .success: return "Great job getting up! Have a wonderful day."
-        case .failed: return nfcService.errorMessage ?? "Please scan your registered GetUp tag"
+        case .idle: return "Hold the top of your phone near the tag."
+        case .scanning: return "Hold the top of your phone near the tag."
+        case .success: return "Have a good morning."
+        case .failed: return nfcService.errorMessage ?? "Try again."
         }
     }
     

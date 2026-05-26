@@ -23,20 +23,10 @@ struct GlassCard<Content: View>: View {
             .padding(padding)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(.ultraThinMaterial)
+                    .fill(DesignSystem.Colors.white)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        DesignSystem.Colors.glassHighlight,
-                                        DesignSystem.Colors.glassBorder.opacity(0.5)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 1
-                            )
+                            .stroke(DesignSystem.Colors.border, lineWidth: 1)
                     )
             )
     }
@@ -59,17 +49,25 @@ struct GlassButton: View {
         
         var backgroundColor: Color {
             switch self {
-            case .primary: return DesignSystem.Colors.accent
-            case .secondary: return .clear
-            case .danger: return DesignSystem.Colors.danger
+            case .primary: return DesignSystem.Colors.primary
+            case .secondary: return DesignSystem.Colors.white
+            case .danger: return DesignSystem.Colors.white
             }
         }
-        
+
         var foregroundColor: Color {
             switch self {
-            case .primary: return .black
+            case .primary: return DesignSystem.Colors.white
             case .secondary: return DesignSystem.Colors.textPrimary
-            case .danger: return .white
+            case .danger: return DesignSystem.Colors.error
+            }
+        }
+
+        var borderColor: Color {
+            switch self {
+            case .primary: return .clear
+            case .secondary: return DesignSystem.Colors.border
+            case .danger: return DesignSystem.Colors.border
             }
         }
     }
@@ -90,7 +88,7 @@ struct GlassButton: View {
     
     var body: some View {
         Button(action: {
-            DesignSystem.Haptics.triggerImpact(style == .secondary ? .light : .medium)
+            DesignSystem.Haptics.triggerImpact(style == .primary ? .medium : .light)
             action()
         }) {
             HStack(spacing: DesignSystem.Spacing.xs) {
@@ -99,26 +97,19 @@ struct GlassButton: View {
                         .font(.body.weight(.semibold))
                 }
                 Text(title)
-                    .font(DesignSystem.Typography.headline)
+                    .font(DesignSystem.Typography.button)
             }
             .foregroundColor(style.foregroundColor)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 52 - 2 * DesignSystem.Spacing.md)
             .padding(.vertical, DesignSystem.Spacing.md)
-            .padding(.horizontal, DesignSystem.Spacing.lg)
+            .padding(.horizontal, DesignSystem.Spacing.xl)
             .background(
-                Group {
-                    if style == .secondary {
-                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium)
-                            .fill(.ultraThinMaterial)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium)
-                                    .stroke(DesignSystem.Colors.glassBorder)
-                            )
-                    } else {
-                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium)
-                            .fill(style.backgroundColor)
-                    }
-                }
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
+                    .fill(style.backgroundColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.large)
+                            .stroke(style.borderColor, lineWidth: 1)
+                    )
             )
         }
         .buttonStyle(ScaleButtonStyle())
@@ -173,19 +164,8 @@ struct LinkCTAButton: View {
             .padding(.horizontal, DesignSystem.Spacing.lg)
             .background(
                 RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.xlarge)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(hex: "#007AFF"), Color(hex: "#0051AF")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.xlarge)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                    )
+                    .fill(DesignSystem.Colors.primary)
             )
-            .shadow(color: Color(hex: "#007AFF").opacity(0.4), radius: 15, y: 10)
             .frame(height: 72)
         }
         .buttonStyle(ScaleButtonStyle())
@@ -330,10 +310,10 @@ struct IconButton: View {
                 .frame(width: size, height: size)
                 .background(
                     Circle()
-                        .fill(.ultraThinMaterial)
+                        .fill(DesignSystem.Colors.white)
                         .overlay(
                             Circle()
-                                .stroke(DesignSystem.Colors.glassBorder)
+                                .stroke(DesignSystem.Colors.border, lineWidth: 1)
                         )
                 )
         }
@@ -372,9 +352,9 @@ private struct GuidanceRow: View {
             Text("\(number)")
                 .font(DesignSystem.Typography.caption)
                 .bold()
-                .foregroundColor(.black)
+                .foregroundColor(DesignSystem.Colors.white)
                 .frame(width: 18, height: 18)
-                .background(Circle().fill(DesignSystem.Colors.accent))
+                .background(Circle().fill(DesignSystem.Colors.primary))
             
             Text(text)
                 .font(DesignSystem.Typography.subheadline)

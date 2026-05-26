@@ -46,7 +46,7 @@ struct SettingsTab: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .alert("Data reset complete", isPresented: $appState.showDataResetAlert) {
                 Button("OK") {}
             } message: {

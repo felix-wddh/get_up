@@ -24,52 +24,31 @@ struct AlarmsTab: View {
                 DesignSystem.Colors.background
                     .ignoresSafeArea()
                 
-                // Decorative glow
-                VStack {
-                    GlowCircle(color: DesignSystem.Colors.accent, size: 300, blur: 100)
-                        .offset(y: -100)
-                    Spacer()
-                }
-                .ignoresSafeArea()
-                
                 ScrollView {
                     VStack(spacing: DesignSystem.Spacing.lg) {
-                        // Authorization warning if needed
                         if authState == .denied {
                             authWarningCard
                         }
-                        
-                        // GetUp Mode Toggle
                         getUpModeCard
-                        
-                        // Onboarding Info Card
                         if !alarms.isEmpty {
                             onboardingInfoCard
                         }
-                        
-                        // Alarms Section
                         alarmsSection
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
-                    .padding(.bottom, 100) // Space for FAB
+                    .padding(.bottom, DesignSystem.Spacing.md)
                 }
-                
-                // Floating Action Button — kept clear of the floating tab bar
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        addAlarmButton
-                    }
-                    .padding(.horizontal, DesignSystem.Spacing.lg)
-                    .padding(.bottom, 100) // Clear the iOS 26 floating tab bar
+                .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
+                    addAlarmButton
+                        .padding(.trailing, DesignSystem.Spacing.lg)
+                        .padding(.bottom, DesignSystem.Spacing.md)
                 }
             }
             .navigationTitle("GetUp")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .sheet(isPresented: $showingCreateAlarm) {
                 CreateAlarmSheet()
             }
@@ -135,12 +114,12 @@ struct AlarmsTab: View {
                 // Icon
                 ZStack {
                     Circle()
-                        .fill(appState.getUpModeEnabled ? DesignSystem.Colors.accent : DesignSystem.Colors.textTertiary)
+                        .fill(appState.getUpModeEnabled ? DesignSystem.Colors.primary : DesignSystem.Colors.surface)
                         .frame(width: 48, height: 48)
-                    
+
                     Image(systemName: "wave.3.right")
                         .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(appState.getUpModeEnabled ? .black : .white)
+                        .foregroundColor(appState.getUpModeEnabled ? DesignSystem.Colors.white : DesignSystem.Colors.textSecondary)
                 }
                 
                 // Text
@@ -245,12 +224,12 @@ struct AlarmsTab: View {
         Button(action: handleAddAlarm) {
             Image(systemName: "plus")
                 .font(.system(size: 24, weight: .semibold))
-                .foregroundColor(.black)
+                .foregroundColor(DesignSystem.Colors.white)
                 .frame(width: 60, height: 60)
                 .background(
                     Circle()
-                        .fill(DesignSystem.Colors.accent)
-                        .shadow(color: DesignSystem.Colors.accent.opacity(0.5), radius: 12, y: 4)
+                        .fill(DesignSystem.Colors.primary)
+                        .shadow(color: Color.black.opacity(0.08), radius: 12, y: 4)
                 )
         }
         .accessibilityLabel("Add new alarm")
@@ -326,12 +305,13 @@ struct AlarmRow: View {
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
                             Text(String(format: "%d:%02d", alarm.time12Hour.hour, alarm.time12Hour.minute))
-                                .font(.system(size: 36, weight: .light, design: .rounded))
-                                .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textTertiary)
-                            
+                                .font(DesignSystem.Typography.title1)
+                                .monospacedDigit()
+                                .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textDisabled)
+
                             Text(alarm.time12Hour.isPM ? "PM" : "AM")
-                                .font(DesignSystem.Typography.caption)
-                                .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textSecondary : DesignSystem.Colors.textTertiary)
+                                .font(DesignSystem.Typography.subheadline)
+                                .foregroundColor(alarm.isEnabled ? DesignSystem.Colors.textSecondary : DesignSystem.Colors.textDisabled)
                         }
                         
                         HStack(spacing: DesignSystem.Spacing.xs) {
@@ -435,7 +415,7 @@ struct EditAlarmSheet: View {
             .navigationTitle("Edit Alarm")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -660,16 +640,16 @@ struct RepeatDayButton: View {
     let fullName: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(DesignSystem.Typography.headline)
-                .foregroundColor(isSelected ? .black : DesignSystem.Colors.textSecondary)
-                .frame(width: 36, height: 36)
+                .font(DesignSystem.Typography.subheadline.weight(.semibold))
+                .foregroundColor(isSelected ? DesignSystem.Colors.white : DesignSystem.Colors.textPrimary)
+                .frame(width: 40, height: 40)
                 .background(
                     Circle()
-                        .fill(isSelected ? DesignSystem.Colors.accent : DesignSystem.Colors.glassFill)
+                        .fill(isSelected ? DesignSystem.Colors.primary : DesignSystem.Colors.surface)
                 )
         }
         .buttonStyle(.plain)
