@@ -13,9 +13,10 @@ struct AlarmsTab: View {
     @State private var selectedAlarm: AlarmEntity?
     @State private var authState: AlarmManager.AuthorizationState = .notDetermined
     @State private var showAuthAlert = false
-    
+    @State private var showingSettings = false
+
     private let alarmService = AlarmService.shared
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -33,23 +34,47 @@ struct AlarmsTab: View {
 
                         addAlarmButton
                             .padding(.top, DesignSystem.Spacing.xs)
+
+                        // Progress lives directly under the alarms section
+                        // now that the dedicated tab is gone.
+                        progressSection
+                            .padding(.top, DesignSystem.Spacing.lg)
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
-                    // Clearance for the floating tab bar.
-                    .padding(.bottom, 120)
+                    .padding(.bottom, DesignSystem.Spacing.spacing2xl)
                 }
-                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("GetUp")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Label("Settings", systemImage: "gearshape")
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                            .frame(width: 40, height: 40)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Menu")
+                }
+            }
             .sheet(isPresented: $showingCreateAlarm) {
                 CreateAlarmSheet()
             }
             .sheet(item: $selectedAlarm) { alarm in
                 EditAlarmSheet(alarm: alarm)
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsTab()
             }
             .alert("Alarms Disabled", isPresented: $showAuthAlert) {
                 Button("Open Settings") {
@@ -64,6 +89,32 @@ struct AlarmsTab: View {
             .task {
                 authState = AlarmManager.shared.authorizationState
             }
+        }
+    }
+
+    // MARK: - Progress section
+    //
+    // Combines the streak card (this week) with the month calendar
+    // showing how often the user was woken with GetUp. Sits below the
+    // alarms section on the main home screen.
+
+    private var progressSection: some View {
+        VStack(spacing: DesignSystem.Spacing.md) {
+            HStack {
+                SectionHeader("Progress")
+                Spacer()
+            }
+
+            StreakCard(
+                streakCount: 12,
+                title: "Streak",
+                subtitle: "Get up on time every day to build your streak.",
+                weekDays: StreakCard.placeholderWeek()
+            )
+
+            MonthCalendarCard(
+                wakeDates: MonthCalendarCard.placeholderWakeDates()
+            )
         }
     }
     

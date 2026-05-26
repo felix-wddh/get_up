@@ -53,9 +53,10 @@ struct RootView: View {
                 OnboardingView()
                     .transition(.opacity)
             } else {
-                // Main content
-                MainTabView()
-                
+                // Main content — single-screen home (alarms + progress).
+                // Settings is reached via the burger menu in the toolbar.
+                AlarmsTab()
+
                 // NFC Scan overlay (appears over everything)
                 if appState.shouldShowNFCScan {
                     NFCScanView()
@@ -65,98 +66,6 @@ struct RootView: View {
         }
         .animation(DesignSystem.Animation.smooth, value: appState.hasCompletedOnboarding)
         .animation(DesignSystem.Animation.smooth, value: appState.shouldShowNFCScan)
-    }
-}
-
-/// Main tab-based navigation — uses a custom floating pill tab bar (v2).
-struct MainTabView: View {
-    @EnvironmentObject private var appState: AppState
-    @State private var selectedTab: Tab = .alarms
-
-    enum Tab: Hashable {
-        case alarms
-        case progress
-        case settings
-    }
-
-    private var items: [FloatingTabBar<Tab>.Item] {
-        [
-            .init(id: .alarms,   icon: "alarm.fill",     label: "Alarms"),
-            .init(id: .progress, icon: "chart.bar.fill", label: "Progress"),
-            .init(id: .settings, icon: "gearshape.fill", label: "Settings"),
-        ]
-    }
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            // Active tab content. We keep all three mounted so SwiftData
-            // queries don't re-run on tab switches; tabs cross-fade.
-            ZStack {
-                AlarmsTab()
-                    .opacity(selectedTab == .alarms ? 1 : 0)
-                    .allowsHitTesting(selectedTab == .alarms)
-                ProgressTab()
-                    .opacity(selectedTab == .progress ? 1 : 0)
-                    .allowsHitTesting(selectedTab == .progress)
-                SettingsTab()
-                    .opacity(selectedTab == .settings ? 1 : 0)
-                    .allowsHitTesting(selectedTab == .settings)
-            }
-            .animation(DesignSystem.Animation.fast, value: selectedTab)
-
-            // Floating pill tab bar — 16-pt above the bottom safe area.
-            // Slides off-screen + fades when `isTabBarHidden` is set by a
-            // tab's scroll observer; reappears smoothly on a downward pan.
-            FloatingTabBar(selection: $selectedTab, items: items)
-                .padding(.bottom, DesignSystem.Spacing.md)
-                .offset(y: appState.isTabBarHidden ? 160 : 0)
-                .opacity(appState.isTabBarHidden ? 0 : 1)
-                .animation(.easeInOut(duration: 0.28), value: appState.isTabBarHidden)
-        }
-        .background(DesignSystem.Colors.canvas.ignoresSafeArea())
-        .onChange(of: selectedTab) { _, _ in
-            // Landing on a new tab should always present the bar.
-            if appState.isTabBarHidden {
-                appState.isTabBarHidden = false
-            }
-        }
-    }
-}
-
-/// Progress tab — opens with the horizontal streak card (Duolingo-style,
-/// brand blue) and leaves room below for additional habit widgets as the
-/// data layer comes online.
-struct ProgressTab: View {
-    @EnvironmentObject private var appState: AppState
-
-    // Placeholder data — wire to the real habit store when it ships.
-    private let streakCount = 12
-
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                DesignSystem.Colors.canvas.ignoresSafeArea()
-
-                ScrollView {
-                    VStack(spacing: DesignSystem.Spacing.xl) {
-                        StreakCard(
-                            streakCount: streakCount,
-                            title: "Streak",
-                            subtitle: "Get up on time every day to build your streak.",
-                            weekDays: StreakCard.placeholderWeek()
-                        )
-                    }
-                    .padding(.horizontal, DesignSystem.Spacing.lg)
-                    .padding(.top, DesignSystem.Spacing.md)
-                    .padding(.bottom, 120)  // clearance for floating tab bar
-                }
-                .hidesTabBarOnScroll($appState.isTabBarHidden)
-            }
-            .navigationTitle("Progress")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
-        }
     }
 }
 

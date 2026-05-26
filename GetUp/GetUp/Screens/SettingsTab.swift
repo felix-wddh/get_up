@@ -41,10 +41,8 @@ struct SettingsTab: View {
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
-                    // Clearance for the floating tab bar
-                    .padding(.bottom, 120)
+                    .padding(.bottom, DesignSystem.Spacing.spacing2xl)
                 }
-                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)

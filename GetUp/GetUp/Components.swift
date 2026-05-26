@@ -605,6 +605,256 @@ extension StreakCard {
     }
 }
 
+// MARK: - Month Calendar Card
+
+/// A single-month calendar card. Renders the month's days in a 6×7 grid
+/// with soft warm row backgrounds. Days the user was woken with GetUp get
+/// a filled brand-blue badge with white number; other days show the day
+/// number in `accent/orange`. Header has prev / next chevrons and a count
+/// of GetUp wake-ups within the displayed month.
+///
+/// Pass a `Set<Date>` of wake dates (normalized to day granularity); the
+/// component handles month navigation internally and counts wakes within
+/// the currently displayed month.
+struct MonthCalendarCard: View {
+    let wakeDates: Set<Date>
+
+    @State private var displayedMonth: Date = Date()
+
+    private let calendar: Calendar = {
+        var cal = Calendar(identifier: .gregorian)
+        cal.firstWeekday = 1  // Sunday — matches the reference layout
+        return cal
+    }()
+
+    var body: some View {
+        Card(padding: DesignSystem.Spacing.lg) {
+            VStack(spacing: DesignSystem.Spacing.md) {
+                header
+                wakeCountLine
+                weekdayHeader
+                grid
+            }
+        }
+    }
+
+    // MARK: Header
+
+    private var header: some View {
+        HStack {
+            Button(action: previousMonth) {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .frame(width: 32, height: 32)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Previous month")
+
+            Spacer()
+
+            Text(monthTitle)
+                .font(.system(size: 16, weight: .heavy, design: .rounded))
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .tracking(1.2)
+
+            Spacer()
+
+            Button(action: nextMonth) {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .frame(width: 32, height: 32)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Next month")
+        }
+    }
+
+    // MARK: Wake count
+
+    private var wakeCountLine: some View {
+        let count = wakeCountForDisplayedMonth
+        let monthName = displayedMonth.formatted(.dateTime.month(.wide))
+        let isCurrent = calendar.isDate(displayedMonth, equalTo: Date(), toGranularity: .month)
+        let suffix = isCurrent ? "this month" : "in \(monthName)"
+        return Text("Woken with GetUp \(count) time\(count == 1 ? "" : "s") \(suffix).")
+            .font(DesignSystem.Font.secondaryBody)
+            .foregroundColor(DesignSystem.Colors.textSecondary)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+    }
+
+    // MARK: Weekday header row
+
+    private var weekdayHeader: some View {
+        HStack(spacing: 0) {
+            ForEach(weekdayLetters, id: \.self) { letter in
+                Text(letter)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(DesignSystem.Colors.textTertiary)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.top, 4)
+    }
+
+    private var weekdayLetters: [String] {
+        // Sun-first to match the visual reference.
+        ["S", "M", "T", "W", "T", "F", "S"]
+    }
+
+    // MARK: Day grid (6 rows × 7 cols)
+
+    private var grid: some View {
+        VStack(spacing: 6) {
+            ForEach(0..<6, id: \.self) { row in
+                calendarRow(row: row)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func calendarRow(row: Int) -> some View {
+        let days = daysInRow(row)
+        let leadingEmpty = days.prefix(while: { $0 == nil }).count
+        let trailingEmpty = days.reversed().prefix(while: { $0 == nil }).count
+        let occupied = 7 - leadingEmpty - trailingEmpty
+
+        // Row is fully empty when the month is short — skip rendering.
+        if occupied > 0 {
+            GeometryReader { proxy in
+                let cellWidth = proxy.size.width / 7
+                ZStack(alignment: .leading) {
+                    // Warm cream capsule behind the days that exist in this row.
+                    Capsule()
+                        .fill(DesignSystem.Colors.warningBg)
+                        .frame(
+                            width: max(0, CGFloat(occupied) * cellWidth),
+                            height: 36
+                        )
+                        .offset(x: CGFloat(leadingEmpty) * cellWidth)
+
+                    HStack(spacing: 0) {
+                        ForEach(0..<7, id: \.self) { col in
+                            dayCell(day: days[col])
+                                .frame(width: cellWidth, height: 36)
+                        }
+                    }
+                }
+                .frame(height: 36)
+            }
+            .frame(height: 36)
+        }
+    }
+
+    @ViewBuilder
+    private func dayCell(day: Date?) -> some View {
+        if let date = day {
+            let dayNumber = calendar.component(.day, from: date)
+            let isWakeDay = wakeDates.contains(where: { calendar.isDate($0, inSameDayAs: date) })
+
+            if isWakeDay {
+                ZStack {
+                    Circle()
+                        .fill(DesignSystem.Colors.primary)
+                        .frame(width: 32, height: 32)
+                    Text("\(dayNumber)")
+                        .font(.system(size: 14, weight: .heavy, design: .rounded))
+                        .foregroundColor(DesignSystem.Colors.white)
+                }
+            } else {
+                Text("\(dayNumber)")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(hex: "#FF8A3D"))  // accent/orange
+            }
+        } else {
+            Color.clear
+        }
+    }
+
+    // MARK: Month math
+
+    private var monthTitle: String {
+        displayedMonth
+            .formatted(.dateTime.month(.wide).year())
+            .uppercased()
+    }
+
+    private var wakeCountForDisplayedMonth: Int {
+        wakeDates.filter {
+            calendar.isDate($0, equalTo: displayedMonth, toGranularity: .month)
+        }.count
+    }
+
+    /// Returns 7 optional dates for the given row index (0–5). nil entries
+    /// represent empty leading/trailing cells outside the displayed month.
+    private func daysInRow(_ row: Int) -> [Date?] {
+        guard let monthInterval = calendar.dateInterval(of: .month, for: displayedMonth) else {
+            return Array(repeating: nil, count: 7)
+        }
+
+        let firstOfMonth = monthInterval.start
+        let firstWeekday = calendar.component(.weekday, from: firstOfMonth)  // 1=Sun
+        let leadingBlanks = firstWeekday - 1
+        let daysInMonth = calendar.range(of: .day, in: .month, for: firstOfMonth)?.count ?? 30
+
+        var cells: [Date?] = []
+        for col in 0..<7 {
+            let cellIndex = row * 7 + col
+            let dayNumber = cellIndex - leadingBlanks + 1
+            if dayNumber < 1 || dayNumber > daysInMonth {
+                cells.append(nil)
+            } else if let date = calendar.date(byAdding: .day, value: dayNumber - 1, to: firstOfMonth) {
+                cells.append(date)
+            } else {
+                cells.append(nil)
+            }
+        }
+        return cells
+    }
+
+    private func previousMonth() {
+        DesignSystem.Haptics.selection()
+        withAnimation(DesignSystem.Animation.base) {
+            if let new = calendar.date(byAdding: .month, value: -1, to: displayedMonth) {
+                displayedMonth = new
+            }
+        }
+    }
+
+    private func nextMonth() {
+        DesignSystem.Haptics.selection()
+        withAnimation(DesignSystem.Animation.base) {
+            if let new = calendar.date(byAdding: .month, value: 1, to: displayedMonth) {
+                displayedMonth = new
+            }
+        }
+    }
+}
+
+extension MonthCalendarCard {
+    /// Placeholder wake-date set covering several days in the current month
+    /// so the calendar visually reads correctly until the real habit data
+    /// layer ships. Picks roughly every-other-day through today.
+    static func placeholderWakeDates(today: Date = Date()) -> Set<Date> {
+        var cal = Calendar(identifier: .gregorian)
+        cal.firstWeekday = 1
+        guard let monthInterval = cal.dateInterval(of: .month, for: today) else { return [] }
+
+        var set: Set<Date> = []
+        let todayDay = cal.component(.day, from: today)
+        for offset in 0..<todayDay where offset % 2 == 0 {
+            if let date = cal.date(byAdding: .day, value: offset, to: monthInterval.start) {
+                set.insert(cal.startOfDay(for: date))
+            }
+        }
+        return set
+    }
+}
+
 // =============================================================================
 // MARK: - Legacy / preserved components (now rendered in v2 language)
 // =============================================================================
