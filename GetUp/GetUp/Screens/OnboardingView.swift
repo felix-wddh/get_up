@@ -63,20 +63,10 @@ struct OnboardingView: View {
 
     private var welcomeScreen: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: DesignSystem.Spacing.spacing4xl)
-
-            // Three dot indicator — soft brand mark.
-            HStack(spacing: DesignSystem.Spacing.xs) {
-                ForEach(0..<3, id: \.self) { _ in
-                    Circle()
-                        .fill(DesignSystem.Colors.primaryLight)
-                        .frame(width: 8, height: 8)
-                }
-            }
-            .padding(.bottom, DesignSystem.Spacing.spacing2xl)
+            Spacer(minLength: DesignSystem.Spacing.spacing2xl)
 
             heroLogo
-                .padding(.bottom, DesignSystem.Spacing.lg)
+                .padding(.bottom, DesignSystem.Spacing.spacing2xl)
 
             Text("Get out of bed.\nActually.")
                 .font(DesignSystem.Font.largeTitle)
@@ -92,7 +82,7 @@ struct OnboardingView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            Spacer()
+            Spacer(minLength: DesignSystem.Spacing.spacing2xl)
         }
     }
 
@@ -120,12 +110,43 @@ struct OnboardingView: View {
     }
 
     // MARK: - Hero Logo
+    //
+    // The logo sits on a lifted "tile" — a soft primarySoft tinted surface
+    // with a halo glow behind, so it reads as a contained brand mark with
+    // depth rather than a sticker on the canvas. Matches the App-Cleaner-
+    // style hero treatment from the v2 reference imagery.
 
     private var heroLogo: some View {
-        Image("AppLogoInApp")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 144, height: 144)
+        ZStack {
+            // Soft radial glow behind the tile — adds the "light source" feel.
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            DesignSystem.Colors.primary.opacity(0.18),
+                            DesignSystem.Colors.primary.opacity(0)
+                        ],
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: 160
+                    )
+                )
+                .frame(width: 320, height: 320)
+                .blur(radius: 12)
+
+            // Lifted tile holding the logo.
+            RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl)
+                .fill(DesignSystem.Colors.primarySoft)
+                .frame(width: 192, height: 192)
+                .designShadow(.raised)
+
+            Image("AppLogoInApp")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 152, height: 152)
+        }
+        .frame(width: 320, height: 240)
+        .accessibilityHidden(true)
     }
 
     // MARK: - Progress Bar
@@ -164,8 +185,14 @@ struct OnboardingView: View {
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
             if boundTagHash == nil {
-                LinkCTAButton {
-                    linkTag()
+                VStack(spacing: DesignSystem.Spacing.sm) {
+                    LinkCTAButton {
+                        linkTag()
+                    }
+
+                    GhostButton("Skip for now") {
+                        skipStep()
+                    }
                 }
                 .padding(.horizontal, DesignSystem.Spacing.xl)
             } else {
@@ -219,8 +246,14 @@ struct OnboardingView: View {
             }
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            PrimaryPillButton("Set alarm time") {
-                nextStep()
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                PrimaryPillButton("Set alarm time") {
+                    nextStep()
+                }
+
+                GhostButton("Skip for now") {
+                    skipStep()
+                }
             }
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
@@ -303,6 +336,16 @@ struct OnboardingView: View {
                 currentStep -= 1
             }
         }
+    }
+
+    /// Skip the current setup step. Used by the ghost "Skip for now" buttons
+    /// on steps 1 (Connection) and 2 (Configuration) so the user can finish
+    /// onboarding even if they don't have a tag yet or don't want to set an
+    /// alarm time right now. Behaves like `nextStep` but plays a softer
+    /// haptic to signal that the step was intentionally bypassed.
+    private func skipStep() {
+        DesignSystem.Haptics.selection()
+        nextStep()
     }
 
     private func linkTag() {
