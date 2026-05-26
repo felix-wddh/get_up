@@ -26,7 +26,7 @@ struct NFCScanView: View {
     @State private var hapticTimer: Timer?
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topLeading) {
             // White canvas per design.md §7.5
             DesignSystem.Colors.white
                 .ignoresSafeArea()
@@ -51,23 +51,21 @@ struct NFCScanView: View {
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.bottom, DesignSystem.Spacing.xxl)
 
-            // Top bar — always-visible back/close button so users can escape
-            // the overlay during testing without waiting on the 20s emergency hold.
-            VStack {
-                HStack {
-                    Button(action: cancelScan) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                            .frame(width: 44, height: 44)
-                            .contentShape(Rectangle())
-                    }
-                    .accessibilityLabel("Close NFC scan")
-                    Spacer()
-                }
-                .padding(.horizontal, DesignSystem.Spacing.sm)
-                Spacer()
+            // Always-visible close button — anchored to top-leading of the
+            // root ZStack so it survives any inner layout changes. Sits
+            // inside the safe area and on top of all other content.
+            Button(action: cancelScan) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(DesignSystem.Colors.white)
+                    .frame(width: 44, height: 44)
+                    .background(
+                        Circle().fill(DesignSystem.Colors.textPrimary)
+                    )
             }
+            .accessibilityLabel("Close NFC scan")
+            .padding(.leading, DesignSystem.Spacing.md)
+            .padding(.top, DesignSystem.Spacing.sm)
         }
         .onAppear {
             loadExpectedTagHash()
@@ -242,8 +240,7 @@ struct NFCScanView: View {
     
     private var statusTitle: String {
         switch nfcService.scanState {
-        case .idle: return "Go scan your tag"
-        case .scanning: return "Go scan your tag"
+        case .idle, .scanning: return "Get the fuck up!"
         case .success: return "You're up."
         case .failed: return "That's not your tag."
         }
@@ -251,8 +248,7 @@ struct NFCScanView: View {
 
     private var statusSubtitle: String {
         switch nfcService.scanState {
-        case .idle: return "Hold the top of your phone near the tag."
-        case .scanning: return "Hold the top of your phone near the tag."
+        case .idle, .scanning: return "Scan your tag to silence the alarm."
         case .success: return "Have a good morning."
         case .failed: return nfcService.errorMessage ?? "Try again."
         }

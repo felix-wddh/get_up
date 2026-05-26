@@ -90,8 +90,10 @@ final class AlarmService: ObservableObject {
         // Create schedule
         let schedule = AlarmKit.Alarm.Schedule.relative(.init(time: time, repeats: recurrence))
         
-        // Create presentation
-        let alertTitle = entity.label.isEmpty ? "GetUp Alarm" : entity.label
+        // Create presentation — the system-level alarm popup users see when
+        // the alarm fires. Falls back to the spec'd attention-grabbing copy
+        // when no custom label is set on the alarm.
+        let alertTitle = entity.label.isEmpty ? "Get the fuck up!" : entity.label
         let alertPresentation = AlarmPresentation.Alert(
             title: LocalizedStringResource(stringLiteral: alertTitle),
             secondaryButtonBehavior: entity.snoozePolicy != .disabled ? .countdown : nil

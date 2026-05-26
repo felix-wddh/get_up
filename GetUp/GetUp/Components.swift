@@ -128,40 +128,41 @@ struct LinkCTAButton: View {
             DesignSystem.Haptics.triggerImpact(.medium)
             action()
         }) {
-            HStack(spacing: DesignSystem.Spacing.lg) {
-                // Icon with proper padding and background to avoid "cut off" look
+            HStack(spacing: DesignSystem.Spacing.md) {
+                // Icon
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.12))
-                        .frame(width: 56, height: 56)
-                    
+                        .fill(Color.white.opacity(0.18))
+                        .frame(width: 44, height: 44)
+
                     Image(systemName: "sensor.tag.radiowaves.forward.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 28, height: 28)
+                        .frame(width: 22, height: 22)
                         .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.1), radius: 2)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Link your GetUp")
-                        .font(DesignSystem.Typography.title3)
-                        .fontWeight(.bold)
+                        .font(DesignSystem.Typography.headline)
                         .foregroundColor(.white)
-                    
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.9)
+
                     Text("Securely connect your tag")
                         .font(DesignSystem.Typography.caption)
-                        .foregroundColor(.white.opacity(0.7))
+                        .foregroundColor(.white.opacity(0.8))
+                        .lineLimit(1)
                 }
-                
-                Spacer()
-                
+
+                Spacer(minLength: DesignSystem.Spacing.xs)
+
                 Image(systemName: "chevron.right")
-                    .font(.body.weight(.bold))
-                    .foregroundColor(.white.opacity(0.6))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white.opacity(0.7))
             }
             .padding(.vertical, DesignSystem.Spacing.md)
-            .padding(.horizontal, DesignSystem.Spacing.lg)
+            .padding(.horizontal, DesignSystem.Spacing.md)
             .background(
                 RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.xlarge)
                     .fill(DesignSystem.Colors.primary)
