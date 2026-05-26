@@ -1,9 +1,11 @@
 import SwiftUI
 import StoreKit
+import SwiftData
 
 /// Settings tab with app configuration and about info
 struct SettingsTab: View {
     @EnvironmentObject private var appState: AppState
+    @Environment(\.modelContext) private var modelContext
     @StateObject private var safetyService = SafetyService.shared
     
     var body: some View {
@@ -45,6 +47,11 @@ struct SettingsTab: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(DesignSystem.Colors.background, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .alert("Data reset complete", isPresented: $appState.showDataResetAlert) {
+                Button("OK") {}
+            } message: {
+                Text("Force-quit and relaunch GetUp to start fresh. (Swipe up from the bottom and swipe the app away.)")
+            }
         }
     }
     
@@ -237,7 +244,20 @@ struct SettingsTab: View {
                     
                     #if DEBUG
                     Divider().background(DesignSystem.Colors.glassBorder)
-                    
+
+                    Button(action: triggerAlarmNow) {
+                        HStack {
+                            Text("Trigger Alarm Now (Debug)")
+                                .foregroundColor(DesignSystem.Colors.accent)
+                            Spacer()
+                            Image(systemName: "bolt.fill")
+                                .foregroundColor(DesignSystem.Colors.accent.opacity(0.7))
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Divider().background(DesignSystem.Colors.glassBorder)
+
                     Button(role: .destructive, action: { appState.resetData() }) {
                         HStack {
                             Text("Reset Local Data")
@@ -276,6 +296,25 @@ struct SettingsTab: View {
             SKStoreReviewController.requestReview(in: scene)
         }
     }
+
+    #if DEBUG
+    /// Debug-only: bypass AlarmKit wait and show the NFC dismiss overlay immediately.
+    /// Uses the first enabled alarm's systemAlarmId if available so the verify-against-stored-tag
+    /// flow runs; falls back to entity id, then to a fresh UUID (binding mode).
+    private func triggerAlarmNow() {
+        let descriptor = FetchDescriptor<AlarmEntity>(
+            predicate: #Predicate { $0.isEnabled }
+        )
+        let alarmIdString: String
+        if let alarm = try? modelContext.fetch(descriptor).first {
+            alarmIdString = alarm.systemAlarmId?.uuidString ?? alarm.id.uuidString
+        } else {
+            alarmIdString = UUID().uuidString
+        }
+        DesignSystem.Haptics.triggerImpact(.medium)
+        appState.triggerNFCScan(alarmId: alarmIdString)
+    }
+    #endif
 }
 
 // MARK: - Preview

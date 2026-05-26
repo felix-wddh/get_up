@@ -104,6 +104,7 @@ final class AppState: ObservableObject {
     
     @Published var shouldShowNFCScan = false
     @Published var pendingAlarmId: String?
+    @Published var showDataResetAlert = false
     @Published var getUpModeEnabled: Bool = true {
         didSet {
             UserDefaults.standard.set(getUpModeEnabled, forKey: "getUpModeEnabled")
@@ -152,10 +153,12 @@ final class AppState: ObservableObject {
         try? FileManager.default.removeItem(at: storeURL)
         try? FileManager.default.removeItem(at: walURL)
         try? FileManager.default.removeItem(at: shmURL)
-        
+
         print("🧹 Data reset complete. Restart app to reinitialize store.")
-        
-        // For simple state restart without actual app restart (experimental)
-        // In a real app, we might call exit(0) or show a "please restart" alert
+
+        // The live ModelContainer still points at the deleted file. Surface
+        // an alert telling the user to force-quit and relaunch instead of
+        // letting the next write crash silently.
+        showDataResetAlert = true
     }
 }

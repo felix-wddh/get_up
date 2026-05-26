@@ -92,35 +92,91 @@ struct CreateAlarmSheet: View {
     }
     
     // MARK: - Time Picker Section
-    
+
+    private var formattedTime: String {
+        String(format: "%02d:%02d", hour, minute)
+    }
+
+    private var ringsInText: String {
+        let now = Date()
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: now)
+        components.hour = hour
+        components.minute = minute
+        components.second = 0
+
+        guard var target = calendar.date(from: components) else { return "" }
+        if target <= now {
+            target = calendar.date(byAdding: .day, value: 1, to: target) ?? target
+        }
+
+        let diff = calendar.dateComponents([.hour, .minute], from: now, to: target)
+        let h = diff.hour ?? 0
+        let m = diff.minute ?? 0
+
+        if h == 0 && m == 0 {
+            return "Rings any moment now"
+        } else if h == 0 {
+            return "Rings in \(m)m"
+        } else if m == 0 {
+            return "Rings in \(h)h"
+        } else {
+            return "Rings in \(h)h \(m)m"
+        }
+    }
+
     private var timePickerSection: some View {
-        VStack(spacing: DesignSystem.Spacing.md) {
-            HStack(spacing: 0) {
-                // Hour picker
-                Picker("Hour", selection: $hour) {
-                    ForEach(0..<24, id: \.self) { h in
-                        Text("\(h)").tag(h)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                    }
+        GlassCard(padding: DesignSystem.Spacing.md) {
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                // Large time preview
+                ZStack {
+                    GlowCircle(color: DesignSystem.Colors.accent, size: 160, blur: 60)
+                        .opacity(0.45)
+
+                    Text(formattedTime)
+                        .font(.system(size: 72, weight: .thin, design: .rounded))
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .monospacedDigit()
+                        .accessibilityLabel("Selected alarm time: \(formattedTime)")
                 }
-                .pickerStyle(.wheel)
-                .frame(width: 80)
-                
-                Text(":")
-                    .font(DesignSystem.Typography.largeTitle)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                
-                // Minute picker
-                Picker("Minute", selection: $minute) {
-                    ForEach(0..<60, id: \.self) { m in
-                        Text(String(format: "%02d", m)).tag(m)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                .frame(height: 80)
+
+                // "Rings in..." subtitle
+                Text(ringsInText)
+                    .font(DesignSystem.Typography.subheadline)
+                    .foregroundColor(DesignSystem.Colors.accent)
+
+                // Wheel pickers
+                HStack(spacing: DesignSystem.Spacing.xs) {
+                    Picker("Hour", selection: $hour) {
+                        ForEach(0..<24, id: \.self) { h in
+                            Text(String(format: "%02d", h))
+                                .font(DesignSystem.Typography.title3)
+                                .tag(h)
+                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        }
                     }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80)
+
+                    Text(":")
+                        .font(DesignSystem.Typography.title2)
+                        .foregroundColor(DesignSystem.Colors.textSecondary)
+
+                    Picker("Minute", selection: $minute) {
+                        ForEach(0..<60, id: \.self) { m in
+                            Text(String(format: "%02d", m))
+                                .font(DesignSystem.Typography.title3)
+                                .tag(m)
+                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80)
                 }
-                .pickerStyle(.wheel)
-                .frame(width: 80)
+                .frame(height: 110)
             }
-            .frame(height: 150)
+            .frame(maxWidth: .infinity)
         }
     }
     

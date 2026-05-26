@@ -108,12 +108,21 @@ final class NFCService: NSObject, ObservableObject {
     
     private func startSession(message: String, completion: @escaping (Bool, String?, String?) -> Void) {
         guard NFCTagReaderSession.readingAvailable else {
+            #if DEBUG
+            // Simulator: enter scanning state without a real session so the
+            // mock-scan button in NFCScanView surfaces and the demo flow runs.
+            onComplete = completion
+            scanState = .scanning
+            errorMessage = nil
+            return
+            #else
             scanState = .failed
             errorMessage = "NFC is not available on this device"
             completion(false, nil, nil)
             return
+            #endif
         }
-        
+
         onComplete = completion
         scanState = .scanning
         errorMessage = nil

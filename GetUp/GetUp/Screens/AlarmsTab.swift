@@ -55,7 +55,7 @@ struct AlarmsTab: View {
                     .padding(.bottom, 100) // Space for FAB
                 }
                 
-                // Floating Action Button
+                // Floating Action Button — kept clear of the floating tab bar
                 VStack {
                     Spacer()
                     HStack {
@@ -63,7 +63,7 @@ struct AlarmsTab: View {
                         addAlarmButton
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
-                    .padding(.bottom, DesignSystem.Spacing.lg)
+                    .padding(.bottom, 100) // Clear the iOS 26 floating tab bar
                 }
             }
             .navigationTitle("GetUp")
@@ -517,31 +517,55 @@ struct EditAlarmSheet: View {
         }
     }
     
+    private var formattedTime: String {
+        String(format: "%02d:%02d", hour, minute)
+    }
+
     private var timePicker: some View {
-        HStack(spacing: 0) {
-            // Hour picker
-            Picker("Hour", selection: $hour) {
-                ForEach(0..<24, id: \.self) { h in
-                    Text("\(h)").tag(h)
+        GlassCard(padding: DesignSystem.Spacing.md) {
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                ZStack {
+                    GlowCircle(color: DesignSystem.Colors.accent, size: 160, blur: 60)
+                        .opacity(0.45)
+
+                    Text(formattedTime)
+                        .font(.system(size: 72, weight: .thin, design: .rounded))
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .monospacedDigit()
                 }
-            }
-            .pickerStyle(.wheel)
-            .frame(width: 80)
-            
-            Text(":")
-                .font(DesignSystem.Typography.largeTitle)
-                .foregroundColor(DesignSystem.Colors.textPrimary)
-            
-            // Minute picker
-            Picker("Minute", selection: $minute) {
-                ForEach(0..<60, id: \.self) { m in
-                    Text(String(format: "%02d", m)).tag(m)
+                .frame(height: 80)
+
+                HStack(spacing: DesignSystem.Spacing.xs) {
+                    Picker("Hour", selection: $hour) {
+                        ForEach(0..<24, id: \.self) { h in
+                            Text(String(format: "%02d", h))
+                                .font(DesignSystem.Typography.title3)
+                                .tag(h)
+                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80)
+
+                    Text(":")
+                        .font(DesignSystem.Typography.title2)
+                        .foregroundColor(DesignSystem.Colors.textSecondary)
+
+                    Picker("Minute", selection: $minute) {
+                        ForEach(0..<60, id: \.self) { m in
+                            Text(String(format: "%02d", m))
+                                .font(DesignSystem.Typography.title3)
+                                .tag(m)
+                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 80)
                 }
+                .frame(height: 110)
             }
-            .pickerStyle(.wheel)
-            .frame(width: 80)
+            .frame(maxWidth: .infinity)
         }
-        .frame(height: 150)
     }
     
     private var labelSection: some View {
