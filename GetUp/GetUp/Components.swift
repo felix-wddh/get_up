@@ -686,7 +686,9 @@ struct MonthCalendarCard: View {
             } else {
                 Text("\(dayNumber)")
                     .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: "#FF8A3D"))  // accent/orange
+                    // A muted gray, darker than the row background capsule
+                    // (color/surface) so the numbers read as quiet metadata.
+                    .foregroundColor(DesignSystem.Colors.textTertiary)
             }
         } else {
             Color.clear
