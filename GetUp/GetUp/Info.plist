@@ -22,5 +22,10 @@
 	<string>GetUp uses alarms to wake you up. Alarms will override Focus and Silent modes.</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>GetUp uses NFC to securely dismiss your alarms by scanning a physical tag.</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
 </dict>
 </plist>
