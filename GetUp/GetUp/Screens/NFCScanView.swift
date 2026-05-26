@@ -33,23 +33,41 @@ struct NFCScanView: View {
 
             VStack(spacing: DesignSystem.Spacing.xxl) {
                 Spacer()
-                
+
                 // Animated NFC icon
                 nfcIconView
                     .frame(maxWidth: 240) // Narrower
-                
+
                 // Status text
                 statusView
                     .frame(maxWidth: 300) // Centered and narrow
-                
+
                 Spacer()
-                
+
                 // Action buttons
                 actionButtonsView
             }
             .frame(maxWidth: .infinity) // Center content
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.bottom, DesignSystem.Spacing.xxl)
+
+            // Top bar — always-visible back/close button so users can escape
+            // the overlay during testing without waiting on the 20s emergency hold.
+            VStack {
+                HStack {
+                    Button(action: cancelScan) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(DesignSystem.Colors.textPrimary)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Close NFC scan")
+                    Spacer()
+                }
+                .padding(.horizontal, DesignSystem.Spacing.sm)
+                Spacer()
+            }
         }
         .onAppear {
             loadExpectedTagHash()

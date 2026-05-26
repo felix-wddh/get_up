@@ -12,6 +12,9 @@ struct OnboardingView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Top bar — back chevron visible on steps 1-4
+            topBar
+
             if currentStep == 0 {
                 // Welcome screen content
                 Spacer()
@@ -23,6 +26,7 @@ struct OnboardingView: View {
                     .font(DesignSystem.Typography.largeTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .padding(.bottom, DesignSystem.Spacing.md)
 
                 Text("GetUp turns off only when you walk\nto a tag in another room.")
@@ -58,17 +62,38 @@ struct OnboardingView: View {
         .animation(DesignSystem.Animation.smooth, value: currentStep)
     }
 
+    // MARK: - Top Bar (back navigation)
+
+    @ViewBuilder
+    private var topBar: some View {
+        HStack {
+            if currentStep > 0 {
+                Button(action: previousStep) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("Back")
+            } else {
+                // Reserve the same height as the back button so subsequent
+                // content doesn't jump when stepping into step 1.
+                Color.clear.frame(width: 44, height: 44)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, DesignSystem.Spacing.sm)
+        .padding(.top, DesignSystem.Spacing.xs)
+    }
+
     // MARK: - Hero Logo
 
     private var heroLogo: some View {
-        // NOTE: For best results, AppLogoInApp should be a tightly-cropped glyph
-        // without pre-baked rounded corners. Current asset has built-in icon styling.
         Image("AppLogoInApp")
             .resizable()
-            .scaledToFill()
-            .frame(width: 180, height: 180)
-            .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
-            .shadow(color: .black.opacity(0.12), radius: 16, y: 8)
+            .scaledToFit()
+            .frame(width: 160, height: 160)
     }
 
     // MARK: - Progress Bar
@@ -248,6 +273,15 @@ struct OnboardingView: View {
                 currentStep += 1
             } else {
                 appState.hasCompletedOnboarding = true
+            }
+        }
+    }
+
+    private func previousStep() {
+        DesignSystem.Haptics.selection()
+        withAnimation {
+            if currentStep > 0 {
+                currentStep -= 1
             }
         }
     }
