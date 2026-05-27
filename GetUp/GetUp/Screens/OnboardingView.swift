@@ -155,11 +155,14 @@ struct OnboardingView: View {
 
     // MARK: - Page 2: Mission (Felix & Georg)
 
+    /// Full-bleed mission page. The founders photo fills the top half of
+    /// the screen edge-to-edge and dissolves softly into the canvas via a
+    /// gradient overlay, so the photo's blue background continues into
+    /// the page color without a visible seam. Title + copy sit below.
     private var pageMission: some View {
-        VStack(spacing: DesignSystem.Spacing.xl) {
-            Spacer(minLength: DesignSystem.Spacing.md)
-
+        VStack(spacing: 0) {
             foundersPhoto
+                .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
                 Text("From Felix & Georg")
@@ -179,35 +182,36 @@ struct OnboardingView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, DesignSystem.Spacing.xl)
+            .padding(.top, DesignSystem.Spacing.md)
 
-            Spacer(minLength: DesignSystem.Spacing.md)
+            Spacer(minLength: 0)
         }
     }
 
-    /// Founders photo — pointing-at-you portrait of Felix & Georg with
-    /// the brand arrow behind. Wrapped in a rounded card with a soft halo
-    /// so it sits naturally on the canvas instead of feeling pasted on.
+    /// Full-bleed founders photo. Fills the screen width, scaled to fill,
+    /// then masked with a soft top→bottom gradient that fades the lower
+    /// edge into the canvas so the image's blue background continues
+    /// seamlessly into the page color underneath the title.
     private var foundersPhoto: some View {
         Image("FoundersPhoto")
             .resizable()
             .scaledToFill()
-            .frame(width: 220, height: 220)
-            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl, style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                DesignSystem.Colors.white.opacity(0.9),
-                                DesignSystem.Colors.white.opacity(0)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ),
-                        lineWidth: 1
-                    )
-            )
-            .designShadow(.raised)
+            .frame(maxWidth: .infinity)
+            .frame(height: 380)
+            .clipped()
+            .overlay(alignment: .bottom) {
+                // Bottom fade into canvas — kills the seam between photo
+                // and the title area.
+                LinearGradient(
+                    colors: [
+                        DesignSystem.Colors.canvas.opacity(0),
+                        DesignSystem.Colors.canvas
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 90)
+            }
             .accessibilityLabel("Felix and Georg, GetUp founders")
     }
 
