@@ -53,9 +53,10 @@ struct RootView: View {
                 OnboardingView()
                     .transition(.opacity)
             } else {
-                // Main content — single-screen home (alarms + progress).
-                // Settings is reached via the burger menu in the toolbar.
-                AlarmsTab()
+                // Main content — two tabs: Home (alarms + progress) and
+                // Analytics. Settings still lives behind the burger menu
+                // inside the Home tab toolbar.
+                MainTabView()
 
                 // NFC Scan overlay (appears over everything)
                 if appState.shouldShowNFCScan {
@@ -66,6 +67,56 @@ struct RootView: View {
         }
         .animation(DesignSystem.Animation.smooth, value: appState.hasCompletedOnboarding)
         .animation(DesignSystem.Animation.smooth, value: appState.shouldShowNFCScan)
+    }
+}
+
+/// Two-tab navigation — Home (alarms + progress sections) and Analytics.
+/// Uses the custom floating pill tab bar that slides off-screen when the
+/// active tab's ScrollView is pulled upward and reappears on a downward
+/// pan. Tab switches always reveal the bar.
+struct MainTabView: View {
+    @EnvironmentObject private var appState: AppState
+    @State private var selectedTab: Tab = .home
+
+    enum Tab: Hashable {
+        case home
+        case analytics
+    }
+
+    private var items: [FloatingTabBar<Tab>.Item] {
+        [
+            .init(id: .home,      icon: "house.fill",     label: "Home"),
+            .init(id: .analytics, icon: "chart.bar.fill", label: "Analytics"),
+        ]
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // Both tabs mounted simultaneously so SwiftData queries
+            // and the home tab's NavigationStack don't unwind on switch.
+            ZStack {
+                AlarmsTab()
+                    .opacity(selectedTab == .home ? 1 : 0)
+                    .allowsHitTesting(selectedTab == .home)
+                AnalyticsTab()
+                    .opacity(selectedTab == .analytics ? 1 : 0)
+                    .allowsHitTesting(selectedTab == .analytics)
+            }
+            .animation(DesignSystem.Animation.fast, value: selectedTab)
+
+            FloatingTabBar(selection: $selectedTab, items: items)
+                .padding(.bottom, DesignSystem.Spacing.md)
+                .offset(y: appState.isTabBarHidden ? 160 : 0)
+                .opacity(appState.isTabBarHidden ? 0 : 1)
+                .animation(.easeInOut(duration: 0.28), value: appState.isTabBarHidden)
+        }
+        .background(DesignSystem.Colors.canvas.ignoresSafeArea())
+        .onChange(of: selectedTab) { _, _ in
+            // Landing on a tab should always reveal the bar.
+            if appState.isTabBarHidden {
+                appState.isTabBarHidden = false
+            }
+        }
     }
 }
 

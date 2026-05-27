@@ -19,6 +19,7 @@
 		E91234560013 /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550013 /* SettingsTab.swift */; };
 		E91234560014 /* CreateAlarmSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550014 /* CreateAlarmSheet.swift */; };
 		E91234560015 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550015 /* OnboardingView.swift */; };
+		E91234560016 /* AnalyticsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550016 /* AnalyticsTab.swift */; };
 		E91234560020 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550020 /* Alarm.swift */; };
 		E91234560021 /* AlarmRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550021 /* AlarmRepository.swift */; };
 		E91234560030 /* Services/SafetyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550030 /* Services/SafetyService.swift */; };
@@ -41,6 +42,7 @@
 		E91234550013 /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
 		E91234550014 /* CreateAlarmSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAlarmSheet.swift; sourceTree = "<group>"; };
 		E91234550015 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		E91234550016 /* AnalyticsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTab.swift; sourceTree = "<group>"; };
 		E91234550020 /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		E91234550021 /* AlarmRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRepository.swift; sourceTree = "<group>"; };
 		E91234550030 /* Services/SafetyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SafetyService.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				E91234550012 /* AlarmsTab.swift */,
+				E91234550016 /* AnalyticsTab.swift */,
 				E91234550013 /* SettingsTab.swift */,
 				E91234550014 /* CreateAlarmSheet.swift */,
 				E91234550015 /* OnboardingView.swift */,
@@ -206,6 +209,7 @@
 				E91234560006 /* AlarmService.swift in Sources */,
 				E91234560030 /* Services/SafetyService.swift in Sources */,
 				E91234560015 /* OnboardingView.swift in Sources */,
+				E91234560016 /* AnalyticsTab.swift in Sources */,
 				E91234720015 /* AppLogo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

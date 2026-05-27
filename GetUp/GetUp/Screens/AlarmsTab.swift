@@ -35,15 +35,17 @@ struct AlarmsTab: View {
                         addAlarmButton
                             .padding(.top, DesignSystem.Spacing.xs)
 
-                        // Progress lives directly under the alarms section
-                        // now that the dedicated tab is gone.
+                        // Progress section sits on the Home tab below the
+                        // alarms list (Analytics has its own tab).
                         progressSection
                             .padding(.top, DesignSystem.Spacing.lg)
                     }
                     .padding(.horizontal, DesignSystem.Spacing.lg)
                     .padding(.top, DesignSystem.Spacing.md)
-                    .padding(.bottom, DesignSystem.Spacing.spacing2xl)
+                    // Clearance for the floating tab bar.
+                    .padding(.bottom, 120)
                 }
+                .hidesTabBarOnScroll($appState.isTabBarHidden)
             }
             .navigationTitle("GetUp")
             .navigationBarTitleDisplayMode(.large)
