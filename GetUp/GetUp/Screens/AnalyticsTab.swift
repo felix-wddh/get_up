@@ -44,6 +44,11 @@ struct AnalyticsTab: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(DesignSystem.Colors.canvas, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    SettingsBurgerButton()
+                }
+            }
         }
     }
 

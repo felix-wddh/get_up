@@ -117,6 +117,11 @@ struct MainTabView: View {
                 appState.isTabBarHidden = false
             }
         }
+        // Single Settings sheet — triggered by the burger menu in either
+        // tab via appState.showingSettings.
+        .sheet(isPresented: $appState.showingSettings) {
+            SettingsTab()
+        }
     }
 }
 
@@ -130,6 +135,8 @@ final class AppState: ObservableObject {
     @Published var shouldShowNFCScan = false
     @Published var pendingAlarmId: String?
     @Published var showDataResetAlert = false
+    /// Shared sheet trigger so any tab's burger menu can open Settings.
+    @Published var showingSettings: Bool = false
     /// Toggled by scrollable tabs via the `hidesTabBarOnScroll(_:)` modifier.
     /// `MainTabView` watches this to slide the floating pill tab bar off
     /// screen while the user pulls more content up, then reveal it again

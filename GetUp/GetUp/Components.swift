@@ -439,6 +439,32 @@ struct FloatingTabBar<Tab: Hashable>: View {
     }
 }
 
+// MARK: - Settings burger button (shared toolbar item)
+
+/// Bare three-line toolbar button. Tapping triggers
+/// `appState.showingSettings`, which is observed by `MainTabView` to
+/// present the Settings sheet — so both Home and Analytics can open
+/// settings from a consistent spot. Uses `.buttonStyle(.plain)` to opt
+/// out of iOS 26's automatic glass pill chrome on toolbar items.
+struct SettingsBurgerButton: View {
+    @EnvironmentObject private var appState: AppState
+
+    var body: some View {
+        Button {
+            DesignSystem.Haptics.selection()
+            appState.showingSettings = true
+        } label: {
+            Image(systemName: "line.3.horizontal")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .frame(width: 40, height: 40)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Settings")
+    }
+}
+
 // MARK: - Scroll-to-hide tab bar
 
 /// Drives the floating tab bar's visibility from a scrollable view.

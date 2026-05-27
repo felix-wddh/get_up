@@ -13,7 +13,6 @@ struct AlarmsTab: View {
     @State private var selectedAlarm: AlarmEntity?
     @State private var authState: AlarmManager.AuthorizationState = .notDetermined
     @State private var showAuthAlert = false
-    @State private var showingSettings = false
 
     private let alarmService = AlarmService.shared
 
@@ -53,21 +52,7 @@ struct AlarmsTab: View {
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    // Plain bare-icon button — no chrome. iOS 26 toolbars
-                    // wrap items in a glass pill by default; `.buttonStyle(.plain)`
-                    // opts out so we get just the three lines.
-                    Button {
-                        DesignSystem.Haptics.selection()
-                        showingSettings = true
-                    } label: {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                            .frame(width: 40, height: 40)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Settings")
+                    SettingsBurgerButton()
                 }
             }
             .sheet(isPresented: $showingCreateAlarm) {
@@ -75,9 +60,6 @@ struct AlarmsTab: View {
             }
             .sheet(item: $selectedAlarm) { alarm in
                 EditAlarmSheet(alarm: alarm)
-            }
-            .sheet(isPresented: $showingSettings) {
-                SettingsTab()
             }
             .alert("Alarms Disabled", isPresented: $showAuthAlert) {
                 Button("Open Settings") {
