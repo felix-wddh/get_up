@@ -39,13 +39,12 @@ struct NFCScanView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // v2 canvas background.
+            // v2 canvas background with a very soft ambient pulse.
             DesignSystem.Colors.canvas
                 .ignoresSafeArea()
                 .overlay(
-                    // Soft ambient pulse cued by the secondary tint.
                     DesignSystem.Colors.primarySoft
-                        .opacity(ambientPulse ? 0.55 : 0)
+                        .opacity(ambientPulse ? 0.40 : 0)
                         .ignoresSafeArea()
                         .animation(
                             DesignSystem.Animation.ambientPagePulse.repeatForever(autoreverses: true),
@@ -53,27 +52,29 @@ struct NFCScanView: View {
                         )
                 )
 
-            VStack(spacing: DesignSystem.Spacing.xl) {
-                // Top header — calm urgency.
-                topHeader
-                    .padding(.top, DesignSystem.Spacing.spacing2xl)
+            VStack(spacing: 0) {
+                // Headline + subtitle
+                headlineBlock
+                    .padding(.top, DesignSystem.Spacing.spacing3xl + DesignSystem.Spacing.lg)
 
-                Spacer()
+                Spacer(minLength: DesignSystem.Spacing.lg)
 
-                // Signature progress ring with halo + live time.
-                progressRingHero
+                // Hero scan module — the heart of the screen.
+                scanModule
 
-                Spacer()
+                Spacer(minLength: DesignSystem.Spacing.lg)
 
-                // Action area — emergency stop only.
-                actionButtonsView
-                    .frame(maxWidth: 360)
+                // Primary + secondary CTAs and optional emergency tertiary.
+                actionStack
+                    .padding(.horizontal, DesignSystem.Spacing.xl)
+
+                trustLabel
+                    .padding(.top, DesignSystem.Spacing.md)
+                    .padding(.bottom, DesignSystem.Spacing.md)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, DesignSystem.Spacing.xl)
-            .padding(.bottom, DesignSystem.Spacing.xl)
 
-            // Always-visible close button.
+            // Always-visible close button (top-left).
             Button(action: cancelScan) {
                 Image(systemName: "xmark")
                     .font(.system(size: 16, weight: .bold))
@@ -111,80 +112,96 @@ struct NFCScanView: View {
         }
     }
 
-    // MARK: - Views
+    // MARK: - Views (v3 — premium NFC scan layout)
 
-    private var topHeader: some View {
+    private var headlineBlock: some View {
         VStack(spacing: DesignSystem.Spacing.xs) {
             Text(statusTitle)
-                .font(DesignSystem.Font.screenTitle)
+                .font(.system(size: 30, weight: .heavy))
                 .foregroundColor(DesignSystem.Colors.textPrimary)
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
 
             Text(statusSubtitle)
-                .font(DesignSystem.Font.secondaryBody)
+                .font(DesignSystem.Font.body)
                 .foregroundColor(DesignSystem.Colors.textSecondary)
                 .multilineTextAlignment(.center)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
         }
-        .padding(.horizontal, DesignSystem.Spacing.lg)
     }
 
-    /// The 280-pt progress ring sitting on a halo. Center shows current
-    /// device time using the countdown font.
-    private var progressRingHero: some View {
+    /// Hero scan module — outer ring with a partial blue arc, concentric
+    /// ripple waves around a floating NFC card, the live alarm time, and
+    /// a phone-top illustration with a dotted arrow pointing at the tag.
+    private var scanModule: some View {
         ZStack {
-            // Halo glow behind the ring.
+            outerRing
+                .frame(width: scanRingDiameter, height: scanRingDiameter)
+
+            // Concentric soft ripples behind the NFC card.
+            ripples
+                .offset(y: 28)  // sit under the NFC card
+
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                alarmPill
+                Text(currentTimeString)
+                    .font(.system(size: 56, weight: .heavy))
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .monospacedDigit()
+                    .tracking(-1)
+                nfcFloatingCard
+            }
+
+            // Phone-top with dotted arrow peeking out of the ring's bottom.
+            phoneWithArrow
+                .offset(y: scanRingDiameter / 2 - 6)
+        }
+        .frame(width: scanRingDiameter, height: scanRingDiameter + 80)
+    }
+
+    private var scanRingDiameter: CGFloat { 280 }
+
+    /// Outer ring: a track + a partial blue arc with a round-cap end dot.
+    /// The whole ring rotates slowly via `ringRotation` so the dot drifts
+    /// like a continuous scan indicator.
+    @ViewBuilder
+    private var outerRing: some View {
+        let lineWidth: CGFloat = 10
+        ZStack {
+            // Subtle halo around the ring.
             Circle()
-                .fill(DesignSystem.Colors.primary.opacity(0.0001)) // keep tappable bounds tidy
-                .frame(width: 280, height: 280)
+                .fill(DesignSystem.Colors.primary.opacity(0.0001))
                 .designShadow(.halo)
 
-            // Animated stroked ring — the arc itself is the indeterminate
-            // indicator: we sweep it continuously while scanning.
-            indeterminateRing
-                .frame(width: 280, height: 280)
-                .rotationEffect(.degrees(ringRotation))
-
-            // Center label: current time + 'Alarm' watermark.
-            VStack(spacing: 4) {
-                Text(currentTimeString)
-                    .font(DesignSystem.Font.countdown)
-                    .monospacedDigit()
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .minimumScaleFactor(0.6)
-
-                Text(centerSubcaption)
-                    .font(DesignSystem.Font.secondaryBody)
-                    .foregroundColor(DesignSystem.Colors.textTertiary)
-            }
-        }
-        .frame(width: 280, height: 280)
-    }
-
-    /// Continuous ring: a 14-px stroke track with a primary-blue arc that
-    /// rotates. While scanning, the arc covers ~33% so the rotation is
-    /// visibly indeterminate; on success/failure we replace it with a full
-    /// (success) or interrupted (failure) state.
-    @ViewBuilder
-    private var indeterminateRing: some View {
-        let lineWidth: CGFloat = 14
-
-        ZStack {
+            // Track
             Circle()
                 .stroke(DesignSystem.Colors.primaryLight, lineWidth: lineWidth)
 
+            // Active arc with a gradient from primary → primary-light tip.
             Circle()
                 .trim(from: 0, to: arcLength)
                 .stroke(
-                    arcColor,
+                    AngularGradient(
+                        colors: [
+                            DesignSystem.Colors.primary.opacity(0.6),
+                            DesignSystem.Colors.primary
+                        ],
+                        center: .center
+                    ),
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
 
-            // End-cap dot — `arcLength` * 360 degrees ahead of the top.
-            let radius = (280 - lineWidth) / 2
+            // End-cap dot at the leading edge of the arc, with halo.
+            let radius = (scanRingDiameter - lineWidth) / 2
             let dotAngle = (arcLength * 2 * .pi) - .pi / 2
             Circle()
                 .fill(arcColor)
-                .frame(width: 14, height: 14)
+                .frame(width: 16, height: 16)
+                .overlay(
+                    Circle()
+                        .stroke(DesignSystem.Colors.white, lineWidth: 3)
+                )
                 .designShadow(.halo)
                 .offset(
                     x: cos(dotAngle) * radius,
@@ -192,27 +209,113 @@ struct NFCScanView: View {
                 )
                 .opacity(arcLength > 0 ? 1 : 0)
         }
+        .rotationEffect(.degrees(ringRotation))
     }
 
-    private var arcLength: Double {
-        switch nfcService.scanState {
-        case .idle, .scanning: return 0.33
-        case .success:          return 1.0
-        case .failed:           return 0.15
+    /// Three soft concentric circles behind the NFC card, sized to imply
+    /// expanding scan waves. They share the page's ambient pulse so the
+    /// "active scanning" feel reads even without continuous animation.
+    private var ripples: some View {
+        ZStack {
+            ripple(diameter: 100, opacity: 0.45)
+            ripple(diameter: 150, opacity: 0.30)
+            ripple(diameter: 200, opacity: 0.15)
         }
+        .allowsHitTesting(false)
     }
 
-    private var arcColor: Color {
-        switch nfcService.scanState {
-        case .idle, .scanning: return DesignSystem.Colors.primary
-        case .success:          return DesignSystem.Colors.success
-        case .failed:           return DesignSystem.Colors.error
+    private func ripple(diameter: CGFloat, opacity: Double) -> some View {
+        Circle()
+            .fill(DesignSystem.Colors.primary.opacity(opacity * (ambientPulse ? 0.6 : 1.0)))
+            .frame(width: diameter, height: diameter)
+            .blendMode(.normal)
+            .animation(
+                DesignSystem.Animation.ambientRingPulse.repeatForever(autoreverses: true),
+                value: ambientPulse
+            )
+            .opacity(0.2 + opacity * 0.6)
+    }
+
+    /// Small "Alarm" status pill — bell glyph + label, tinted primaryLight.
+    private var alarmPill: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "bell.fill")
+                .font(.system(size: 12, weight: .semibold))
+            Text("Alarm")
+                .font(.system(size: 14, weight: .semibold))
         }
+        .foregroundColor(DesignSystem.Colors.primary)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+        .background(
+            Capsule().fill(DesignSystem.Colors.primaryLight)
+        )
     }
 
-    private var actionButtonsView: some View {
-        VStack(spacing: DesignSystem.Spacing.md) {
-            // Mock Scan button for DEBUG
+    /// Floating white NFC card with the radio-waves glyph and "NFC" label.
+    /// Sits on a `shadow/raised` so it reads as the strongest visual cue
+    /// after the alarm time.
+    private var nfcFloatingCard: some View {
+        VStack(spacing: 2) {
+            Image(systemName: "dot.radiowaves.left.and.right")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(DesignSystem.Colors.primary)
+                .rotationEffect(.degrees(-90))
+            Text("NFC")
+                .font(.system(size: 11, weight: .heavy))
+                .foregroundColor(DesignSystem.Colors.primary)
+                .tracking(0.8)
+        }
+        .frame(width: 92, height: 92)
+        .background(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(DesignSystem.Colors.white)
+        )
+        .designShadow(.raised)
+    }
+
+    /// A small phone-top illustration (rounded rectangle with a dynamic
+    /// island) with a vertical dotted arrow pointing up at the NFC card.
+    private var phoneWithArrow: some View {
+        VStack(spacing: 6) {
+            // Dotted arrow
+            VStack(spacing: 4) {
+                Image(systemName: "arrow.up")
+                    .font(.system(size: 13, weight: .heavy))
+                    .foregroundColor(DesignSystem.Colors.primary)
+                ForEach(0..<3, id: \.self) { _ in
+                    Circle()
+                        .fill(DesignSystem.Colors.primary)
+                        .frame(width: 3, height: 3)
+                }
+            }
+
+            // Phone top (just the upper part — fades into white below).
+            ZStack(alignment: .top) {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(DesignSystem.Colors.textPrimary)
+                    .frame(width: 80, height: 40)
+                Capsule()
+                    .fill(.black)
+                    .frame(width: 38, height: 10)
+                    .padding(.top, 6)
+            }
+            .mask(
+                LinearGradient(
+                    colors: [.black, .black.opacity(0)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+        }
+        .accessibilityHidden(true)
+    }
+
+    /// CTAs: a vivid blue gradient "Ready to Scan" primary, a quiet
+    /// white "Close" secondary, plus the existing 20-second emergency
+    /// bypass exposed only when GetUp Mode is on and a tag is bound.
+    private var actionStack: some View {
+        VStack(spacing: DesignSystem.Spacing.sm) {
             #if DEBUG
             if nfcService.scanState == .scanning {
                 SecondaryPillButton("Mock NFC Scan", icon: "testtube.2") {
@@ -221,41 +324,97 @@ struct NFCScanView: View {
             }
             #endif
 
-            // Retry button (if failed)
-            if nfcService.scanState == .failed {
-                PrimaryPillButton("Try again", icon: "arrow.clockwise") {
-                    startVerification()
-                }
+            readyToScanPill
+
+            SecondaryPillButton("Close") {
+                cancelScan()
             }
 
-            // Emergency Stop / Cancel
-            VStack(spacing: DesignSystem.Spacing.sm) {
-                if !NFCService.isAvailable {
-                    #if DEBUG
-                    Text("NFC requires full release version /\nsupported signing")
-                        .font(DesignSystem.Font.caption)
-                        .foregroundColor(DesignSystem.Colors.warning)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 8)
-                    #else
-                    Text("NFC is not available on this device")
-                        .font(DesignSystem.Font.caption)
-                        .foregroundColor(DesignSystem.Colors.warning)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 8)
-                    #endif
-                }
-
-                if appState.getUpModeEnabled && expectedTagHash != nil {
-                    // Emergency bypass button with long press
-                    emergencyStopButton
-                } else {
-                    // Regular cancel if GetUp mode is off or no tag bound
-                    SecondaryPillButton(NFCService.isAvailable ? "Dismiss" : "Close") {
-                        cancelScan()
-                    }
-                }
+            if appState.getUpModeEnabled && expectedTagHash != nil {
+                emergencyStopButton
+                    .padding(.top, DesignSystem.Spacing.xs)
             }
+
+            if !NFCService.isAvailable {
+                #if DEBUG
+                Text("NFC requires full release version / supported signing")
+                    .font(DesignSystem.Font.caption)
+                    .foregroundColor(DesignSystem.Colors.warning)
+                    .multilineTextAlignment(.center)
+                #else
+                Text("NFC is not available on this device")
+                    .font(DesignSystem.Font.caption)
+                    .foregroundColor(DesignSystem.Colors.warning)
+                    .multilineTextAlignment(.center)
+                #endif
+            }
+        }
+    }
+
+    /// Primary "Ready to Scan" CTA — gradient pill, leading NFC icon, soft
+    /// blue glow. Tapping (re)starts NFC verification.
+    private var readyToScanPill: some View {
+        Button(action: {
+            DesignSystem.Haptics.triggerImpact(.medium)
+            startVerification()
+        }) {
+            HStack(spacing: 10) {
+                Image(systemName: "dot.radiowaves.left.and.right")
+                    .font(.system(size: 17, weight: .bold))
+                    .rotationEffect(.degrees(-90))
+                Text("Ready to Scan")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+            .foregroundColor(DesignSystem.Colors.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: 60)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "#3D9BFF"),
+                                DesignSystem.Colors.primary,
+                                DesignSystem.Colors.primaryPressed
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+            )
+            .shadow(color: DesignSystem.Colors.primary.opacity(0.35), radius: 18, x: 0, y: 8)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Ready to scan")
+    }
+
+    private var trustLabel: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(DesignSystem.Colors.primary)
+            Text("Secure · Private · Local Only")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(DesignSystem.Colors.textTertiary)
+                .tracking(0.4)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+    }
+
+    private var arcLength: Double {
+        switch nfcService.scanState {
+        case .idle, .scanning: return 0.65
+        case .success:          return 1.0
+        case .failed:           return 0.20
+        }
+    }
+
+    private var arcColor: Color {
+        switch nfcService.scanState {
+        case .idle, .scanning: return DesignSystem.Colors.primary
+        case .success:          return DesignSystem.Colors.success
+        case .failed:           return DesignSystem.Colors.error
         }
     }
 
@@ -327,7 +486,7 @@ struct NFCScanView: View {
 
     private var statusTitle: String {
         switch nfcService.scanState {
-        case .idle, .scanning: return "Go scan your tag."
+        case .idle, .scanning: return "Scan to stop alarm"
         case .success:          return "You're up."
         case .failed:           return "That's not your tag."
         }
@@ -335,7 +494,7 @@ struct NFCScanView: View {
 
     private var statusSubtitle: String {
         switch nfcService.scanState {
-        case .idle, .scanning: return "Hold the top of your phone against the tag."
+        case .idle, .scanning: return "Hold the top of your iPhone near your NFC tag."
         case .success:          return "Have a good morning."
         case .failed:           return nfcService.errorMessage ?? "Try again."
         }
