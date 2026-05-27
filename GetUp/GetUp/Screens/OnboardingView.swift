@@ -161,26 +161,30 @@ struct OnboardingView: View {
     /// the page color without a visible seam. Title + copy sit below.
     private var pageMission: some View {
         VStack(spacing: 0) {
+            Spacer(minLength: 0)
+
             foundersPhoto
                 .frame(maxWidth: .infinity)
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            VStack(spacing: DesignSystem.Spacing.md) {
                 Text("From Felix & Georg")
                     .font(DesignSystem.Font.largeTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .multilineTextAlignment(.leading)
+                    .multilineTextAlignment(.center)
 
                 Text("We're two people who could never trust ourselves to actually get up. Every snooze button felt like a tiny betrayal.")
                     .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
+                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Text("So we built GetUp — a clean, simple way to make mornings easier. Once your feet hit the floor, the day starts.")
                     .font(DesignSystem.Font.body)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
+                    .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.top, DesignSystem.Spacing.md)
 
