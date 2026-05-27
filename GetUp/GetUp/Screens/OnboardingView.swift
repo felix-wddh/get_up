@@ -191,21 +191,25 @@ struct OnboardingView: View {
     // MARK: - Page 3: Connect NFC tag
 
     private var pageConnect: some View {
-        VStack(spacing: DesignSystem.Spacing.xl) {
-            Spacer()
+        VStack(spacing: 0) {
+            Spacer(minLength: DesignSystem.Spacing.lg)
 
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-                Text("Connect your tag")
-                    .font(DesignSystem.Font.largeTitle)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+            nfcHeroIcon
+                .padding(.bottom, DesignSystem.Spacing.xl)
 
-                Text("Pair your physical GetUp tag once. We'll use it to know when you've actually walked to it.")
-                    .font(DesignSystem.Font.body)
-                    .foregroundColor(DesignSystem.Colors.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, DesignSystem.Spacing.xl)
+            Text("Connect your tag")
+                .font(DesignSystem.Font.largeTitle)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .multilineTextAlignment(.center)
+                .padding(.bottom, DesignSystem.Spacing.md)
+
+            Text("Pair your physical GetUp tag once.\nWe'll use it to know when you've\nactually walked to it.")
+                .font(DesignSystem.Font.body)
+                .foregroundColor(DesignSystem.Colors.textSecondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
+                .padding(.bottom, DesignSystem.Spacing.xl)
 
             if boundTagHash == nil {
                 LinkCTAButton {
@@ -237,6 +241,39 @@ struct OnboardingView: View {
 
             Spacer()
         }
+    }
+
+    /// Lifted hero tile holding a large NFC glyph — mirrors the welcome
+    /// page's logo treatment so the Connect step reads as a real "moment",
+    /// not just a button.
+    private var nfcHeroIcon: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            DesignSystem.Colors.primary.opacity(0.18),
+                            DesignSystem.Colors.primary.opacity(0)
+                        ],
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: 160
+                    )
+                )
+                .frame(width: 320, height: 320)
+                .blur(radius: 12)
+
+            RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl)
+                .fill(DesignSystem.Colors.primarySoft)
+                .frame(width: 192, height: 192)
+                .designShadow(.raised)
+
+            Image(systemName: "sensor.tag.radiowaves.forward.fill")
+                .font(.system(size: 88, weight: .regular))
+                .foregroundColor(DesignSystem.Colors.primary)
+        }
+        .frame(width: 320, height: 240)
+        .accessibilityHidden(true)
     }
 
     // MARK: - Page 4: Set up alarm
@@ -319,12 +356,9 @@ struct OnboardingView: View {
     private var bottomCTAs: some View {
         switch currentStep {
         case 0:
-            // Welcome — start the flow, optional account ghost.
-            VStack(spacing: DesignSystem.Spacing.sm) {
+            // Welcome — start the flow.
+            VStack(spacing: 0) {
                 PrimaryPillButton("Get started", icon: "arrow.right", action: nextStep)
-                GhostButton("I already have an account") {
-                    DesignSystem.Haptics.selection()
-                }
             }
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.bottom, DesignSystem.Spacing.xl)
