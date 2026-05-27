@@ -197,7 +197,7 @@ struct OnboardingView: View {
             .resizable()
             .scaledToFill()
             .frame(maxWidth: .infinity)
-            .frame(height: 380)
+            .frame(height: 300)
             .clipped()
             .overlay(alignment: .bottom) {
                 // Bottom fade into canvas — kills the seam between photo
@@ -210,7 +210,7 @@ struct OnboardingView: View {
                     startPoint: .top,
                     endPoint: .bottom
                 )
-                .frame(height: 90)
+                .frame(height: 70)
             }
             .accessibilityLabel("Felix and Georg, GetUp founders")
     }
