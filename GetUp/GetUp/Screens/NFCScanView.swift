@@ -76,22 +76,6 @@ struct NFCScanView: View {
                     .padding(.bottom, DesignSystem.Spacing.xl)
             }
             .frame(maxWidth: .infinity)
-
-            // Always-visible close button (top-left).
-            Button(action: cancelScan) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .frame(width: 44, height: 44)
-                    .background(
-                        RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.md, style: .continuous)
-                            .fill(DesignSystem.Colors.white)
-                    )
-                    .designShadow(.card)
-            }
-            .accessibilityLabel("Close NFC scan")
-            .padding(.leading, DesignSystem.Spacing.md)
-            .padding(.top, DesignSystem.Spacing.sm)
         }
         .onAppear {
             loadExpectedTagHash()
