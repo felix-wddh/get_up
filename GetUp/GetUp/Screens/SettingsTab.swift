@@ -169,8 +169,6 @@ struct SettingsTab: View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
             SectionHeader("About")
 
-            UserGuidanceCard()
-
             Card(padding: DesignSystem.Spacing.lg) {
                 VStack(spacing: DesignSystem.Spacing.md) {
                     rowVersion

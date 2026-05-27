@@ -1096,50 +1096,6 @@ struct IconButton: View {
     }
 }
 
-// MARK: - User Guidance Card (preserved)
-
-struct UserGuidanceCard: View {
-    var body: some View {
-        Card {
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
-                HStack(spacing: DesignSystem.Spacing.sm) {
-                    TintedIconContainer("lightbulb.fill", size: 40)
-                    Text("How to get started")
-                        .font(DesignSystem.Font.headline)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
-                }
-
-                VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-                    GuidanceRow(number: 1, text: "Get a GetUp NFC Tag and place it >3m from your bed.")
-                    GuidanceRow(number: 2, text: "Open GetUp → \u{201C}Link your GetUp\u{201D} and hold your iPhone near the tag.")
-                    GuidanceRow(number: 3, text: "Create your first GetUp alarm and turn GetUp Mode ON. Done.")
-                }
-            }
-        }
-    }
-}
-
-private struct GuidanceRow: View {
-    let number: Int
-    let text: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: DesignSystem.Spacing.sm) {
-            Text("\(number)")
-                .font(DesignSystem.Font.caption)
-                .bold()
-                .foregroundColor(DesignSystem.Colors.white)
-                .frame(width: 20, height: 20)
-                .background(Circle().fill(DesignSystem.Colors.primary))
-
-            Text(text)
-                .font(DesignSystem.Font.secondaryBody)
-                .foregroundColor(DesignSystem.Colors.textSecondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-}
-
 // MARK: - Previews
 
 #Preview("Cards") {
