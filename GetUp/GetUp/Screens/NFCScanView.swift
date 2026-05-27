@@ -326,9 +326,10 @@ struct NFCScanView: View {
         .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
     }
 
-    /// CTAs: a vivid blue gradient "Ready to Scan" primary, a quiet
-    /// white "Close" secondary, plus the existing 20-second emergency
-    /// bypass exposed only when GetUp Mode is on and a tag is bound.
+    /// Action area — the real NFC scan kicks off automatically on appear
+    /// and the top-left X handles dismissal, so production renders nothing
+    /// here. DEBUG builds keep the Mock NFC Scan helper so the success
+    /// flow can be exercised without a physical tag.
     private var actionStack: some View {
         VStack(spacing: DesignSystem.Spacing.sm) {
             #if DEBUG
@@ -338,73 +339,7 @@ struct NFCScanView: View {
                 }
             }
             #endif
-
-            readyToScanPill
-
-            SecondaryPillButton("Close") {
-                cancelScan()
-            }
-
-            if appState.getUpModeEnabled && expectedTagHash != nil {
-                emergencyStopButton
-                    .padding(.top, DesignSystem.Spacing.xs)
-            }
         }
-    }
-
-    /// Primary "Ready to Scan" CTA — gradient pill, leading NFC icon,
-    /// strong soft blue ambient glow underneath. Tapping (re)starts
-    /// NFC verification.
-    private var readyToScanPill: some View {
-        Button(action: {
-            DesignSystem.Haptics.triggerImpact(.medium)
-            startVerification()
-        }) {
-            HStack(spacing: 10) {
-                Image(systemName: "dot.radiowaves.left.and.right")
-                    .font(.system(size: 17, weight: .bold))
-                    .rotationEffect(.degrees(-90))
-                Text("Ready to Scan")
-                    .font(.system(size: 17, weight: .semibold))
-            }
-            .foregroundColor(DesignSystem.Colors.white)
-            .frame(maxWidth: .infinity)
-            .frame(height: 60)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(hex: "#3D9BFF"),
-                                DesignSystem.Colors.primary,
-                                DesignSystem.Colors.primaryPressed
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-            )
-            .overlay(
-                // Subtle inner-top highlight for the polished gloss look.
-                Capsule(style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                DesignSystem.Colors.white.opacity(0.45),
-                                DesignSystem.Colors.white.opacity(0)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ),
-                        lineWidth: 1
-                    )
-            )
-            // Layered glow: a wide soft blue ambient + a tighter shadow.
-            .shadow(color: DesignSystem.Colors.primary.opacity(0.55), radius: 32, x: 0, y: 14)
-            .shadow(color: DesignSystem.Colors.primary.opacity(0.35), radius: 12, x: 0, y: 4)
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel("Ready to scan")
     }
 
     private var arcLength: Double {
@@ -420,56 +355,6 @@ struct NFCScanView: View {
         case .idle, .scanning: return DesignSystem.Colors.primary
         case .success:          return DesignSystem.Colors.success
         case .failed:           return DesignSystem.Colors.error
-        }
-    }
-
-    private var emergencyStopButton: some View {
-        VStack(spacing: 8) {
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    // Background pill
-                    Capsule()
-                        .fill(DesignSystem.Colors.white)
-                        .overlay(
-                            Capsule()
-                                .stroke(DesignSystem.Colors.border, lineWidth: 1)
-                        )
-                        .frame(height: 56)
-
-                    // Progress fill — error tint, since this is the bypass.
-                    Capsule()
-                        .fill(DesignSystem.Colors.error.opacity(0.18))
-                        .frame(width: max(0, emergencyProgress * geometry.size.width), height: 56)
-
-                    // Label
-                    HStack {
-                        Spacer()
-                        Text(isPressingEmergency
-                             ? "Hold for \(Int(ceil(max(0, emergencyDuration - abs(startTime?.timeIntervalSinceNow ?? 0)))))s…"
-                             : "Emergency stop")
-                            .font(DesignSystem.Font.button)
-                            .foregroundColor(DesignSystem.Colors.textPrimary)
-                        Spacer()
-                    }
-                }
-            }
-            .frame(height: 56)
-            .contentShape(Capsule())
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in
-                        if !isPressingEmergency {
-                            startEmergencyTimer()
-                        }
-                    }
-                    .onEnded { _ in
-                        stopEmergencyTimer()
-                    }
-            )
-
-            Text("Continuous 20-second hold required")
-                .font(DesignSystem.Font.caption)
-                .foregroundColor(DesignSystem.Colors.textTertiary)
         }
     }
 
