@@ -53,9 +53,15 @@ struct NFCScanView: View {
                 )
 
             VStack(spacing: 0) {
+                // Small NFC status chip above the headline — matches the
+                // reference's top-of-screen indicator that this screen is
+                // about NFC.
+                nfcStatusChip
+                    .padding(.top, DesignSystem.Spacing.spacing3xl + DesignSystem.Spacing.md)
+                    .padding(.bottom, DesignSystem.Spacing.md)
+
                 // Headline + subtitle
                 headlineBlock
-                    .padding(.top, DesignSystem.Spacing.spacing3xl + DesignSystem.Spacing.lg)
 
                 Spacer(minLength: DesignSystem.Spacing.lg)
 
@@ -113,6 +119,24 @@ struct NFCScanView: View {
     }
 
     // MARK: - Views (v3 — premium NFC scan layout)
+
+    /// Small soft-tinted circle holding the NFC waves glyph. Sits above
+    /// the headline as a quiet status indicator that this screen is the
+    /// NFC scan moment.
+    private var nfcStatusChip: some View {
+        ZStack {
+            Circle()
+                .fill(DesignSystem.Colors.primarySoft)
+                .frame(width: 56, height: 56)
+                .designShadow(.card)
+
+            Image(systemName: "dot.radiowaves.left.and.right")
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(DesignSystem.Colors.primary)
+                .rotationEffect(.degrees(-90))
+        }
+        .accessibilityHidden(true)
+    }
 
     private var headlineBlock: some View {
         VStack(spacing: DesignSystem.Spacing.xs) {
@@ -333,20 +357,6 @@ struct NFCScanView: View {
             if appState.getUpModeEnabled && expectedTagHash != nil {
                 emergencyStopButton
                     .padding(.top, DesignSystem.Spacing.xs)
-            }
-
-            if !NFCService.isAvailable {
-                #if DEBUG
-                Text("NFC requires full release version / supported signing")
-                    .font(DesignSystem.Font.caption)
-                    .foregroundColor(DesignSystem.Colors.warning)
-                    .multilineTextAlignment(.center)
-                #else
-                Text("NFC is not available on this device")
-                    .font(DesignSystem.Font.caption)
-                    .foregroundColor(DesignSystem.Colors.warning)
-                    .multilineTextAlignment(.center)
-                #endif
             }
         }
     }
