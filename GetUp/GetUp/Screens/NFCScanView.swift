@@ -164,29 +164,32 @@ struct NFCScanView: View {
         }
     }
 
-    /// Hero scan module — outer ring with a partial blue arc, concentric
-    /// ripple waves around a floating NFC card, the live alarm time, and
-    /// a phone-top illustration with a dotted arrow pointing at the tag.
+    /// Hero scan module — alarm pill + time stacked above the ring so
+    /// each element gets its own breathing room. The ring itself only
+    /// holds the concentric ripple waves and the floating NFC card.
     private var scanModule: some View {
-        ZStack {
-            outerRing
-                .frame(width: scanRingDiameter, height: scanRingDiameter)
-
-            // Concentric soft ripples behind the NFC card.
-            ripples
-                .offset(y: 28)  // sit under the NFC card
-
+        VStack(spacing: DesignSystem.Spacing.lg) {
             VStack(spacing: DesignSystem.Spacing.sm) {
                 alarmPill
+
                 Text(currentTimeString)
-                    .font(.system(size: 56, weight: .heavy))
+                    .font(.system(size: 64, weight: .heavy))
                     .foregroundColor(DesignSystem.Colors.textPrimary)
                     .monospacedDigit()
-                    .tracking(-1)
+                    .tracking(-1.5)
+            }
+
+            ZStack {
+                outerRing
+                    .frame(width: scanRingDiameter, height: scanRingDiameter)
+
+                // Concentric soft ripples centered behind the NFC card.
+                ripples
+
                 nfcFloatingCard
             }
+            .frame(width: scanRingDiameter, height: scanRingDiameter)
         }
-        .frame(width: scanRingDiameter, height: scanRingDiameter)
     }
 
     private var scanRingDiameter: CGFloat { 300 }
