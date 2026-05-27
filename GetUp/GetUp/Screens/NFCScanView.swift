@@ -120,21 +120,33 @@ struct NFCScanView: View {
 
     // MARK: - Views (v3 — premium NFC scan layout)
 
-    /// Small soft-tinted circle holding the NFC waves glyph. Sits above
-    /// the headline as a quiet status indicator that this screen is the
-    /// NFC scan moment.
+    /// Glowing NFC waves glyph floating above the headline — no card
+    /// container, just the icon with a soft radial halo behind it so it
+    /// reads as a quiet "this is the NFC moment" anchor.
     private var nfcStatusChip: some View {
         ZStack {
+            // Soft radial glow
             Circle()
-                .fill(DesignSystem.Colors.primarySoft)
-                .frame(width: 56, height: 56)
-                .designShadow(.card)
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            DesignSystem.Colors.primary.opacity(0.28),
+                            DesignSystem.Colors.primary.opacity(0)
+                        ],
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: 60
+                    )
+                )
+                .frame(width: 120, height: 120)
+                .blur(radius: 8)
 
             Image(systemName: "dot.radiowaves.left.and.right")
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 30, weight: .bold))
                 .foregroundColor(DesignSystem.Colors.primary)
                 .rotationEffect(.degrees(-90))
         }
+        .frame(height: 60)
         .accessibilityHidden(true)
     }
 
@@ -184,7 +196,7 @@ struct NFCScanView: View {
         .frame(width: scanRingDiameter, height: scanRingDiameter + 80)
     }
 
-    private var scanRingDiameter: CGFloat { 280 }
+    private var scanRingDiameter: CGFloat { 300 }
 
     /// Outer ring: a track + a partial blue arc with a round-cap end dot.
     /// The whole ring rotates slowly via `ringRotation` so the dot drifts
@@ -236,28 +248,42 @@ struct NFCScanView: View {
         .rotationEffect(.degrees(ringRotation))
     }
 
-    /// Three soft concentric circles behind the NFC card, sized to imply
-    /// expanding scan waves. They share the page's ambient pulse so the
-    /// "active scanning" feel reads even without continuous animation.
+    /// Concentric primary-blue waves behind the NFC card. Mix soft fills
+    /// with thin stroked rings to imply expanding scan ripples; the page's
+    /// ambient pulse subtly modulates their opacity for an "active" feel.
     private var ripples: some View {
         ZStack {
-            ripple(diameter: 100, opacity: 0.45)
-            ripple(diameter: 150, opacity: 0.30)
-            ripple(diameter: 200, opacity: 0.15)
+            // Solid soft washes, biggest → smallest.
+            rippleFill(diameter: 250, opacity: 0.08)
+            rippleFill(diameter: 200, opacity: 0.12)
+            rippleFill(diameter: 155, opacity: 0.18)
+            rippleFill(diameter: 115, opacity: 0.28)
+
+            // Thin stroked rings layered on top for the radar feel.
+            rippleStroke(diameter: 230, opacity: 0.20)
+            rippleStroke(diameter: 180, opacity: 0.28)
+            rippleStroke(diameter: 135, opacity: 0.40)
         }
         .allowsHitTesting(false)
+        .animation(
+            DesignSystem.Animation.ambientRingPulse.repeatForever(autoreverses: true),
+            value: ambientPulse
+        )
     }
 
-    private func ripple(diameter: CGFloat, opacity: Double) -> some View {
+    private func rippleFill(diameter: CGFloat, opacity: Double) -> some View {
         Circle()
-            .fill(DesignSystem.Colors.primary.opacity(opacity * (ambientPulse ? 0.6 : 1.0)))
+            .fill(DesignSystem.Colors.primary.opacity(opacity * (ambientPulse ? 0.85 : 1.0)))
             .frame(width: diameter, height: diameter)
-            .blendMode(.normal)
-            .animation(
-                DesignSystem.Animation.ambientRingPulse.repeatForever(autoreverses: true),
-                value: ambientPulse
+    }
+
+    private func rippleStroke(diameter: CGFloat, opacity: Double) -> some View {
+        Circle()
+            .stroke(
+                DesignSystem.Colors.primary.opacity(opacity * (ambientPulse ? 0.7 : 1.0)),
+                lineWidth: 1
             )
-            .opacity(0.2 + opacity * 0.6)
+            .frame(width: diameter, height: diameter)
     }
 
     /// Small "Alarm" status pill — bell glyph + label, tinted primaryLight.
@@ -277,60 +303,116 @@ struct NFCScanView: View {
     }
 
     /// Floating white NFC card with the radio-waves glyph and "NFC" label.
-    /// Sits on a `shadow/raised` so it reads as the strongest visual cue
-    /// after the alarm time.
+    /// Stronger 3D feel via a subtle top→bottom white→primarySoft gradient
+    /// plus a dark "lifted" shadow ledge below it, so it reads as the
+    /// strongest visual cue after the alarm time.
     private var nfcFloatingCard: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 4) {
             Image(systemName: "dot.radiowaves.left.and.right")
-                .font(.system(size: 28, weight: .bold))
+                .font(.system(size: 34, weight: .bold))
                 .foregroundColor(DesignSystem.Colors.primary)
                 .rotationEffect(.degrees(-90))
             Text("NFC")
-                .font(.system(size: 11, weight: .heavy))
+                .font(.system(size: 13, weight: .heavy))
                 .foregroundColor(DesignSystem.Colors.primary)
                 .tracking(0.8)
         }
-        .frame(width: 92, height: 92)
+        .frame(width: 112, height: 112)
         .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(DesignSystem.Colors.white)
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            DesignSystem.Colors.white,
+                            DesignSystem.Colors.primarySoft.opacity(0.85)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
         )
-        .designShadow(.raised)
+        .overlay(
+            // Subtle highlight along the top edge for the lifted-tile feel.
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            DesignSystem.Colors.white.opacity(0.9),
+                            DesignSystem.Colors.white.opacity(0)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 1
+                )
+        )
+        .shadow(color: DesignSystem.Colors.primary.opacity(0.18), radius: 18, x: 0, y: 12)
+        .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
     }
 
-    /// A small phone-top illustration (rounded rectangle with a dynamic
-    /// island) with a vertical dotted arrow pointing up at the NFC card.
+    /// Phone-top illustration with a dotted upward arrow. The phone is
+    /// drawn as a layered iPhone-like frame: dark outer body, slightly
+    /// lighter inner screen, dynamic island on top, then masked into a
+    /// vertical fade so it dissolves into the canvas.
     private var phoneWithArrow: some View {
         VStack(spacing: 6) {
-            // Dotted arrow
-            VStack(spacing: 4) {
+            // Dotted arrow with the arrowhead on top.
+            VStack(spacing: 5) {
                 Image(systemName: "arrow.up")
-                    .font(.system(size: 13, weight: .heavy))
+                    .font(.system(size: 14, weight: .heavy))
                     .foregroundColor(DesignSystem.Colors.primary)
-                ForEach(0..<3, id: \.self) { _ in
+                ForEach(0..<4, id: \.self) { _ in
                     Circle()
                         .fill(DesignSystem.Colors.primary)
                         .frame(width: 3, height: 3)
                 }
             }
 
-            // Phone top (just the upper part — fades into white below).
+            // iPhone top — outer body + screen + dynamic island, masked.
             ZStack(alignment: .top) {
+                // Outer titanium frame
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color(white: 0.16), Color(white: 0.06)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(width: 96, height: 60)
+
+                // Inner screen — slightly inset, near-black with a faint
+                // highlight to suggest a live display.
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(DesignSystem.Colors.textPrimary)
-                    .frame(width: 80, height: 40)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color(white: 0.10), Color(white: 0.02)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(width: 88, height: 54)
+                    .padding(.top, 3)
+
+                // Dynamic island
                 Capsule()
                     .fill(.black)
-                    .frame(width: 38, height: 10)
-                    .padding(.top, 6)
+                    .frame(width: 42, height: 11)
+                    .padding(.top, 8)
             }
+            .frame(height: 60, alignment: .top)
             .mask(
                 LinearGradient(
-                    colors: [.black, .black.opacity(0)],
+                    stops: [
+                        .init(color: .black, location: 0),
+                        .init(color: .black, location: 0.55),
+                        .init(color: .black.opacity(0), location: 1.0)
+                    ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
             )
+            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
         }
         .accessibilityHidden(true)
     }
@@ -361,8 +443,9 @@ struct NFCScanView: View {
         }
     }
 
-    /// Primary "Ready to Scan" CTA — gradient pill, leading NFC icon, soft
-    /// blue glow. Tapping (re)starts NFC verification.
+    /// Primary "Ready to Scan" CTA — gradient pill, leading NFC icon,
+    /// strong soft blue ambient glow underneath. Tapping (re)starts
+    /// NFC verification.
     private var readyToScanPill: some View {
         Button(action: {
             DesignSystem.Haptics.triggerImpact(.medium)
@@ -392,7 +475,24 @@ struct NFCScanView: View {
                         )
                     )
             )
-            .shadow(color: DesignSystem.Colors.primary.opacity(0.35), radius: 18, x: 0, y: 8)
+            .overlay(
+                // Subtle inner-top highlight for the polished gloss look.
+                Capsule(style: .continuous)
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                DesignSystem.Colors.white.opacity(0.45),
+                                DesignSystem.Colors.white.opacity(0)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            // Layered glow: a wide soft blue ambient + a tighter shadow.
+            .shadow(color: DesignSystem.Colors.primary.opacity(0.55), radius: 32, x: 0, y: 14)
+            .shadow(color: DesignSystem.Colors.primary.opacity(0.35), radius: 12, x: 0, y: 4)
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Ready to scan")
