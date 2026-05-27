@@ -157,13 +157,9 @@ struct OnboardingView: View {
 
     private var pageMission: some View {
         VStack(spacing: DesignSystem.Spacing.xl) {
-            Spacer()
+            Spacer(minLength: DesignSystem.Spacing.md)
 
-            TintedIconContainer(
-                "hand.wave.fill",
-                size: 64
-            )
-            .designShadow(.halo)
+            foundersPhoto
 
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
                 Text("From Felix & Georg")
@@ -184,8 +180,35 @@ struct OnboardingView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            Spacer()
+            Spacer(minLength: DesignSystem.Spacing.md)
         }
+    }
+
+    /// Founders photo — pointing-at-you portrait of Felix & Georg with
+    /// the brand arrow behind. Wrapped in a rounded card with a soft halo
+    /// so it sits naturally on the canvas instead of feeling pasted on.
+    private var foundersPhoto: some View {
+        Image("FoundersPhoto")
+            .resizable()
+            .scaledToFill()
+            .frame(width: 220, height: 220)
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.radius2xl, style: .continuous)
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                DesignSystem.Colors.white.opacity(0.9),
+                                DesignSystem.Colors.white.opacity(0)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            .designShadow(.raised)
+            .accessibilityLabel("Felix and Georg, GetUp founders")
     }
 
     // MARK: - Page 3: Connect NFC tag
