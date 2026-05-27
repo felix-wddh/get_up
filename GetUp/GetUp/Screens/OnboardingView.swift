@@ -283,10 +283,11 @@ struct OnboardingView: View {
             Spacer()
 
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
-                Text("Set up your\nalarm")
+                Text("Set up your alarm")
                     .font(DesignSystem.Font.largeTitle)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
 
                 Text("On the home screen, tap Add alarm to pick your wake time. We'll handle the rest — when it rings, walk to your tag.")
                     .font(DesignSystem.Font.body)
