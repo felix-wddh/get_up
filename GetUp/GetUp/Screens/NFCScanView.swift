@@ -73,10 +73,7 @@ struct NFCScanView: View {
                 // Primary + secondary CTAs and optional emergency tertiary.
                 actionStack
                     .padding(.horizontal, DesignSystem.Spacing.xl)
-
-                trustLabel
-                    .padding(.top, DesignSystem.Spacing.md)
-                    .padding(.bottom, DesignSystem.Spacing.md)
+                    .padding(.bottom, DesignSystem.Spacing.xl)
             }
             .frame(maxWidth: .infinity)
 
@@ -188,12 +185,8 @@ struct NFCScanView: View {
                     .tracking(-1)
                 nfcFloatingCard
             }
-
-            // Phone-top with dotted arrow peeking out of the ring's bottom.
-            phoneWithArrow
-                .offset(y: scanRingDiameter / 2 - 6)
         }
-        .frame(width: scanRingDiameter, height: scanRingDiameter + 80)
+        .frame(width: scanRingDiameter, height: scanRingDiameter)
     }
 
     private var scanRingDiameter: CGFloat { 300 }
@@ -227,23 +220,6 @@ struct NFCScanView: View {
                     ),
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
-
-            // End-cap dot at the leading edge of the arc, with halo.
-            let radius = (scanRingDiameter - lineWidth) / 2
-            let dotAngle = (arcLength * 2 * .pi) - .pi / 2
-            Circle()
-                .fill(arcColor)
-                .frame(width: 16, height: 16)
-                .overlay(
-                    Circle()
-                        .stroke(DesignSystem.Colors.white, lineWidth: 3)
-                )
-                .designShadow(.halo)
-                .offset(
-                    x: cos(dotAngle) * radius,
-                    y: sin(dotAngle) * radius
-                )
-                .opacity(arcLength > 0 ? 1 : 0)
         }
         .rotationEffect(.degrees(ringRotation))
     }
@@ -350,73 +326,6 @@ struct NFCScanView: View {
         .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
     }
 
-    /// Phone-top illustration with a dotted upward arrow. The phone is
-    /// drawn as a layered iPhone-like frame: dark outer body, slightly
-    /// lighter inner screen, dynamic island on top, then masked into a
-    /// vertical fade so it dissolves into the canvas.
-    private var phoneWithArrow: some View {
-        VStack(spacing: 6) {
-            // Dotted arrow with the arrowhead on top.
-            VStack(spacing: 5) {
-                Image(systemName: "arrow.up")
-                    .font(.system(size: 14, weight: .heavy))
-                    .foregroundColor(DesignSystem.Colors.primary)
-                ForEach(0..<4, id: \.self) { _ in
-                    Circle()
-                        .fill(DesignSystem.Colors.primary)
-                        .frame(width: 3, height: 3)
-                }
-            }
-
-            // iPhone top — outer body + screen + dynamic island, masked.
-            ZStack(alignment: .top) {
-                // Outer titanium frame
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(white: 0.16), Color(white: 0.06)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .frame(width: 96, height: 60)
-
-                // Inner screen — slightly inset, near-black with a faint
-                // highlight to suggest a live display.
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(white: 0.10), Color(white: 0.02)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .frame(width: 88, height: 54)
-                    .padding(.top, 3)
-
-                // Dynamic island
-                Capsule()
-                    .fill(.black)
-                    .frame(width: 42, height: 11)
-                    .padding(.top, 8)
-            }
-            .frame(height: 60, alignment: .top)
-            .mask(
-                LinearGradient(
-                    stops: [
-                        .init(color: .black, location: 0),
-                        .init(color: .black, location: 0.55),
-                        .init(color: .black.opacity(0), location: 1.0)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 4)
-        }
-        .accessibilityHidden(true)
-    }
-
     /// CTAs: a vivid blue gradient "Ready to Scan" primary, a quiet
     /// white "Close" secondary, plus the existing 20-second emergency
     /// bypass exposed only when GetUp Mode is on and a tag is bound.
@@ -496,20 +405,6 @@ struct NFCScanView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Ready to scan")
-    }
-
-    private var trustLabel: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "lock.fill")
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(DesignSystem.Colors.primary)
-            Text("Secure · Private · Local Only")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(DesignSystem.Colors.textTertiary)
-                .tracking(0.4)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 6)
     }
 
     private var arcLength: Double {
