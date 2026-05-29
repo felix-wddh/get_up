@@ -112,11 +112,63 @@ struct SettingsTab: View {
 
     // MARK: - Language Section
 
+    /// Compact dropdown — shows the current language with a chevron, taps
+    /// open a `Menu` with all five languages. The full-list `LanguagePickerView`
+    /// is still used in onboarding where the choice deserves to be the
+    /// whole screen, but here in Settings a single row reads cleaner.
     private var languageSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
             SectionHeader("Language")
-            LanguagePickerView()
+
+            Card(padding: DesignSystem.Spacing.lg) {
+                Menu {
+                    ForEach(LanguagePickerView.supported) { lang in
+                        Button {
+                            DesignSystem.Haptics.selection()
+                            appState.selectedLanguage = lang.code
+                        } label: {
+                            HStack {
+                                Text(verbatim: "\(lang.flag)  \(lang.endonym)")
+                                if appState.selectedLanguage == lang.code {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: DesignSystem.Spacing.md) {
+                        TintedIconContainer("globe", size: 40, shape: .circle)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Language")
+                                .font(DesignSystem.Font.headline)
+                                .foregroundColor(DesignSystem.Colors.textPrimary)
+                            HStack(spacing: 6) {
+                                Text(verbatim: currentLanguage.flag)
+                                    .font(.system(size: 16))
+                                Text(verbatim: currentLanguage.endonym)
+                                    .font(DesignSystem.Font.caption)
+                                    .foregroundColor(DesignSystem.Colors.textSecondary)
+                            }
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(DesignSystem.Colors.textTertiary)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
         }
+    }
+
+    /// Resolve the currently-selected language to its descriptor row so the
+    /// dropdown label can show flag + endonym without re-deriving it.
+    private var currentLanguage: LanguagePickerView.Language {
+        LanguagePickerView.supported.first(where: { $0.code == appState.selectedLanguage })
+            ?? LanguagePickerView.supported[0]
     }
 
     // MARK: - Emergency History Section
@@ -282,7 +334,7 @@ struct SettingsTab: View {
 
     private func settingsRow(title: String, trailing icon: String) -> some View {
         HStack {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(DesignSystem.Font.body)
                 .foregroundColor(DesignSystem.Colors.textPrimary)
             Spacer()

@@ -107,7 +107,7 @@ struct PrimaryPillButton: View {
                         Image(systemName: icon)
                             .font(.system(size: 18, weight: .semibold))
                     }
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(DesignSystem.Font.button)
                 }
             }
@@ -121,7 +121,7 @@ struct PrimaryPillButton: View {
         }
         .buttonStyle(PrimaryPillButtonStyle(isEnabled: isEnabled))
         .disabled(!isEnabled || isLoading)
-        .accessibilityLabel(title)
+        .accessibilityLabel(LocalizedStringKey(title))
     }
 }
 
@@ -161,7 +161,7 @@ struct SecondaryPillButton: View {
                     Image(systemName: icon)
                         .font(.system(size: 18, weight: .semibold))
                 }
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(DesignSystem.Font.button)
             }
             .foregroundColor(DesignSystem.Colors.textPrimary)
@@ -177,7 +177,7 @@ struct SecondaryPillButton: View {
             )
         }
         .buttonStyle(ScaleButtonStyle())
-        .accessibilityLabel(title)
+        .accessibilityLabel(LocalizedStringKey(title))
     }
 }
 
@@ -198,12 +198,12 @@ struct GhostButton: View {
             DesignSystem.Haptics.selection()
             action()
         } label: {
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(DesignSystem.Font.button)
                 .foregroundColor(DesignSystem.Colors.primary)
                 .frame(maxWidth: .infinity, minHeight: 44)
         }
-        .accessibilityLabel(title)
+        .accessibilityLabel(LocalizedStringKey(title))
     }
 }
 
@@ -530,10 +530,10 @@ struct StreakCard: View {
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(DesignSystem.Font.screenTitle)
                         .foregroundColor(DesignSystem.Colors.textPrimary)
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(DesignSystem.Font.body)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -932,7 +932,7 @@ struct DestructivePillButton: View {
                     Image(systemName: icon)
                         .font(.system(size: 18, weight: .semibold))
                 }
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(DesignSystem.Font.button)
             }
             .foregroundColor(DesignSystem.Colors.error)
@@ -1104,7 +1104,7 @@ struct SectionHeader: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(DesignSystem.Colors.primary)
             }
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(DesignSystem.Font.sectionHeader)
                 .foregroundColor(DesignSystem.Colors.textPrimary)
             Spacer()

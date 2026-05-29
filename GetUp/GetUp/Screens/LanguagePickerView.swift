@@ -52,11 +52,11 @@ struct LanguagePickerView: View {
             appState.selectedLanguage = lang.code
         } label: {
             HStack(spacing: DesignSystem.Spacing.md) {
-                Text(lang.flag)
+                Text(verbatim: lang.flag)
                     .font(.system(size: 26))
                     .frame(width: 32)
 
-                Text(lang.endonym)
+                Text(verbatim: lang.endonym)
                     .font(DesignSystem.Font.headline)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
 

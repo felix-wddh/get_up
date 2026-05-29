@@ -129,7 +129,7 @@ struct AnalyticsTab: View {
                 .font(.system(size: 28, weight: .heavy, design: .rounded))
                 .foregroundColor(DesignSystem.Colors.textPrimary)
                 .tracking(-1)
-            Text(label)
+            Text(LocalizedStringKey(label))
                 .font(DesignSystem.Font.caption)
                 .foregroundColor(DesignSystem.Colors.textSecondary)
         }
@@ -267,10 +267,10 @@ struct InsightCard: View {
                 )
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(DesignSystem.Font.headline)
                         .foregroundColor(DesignSystem.Colors.textPrimary)
-                    Text(detail)
+                    Text(LocalizedStringKey(detail))
                         .font(DesignSystem.Font.secondaryBody)
                         .foregroundColor(DesignSystem.Colors.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)

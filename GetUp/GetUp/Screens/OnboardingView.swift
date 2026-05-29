@@ -402,10 +402,10 @@ struct OnboardingView: View {
                 .background(Circle().fill(DesignSystem.Colors.primary))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(DesignSystem.Font.headline)
                     .foregroundColor(DesignSystem.Colors.textPrimary)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(DesignSystem.Font.secondaryBody)
                     .foregroundColor(DesignSystem.Colors.textSecondary)
             }
