@@ -67,6 +67,11 @@ struct RootView: View {
         }
         .animation(DesignSystem.Animation.smooth, value: appState.hasCompletedOnboarding)
         .animation(DesignSystem.Animation.smooth, value: appState.shouldShowNFCScan)
+        // Inject the chosen UI language at the root. `Text(_:)`, Date and
+        // Number formatters, and `Calendar.…StandaloneWeekdaySymbols` all
+        // follow this environment value — so switching language in
+        // onboarding or Settings re-renders the whole UI immediately.
+        .environment(\.locale, Locale(identifier: appState.selectedLanguage))
     }
 }
 
@@ -152,7 +157,15 @@ final class AppState: ObservableObject {
             UserDefaults.standard.set(hasCompletedOnboarding, forKey: "hasCompletedOnboarding")
         }
     }
-    
+    /// Chosen UI language. One of "en" / "de" / "es" / "it" / "fr". Drives
+    /// `.environment(\.locale, ...)` at the root view so the whole UI
+    /// re-renders live when the user switches in Settings or onboarding.
+    @Published var selectedLanguage: String {
+        didSet {
+            UserDefaults.standard.set(selectedLanguage, forKey: "selectedLanguage")
+        }
+    }
+
     private init() {
         // Support UI test reset via launch argument
         if CommandLine.arguments.contains("--reset-onboarding") {
@@ -163,6 +176,19 @@ final class AppState: ObservableObject {
         }
 
         self.getUpModeEnabled = UserDefaults.standard.object(forKey: "getUpModeEnabled") as? Bool ?? true
+
+        // First-launch language defaults: respect the system preference if
+        // it matches one of our supported locales, otherwise fall back to
+        // English. Subsequent launches use whatever the user picked.
+        if let stored = UserDefaults.standard.string(forKey: "selectedLanguage") {
+            self.selectedLanguage = stored
+        } else {
+            let supported: Set<String> = ["en", "de", "es", "it", "fr"]
+            let match = Bundle.main.preferredLocalizations
+                .compactMap { String($0.prefix(2)) }
+                .first(where: { supported.contains($0) })
+            self.selectedLanguage = match ?? "en"
+        }
     }
     
     func triggerNFCScan(alarmId: String) {

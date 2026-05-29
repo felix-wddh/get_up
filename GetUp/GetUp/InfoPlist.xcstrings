@@ -1,0 +1,26 @@
+{
+  "sourceLanguage" : "en",
+  "version" : "1.0",
+  "strings" : {
+    "NSAlarmKitUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "GetUp uses alarms to wake you up. Alarms will override Focus and Silent modes." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp nutzt Wecker, um dich zu wecken. Wecker überschreiben Fokus- und Lautlos-Modus." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "GetUp usa alarmas para despertarte. Las alarmas anulan los modos Concentración y Silencio." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "GetUp usa le sveglie per svegliarti. Le sveglie hanno la precedenza sulle modalità Full Immersion e Silenzioso." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "GetUp utilise des alarmes pour te réveiller. Les alarmes priment sur les modes Concentration et Silencieux." } }
+      }
+    },
+    "NFCReaderUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "GetUp uses NFC to securely dismiss your alarms by scanning a physical tag." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp nutzt NFC, um deine Wecker durch das Scannen eines physischen Tags sicher zu beenden." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "GetUp usa NFC para desactivar tus alarmas de forma segura escaneando una etiqueta física." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "GetUp usa l'NFC per disattivare in sicurezza le tue sveglie scansionando un tag fisico." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "GetUp utilise le NFC pour désactiver tes alarmes en toute sécurité via le scan d'un tag physique." } }
+      }
+    }
+  }
+}

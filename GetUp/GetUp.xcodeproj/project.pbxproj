@@ -20,6 +20,9 @@
 		E91234560014 /* CreateAlarmSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550014 /* CreateAlarmSheet.swift */; };
 		E91234560015 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550015 /* OnboardingView.swift */; };
 		E91234560016 /* AnalyticsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550016 /* AnalyticsTab.swift */; };
+		E91234560017 /* LanguagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550017 /* LanguagePickerView.swift */; };
+		E91234560040 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E91234550040 /* Localizable.xcstrings */; };
+		E91234560041 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E91234550041 /* InfoPlist.xcstrings */; };
 		E91234560020 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550020 /* Alarm.swift */; };
 		E91234560021 /* AlarmRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550021 /* AlarmRepository.swift */; };
 		E91234560030 /* Services/SafetyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91234550030 /* Services/SafetyService.swift */; };
@@ -43,6 +46,9 @@
 		E91234550014 /* CreateAlarmSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAlarmSheet.swift; sourceTree = "<group>"; };
 		E91234550015 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		E91234550016 /* AnalyticsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTab.swift; sourceTree = "<group>"; };
+		E91234550017 /* LanguagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePickerView.swift; sourceTree = "<group>"; };
+		E91234550040 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		E91234550041 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		E91234550020 /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		E91234550021 /* AlarmRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRepository.swift; sourceTree = "<group>"; };
 		E91234550030 /* Services/SafetyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/SafetyService.swift; sourceTree = "<group>"; };
@@ -78,6 +84,8 @@
 				E91234580003 /* Screens */,
 				E91234580004 /* Services */,
 				E91234550007 /* Assets.xcassets */,
+				E91234550040 /* Localizable.xcstrings */,
+				E91234550041 /* InfoPlist.xcstrings */,
 				E91234550008 /* Info.plist */,
 				E91234550009 /* GetUp.entitlements */,
 			);
@@ -100,6 +108,7 @@
 				E91234550013 /* SettingsTab.swift */,
 				E91234550014 /* CreateAlarmSheet.swift */,
 				E91234550015 /* OnboardingView.swift */,
+				E91234550017 /* LanguagePickerView.swift */,
 				E91234710015 /* AppLogo.swift */,
 				E91234550003 /* NFCScanView.swift */,
 			);
@@ -168,6 +177,10 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				es,
+				it,
+				fr,
 			);
 			mainGroup = E91234580000;
 			productRefGroup = E91234580002 /* Products */;
@@ -185,6 +198,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E91234560007 /* Assets.xcassets in Resources */,
+				E91234560040 /* Localizable.xcstrings in Resources */,
+				E91234560041 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +225,7 @@
 				E91234560030 /* Services/SafetyService.swift in Sources */,
 				E91234560015 /* OnboardingView.swift in Sources */,
 				E91234560016 /* AnalyticsTab.swift in Sources */,
+				E91234560017 /* LanguagePickerView.swift in Sources */,
 				E91234720015 /* AppLogo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

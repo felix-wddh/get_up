@@ -1,8 +1,10 @@
 import SwiftUI
 
-/// Four-page onboarding for GetUp — v2 visual language.
+/// Five-page onboarding for GetUp — v2 visual language.
 ///
 /// Pages, in order:
+///   0. Language — pick the UI language (defaults to system match). Sits
+///      outside the progress bar like a pre-flight step.
 ///   1. Welcome — hero logo + the GetUp promise.
 ///   2. Mission — short personal note from Felix & Georg explaining why.
 ///   3. Connect NFC tag — primary CTA to link the tag, "Skip for now"
@@ -10,8 +12,8 @@ import SwiftUI
 ///   4. Set up your alarm — copy explaining how alarms work in-app,
 ///      plus the "Finish" button that drops the user onto the home screen.
 ///
-/// The Welcome page is the implicit "intro" — it doesn't show a progress
-/// bar. Pages 2–4 share a 3-step progress indicator across the top.
+/// The Language page is the implicit "pre-intro" — it doesn't show a
+/// progress bar. Pages 1–4 share a 4-step progress indicator across the top.
 struct OnboardingView: View {
     @EnvironmentObject private var appState: AppState
 
@@ -19,24 +21,25 @@ struct OnboardingView: View {
     @State private var boundTagHash: String?
     @State private var isScanning: Bool = false
 
-    /// Total number of "counted" steps after the welcome page (used by
-    /// the progress bar). Welcome itself sits outside this count.
-    private let countedSteps = 3
+    /// Total number of "counted" steps after the language page (used by
+    /// the progress bar). Language itself sits outside this count.
+    private let countedSteps = 4
 
     var body: some View {
         VStack(spacing: 0) {
             topBar
 
             if currentStep == 0 {
-                pageWelcome
+                pageLanguage
             } else {
                 progressBar
 
                 Group {
                     switch currentStep {
-                    case 1: pageMission
-                    case 2: pageConnect
-                    case 3: pageAlarmSetup
+                    case 1: pageWelcome
+                    case 2: pageMission
+                    case 3: pageConnect
+                    case 4: pageAlarmSetup
                     default: EmptyView()
                     }
                 }
@@ -124,6 +127,37 @@ struct OnboardingView: View {
         }
         .frame(width: 320, height: 240)
         .accessibilityHidden(true)
+    }
+
+    // MARK: - Page 0: Language picker
+    //
+    // Pre-flight choice that sets `appState.selectedLanguage`. The root
+    // view re-renders all `Text(_:)` content through the chosen locale
+    // the moment the user taps a row, so the rest of onboarding reads in
+    // that language from the next step onward.
+
+    private var pageLanguage: some View {
+        VStack(spacing: DesignSystem.Spacing.xl) {
+            Spacer(minLength: DesignSystem.Spacing.lg)
+
+            VStack(spacing: DesignSystem.Spacing.sm) {
+                Text("Choose your language")
+                    .font(DesignSystem.Font.largeTitle)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .multilineTextAlignment(.center)
+
+                Text("You can change this anytime in Settings.")
+                    .font(DesignSystem.Font.body)
+                    .foregroundColor(DesignSystem.Colors.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, DesignSystem.Spacing.xl)
+
+            LanguagePickerView()
+                .padding(.horizontal, DesignSystem.Spacing.xl)
+
+            Spacer(minLength: DesignSystem.Spacing.lg)
+        }
     }
 
     // MARK: - Page 1: Welcome
@@ -388,6 +422,14 @@ struct OnboardingView: View {
     private var bottomCTAs: some View {
         switch currentStep {
         case 0:
+            // Language — confirm and move into the real flow.
+            VStack(spacing: 0) {
+                PrimaryPillButton("Continue", icon: "arrow.right", action: nextStep)
+            }
+            .padding(.horizontal, DesignSystem.Spacing.xl)
+            .padding(.bottom, DesignSystem.Spacing.xl)
+
+        case 1:
             // Welcome — start the flow.
             VStack(spacing: 0) {
                 PrimaryPillButton("Get started", icon: "arrow.right", action: nextStep)
@@ -395,7 +437,7 @@ struct OnboardingView: View {
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.bottom, DesignSystem.Spacing.xl)
 
-        case 1:
+        case 2:
             // Mission — single primary to continue.
             VStack(spacing: 0) {
                 PrimaryPillButton("Continue", icon: "arrow.right", action: nextStep)
@@ -403,7 +445,7 @@ struct OnboardingView: View {
             .padding(.horizontal, DesignSystem.Spacing.xl)
             .padding(.bottom, DesignSystem.Spacing.xl)
 
-        case 2:
+        case 3:
             // Connect — primary action is inside the screen (LinkCTAButton).
             // Bottom slot only carries the skip ghost while no tag is linked.
             if boundTagHash == nil {
@@ -418,7 +460,7 @@ struct OnboardingView: View {
                     .padding(.bottom, DesignSystem.Spacing.xl)
             }
 
-        case 3:
+        case 4:
             // Setup alarm — Finish lands the user on the home screen.
             VStack(spacing: 0) {
                 PrimaryPillButton("Finish", action: finishOnboarding)

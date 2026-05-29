@@ -24,6 +24,9 @@ struct SettingsTab: View {
                         // GetUp Mode Section
                         getUpModeSection
 
+                        // Language Section
+                        languageSection
+
                         // Emergency History Section
                         emergencyHistorySection
 
@@ -104,6 +107,15 @@ struct SettingsTab: View {
                         .accessibilityHint("Require NFC scan to silence alarms")
                 }
             }
+        }
+    }
+
+    // MARK: - Language Section
+
+    private var languageSection: some View {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
+            SectionHeader("Language")
+            LanguagePickerView()
         }
     }
 

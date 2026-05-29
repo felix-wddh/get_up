@@ -618,15 +618,33 @@ struct MonthCalendarCard: View {
     // MARK: Wake count
 
     private var wakeCountLine: some View {
+        // Picks one of four catalog keys based on singular/plural and
+        // whether we're showing the current month or a navigated one,
+        // so each language can phrase the time-of-month suffix naturally.
         let count = wakeCountForDisplayedMonth
-        let monthName = displayedMonth.formatted(.dateTime.month(.wide))
         let isCurrent = calendar.isDate(displayedMonth, equalTo: Date(), toGranularity: .month)
-        let suffix = isCurrent ? "this month" : "in \(monthName)"
-        return Text("Woken with GetUp \(count) time\(count == 1 ? "" : "s") \(suffix).")
-            .font(DesignSystem.Font.secondaryBody)
-            .foregroundColor(DesignSystem.Colors.textSecondary)
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity)
+        let monthName = displayedMonth.formatted(.dateTime.month(.wide))
+        let isSingular = (count == 1)
+
+        return Group {
+            if isCurrent {
+                if isSingular {
+                    Text("Woken with GetUp \(count) time this month.")
+                } else {
+                    Text("Woken with GetUp \(count) times this month.")
+                }
+            } else {
+                if isSingular {
+                    Text("Woken with GetUp \(count) time in \(monthName).")
+                } else {
+                    Text("Woken with GetUp \(count) times in \(monthName).")
+                }
+            }
+        }
+        .font(DesignSystem.Font.secondaryBody)
+        .foregroundColor(DesignSystem.Colors.textSecondary)
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: Weekday header row
@@ -643,9 +661,18 @@ struct MonthCalendarCard: View {
         .padding(.top, 4)
     }
 
+    @Environment(\.locale) private var environmentLocale
+
     private var weekdayLetters: [String] {
-        // Sun-first to match the visual reference.
-        ["S", "M", "T", "W", "T", "F", "S"]
+        // Locale-aware one-letter abbreviations, Sunday-first to match the
+        // visual reference. veryShortStandaloneWeekdaySymbols is already
+        // language-appropriate (M D M D F S S in German, M T W T F S S in
+        // English, etc.) and shifts automatically when the root view's
+        // locale env changes.
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = environmentLocale
+        cal.firstWeekday = 1
+        return cal.veryShortStandaloneWeekdaySymbols
     }
 
     // MARK: Day grid (6 rows × 7 cols)

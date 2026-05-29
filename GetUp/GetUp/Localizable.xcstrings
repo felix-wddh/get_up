@@ -1,0 +1,945 @@
+{
+  "sourceLanguage" : "en",
+  "version" : "1.0",
+  "strings" : {
+
+    "Choose your language" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprache wählen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige tu idioma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Scegli la tua lingua" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisis ta langue" } }
+      }
+    },
+    "You can change this anytime in Settings." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Du kannst das jederzeit in den Einstellungen ändern." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puedes cambiarlo cuando quieras en Ajustes." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Puoi cambiarla in qualsiasi momento nelle Impostazioni." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tu peux la changer à tout moment dans les Réglages." } }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sprache" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Lingua" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Langue" } }
+      }
+    },
+
+    "Get out of bed.\nActually." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Steh auf.\nWirklich." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sal de la cama.\nDe verdad." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Alzati dal letto.\nDavvero." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sors du lit.\nVraiment." } }
+      }
+    },
+    "GetUp only turns off when you walk\nyour phone to a tag in another room." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp geht erst aus, wenn du dein Telefon\nzu einem Tag in einem anderen Raum bringst." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "GetUp solo se apaga cuando llevas el móvil\na una etiqueta en otra habitación." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "GetUp si spegne solo quando porti il telefono\na un tag in un'altra stanza." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "GetUp ne s'éteint que lorsque tu apportes ton téléphone\nà un tag dans une autre pièce." } }
+      }
+    },
+    "Get started" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Loslegen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Empezar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Inizia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Commencer" } }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Weiter" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Continuar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Continua" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Continuer" } }
+      }
+    },
+    "Skip for now" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Vorerst überspringen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Omitir por ahora" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Salta per ora" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ignorer pour l'instant" } }
+      }
+    },
+    "Finish" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fertig" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Finalizar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Concludi" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Terminer" } }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zurück" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrás" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Indietro" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Retour" } }
+      }
+    },
+
+    "From Felix & Georg" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Von Felix & Georg" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "De Felix & Georg" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Da Felix & Georg" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "De la part de Felix & Georg" } }
+      }
+    },
+    "We're two people who could never trust ourselves to actually get up. Every snooze button felt like a tiny betrayal." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wir sind zwei Leute, die sich selbst nie zugetraut haben, wirklich aufzustehen. Jede Snooze-Taste fühlte sich wie ein kleiner Verrat an." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Somos dos personas que nunca confiamos en levantarnos de verdad. Cada botón de repetir alarma se sentía como una pequeña traición." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Siamo due persone che non sono mai riuscite a fidarsi di sé stesse per alzarsi davvero. Ogni tasto snooze sembrava un piccolo tradimento." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nous sommes deux personnes qui n'ont jamais pu se faire confiance pour vraiment se lever. Chaque bouton snooze ressemblait à une petite trahison." } }
+      }
+    },
+    "So we built GetUp — a clean, simple way to make mornings easier. Once your feet hit the floor, the day starts." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Also haben wir GetUp gebaut — eine klare, einfache Art, Morgen leichter zu machen. Sobald deine Füße den Boden berühren, beginnt der Tag." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Así que creamos GetUp — una forma clara y sencilla de hacer las mañanas más fáciles. En cuanto tus pies tocan el suelo, empieza el día." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Così abbiamo costruito GetUp — un modo pulito e semplice per rendere le mattine più facili. Quando i tuoi piedi toccano il pavimento, la giornata inizia." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Alors nous avons créé GetUp — une façon simple et claire de rendre les matins plus faciles. Dès que tes pieds touchent le sol, la journée commence." } }
+      }
+    },
+    "Felix and Georg, GetUp founders" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Felix und Georg, GetUp-Gründer" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Felix y Georg, fundadores de GetUp" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Felix e Georg, fondatori di GetUp" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Felix et Georg, fondateurs de GetUp" } }
+      }
+    },
+
+    "Connect your tag" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag verbinden" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Conecta tu etiqueta" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Collega il tuo tag" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Connecte ton tag" } }
+      }
+    },
+    "Pair your physical GetUp tag once.\nWe'll use it to know when you've\nactually walked to it." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verbinde deinen GetUp-Tag einmalig.\nDamit wissen wir, wann du wirklich\nzu ihm hingegangen bist." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Empareja tu etiqueta GetUp una vez.\nAsí sabremos cuándo de verdad\nhas caminado hasta ella." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Abbina il tuo tag GetUp una sola volta.\nLo useremo per sapere quando ci\nsei davvero andato vicino." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Associe ton tag GetUp une seule fois.\nNous saurons ainsi quand tu y as\nvraiment marché." } }
+      }
+    },
+    "Tag successfully linked." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag erfolgreich verbunden." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta vinculada con éxito." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Tag collegato con successo." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tag connecté avec succès." } }
+      }
+    },
+    "Link your GetUp" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp verbinden" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vincular GetUp" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Collega GetUp" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lier GetUp" } }
+      }
+    },
+    "Securely connect your tag" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Sicher mit deinem Tag verbinden" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Conecta tu etiqueta de forma segura" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Collega il tuo tag in sicurezza" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Connecte ton tag en toute sécurité" } }
+      }
+    },
+
+    "Set up your alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker einrichten" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Configura tu alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Imposta la sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Configure ton réveil" } }
+      }
+    },
+    "On the home screen, tap Add alarm to pick your wake time. We'll handle the rest — when it rings, walk to your tag." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tippe auf dem Home-Screen auf „Wecker hinzufügen“, um deine Aufstehzeit zu wählen. Den Rest übernehmen wir — wenn er klingelt, gehst du zu deinem Tag." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "En la pantalla principal, toca Añadir alarma para elegir tu hora de despertar. Nos encargamos del resto — cuando suene, camina hasta tu etiqueta." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Nella schermata principale, tocca Aggiungi sveglia per scegliere l'orario. Al resto pensiamo noi — quando suona, vai al tuo tag." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sur l'écran d'accueil, appuie sur Ajouter une alarme pour choisir l'heure du réveil. On s'occupe du reste — quand elle sonne, marche jusqu'à ton tag." } }
+      }
+    },
+    "Tap Add alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "„Wecker hinzufügen“ tippen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca Añadir alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Tocca Aggiungi sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appuie sur Ajouter une alarme" } }
+      }
+    },
+    "From the home screen." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Vom Home-Screen aus." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Desde la pantalla principal." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Dalla schermata principale." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Depuis l'écran d'accueil." } }
+      }
+    },
+    "Pick a time" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zeit wählen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige una hora" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Scegli un orario" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisis une heure" } }
+      }
+    },
+    "Whenever you want to wake up." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wann immer du aufwachen willst." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuando quieras despertarte." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Quando vuoi svegliarti." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quand tu veux te réveiller." } }
+      }
+    },
+    "Sleep tight" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Schlaf gut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Que duermas bien" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Sogni d'oro" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dors bien" } }
+      }
+    },
+    "When it rings, walk to your tag." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wenn er klingelt, geh zu deinem Tag." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuando suene, camina hasta tu etiqueta." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Quando suona, vai al tuo tag." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quand il sonne, marche jusqu'à ton tag." } }
+      }
+    },
+
+    "Alarms Disabled" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker deaktiviert" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Alarmas desactivadas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Sveglie disattivate" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Alarmes désactivées" } }
+      }
+    },
+    "Enable in Settings to receive alarms" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "In Einstellungen aktivieren, um Wecker zu erhalten" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa en Ajustes para recibir alarmas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Attiva nelle Impostazioni per ricevere le sveglie" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Active dans les Réglages pour recevoir les alarmes" } }
+      }
+    },
+    "Fix" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Beheben" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Arreglar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Risolvi" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Corriger" } }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen öffnen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir Ajustes" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Apri Impostazioni" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir Réglages" } }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Abbrechen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Annulla" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } }
+      }
+    },
+    "Please enable alarms in Settings to use GetUp." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bitte aktiviere Wecker in den Einstellungen, um GetUp zu nutzen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa las alarmas en Ajustes para usar GetUp." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Attiva le sveglie nelle Impostazioni per usare GetUp." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Active les alarmes dans les Réglages pour utiliser GetUp." } }
+      }
+    },
+    "Your alarms" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Deine Wecker" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tus alarmas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Le tue sveglie" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tes alarmes" } }
+      }
+    },
+    "%lld active" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld aktiv" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld activas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "%lld attive" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld actives" } }
+      }
+    },
+    "No alarms yet" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Noch keine Wecker" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay alarmas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Nessuna sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas encore d'alarmes" } }
+      }
+    },
+    "Add your first morning alarm to get started." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Füge deinen ersten Morgen-Wecker hinzu, um loszulegen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade tu primera alarma matutina para empezar." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Aggiungi la tua prima sveglia mattutina per iniziare." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajoute ta première alarme du matin pour commencer." } }
+      }
+    },
+    "Add alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker hinzufügen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Aggiungi sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter une alarme" } }
+      }
+    },
+    "Add new alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuen Wecker hinzufügen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir nueva alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Aggiungi nuova sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter une nouvelle alarme" } }
+      }
+    },
+    "Progress" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fortschritt" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Progreso" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Progressi" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Progrès" } }
+      }
+    },
+    "Streak" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Serie" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Racha" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Serie" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Série" } }
+      }
+    },
+    "Get up on time every day to build your streak." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Steh jeden Tag pünktlich auf, um deine Serie aufzubauen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Levántate a tiempo cada día para mantener tu racha." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Alzati in tempo ogni giorno per costruire la tua serie." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lève-toi à l'heure chaque jour pour construire ta série." } }
+      }
+    },
+    "Menu" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Menü" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Menú" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Menu" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Menu" } }
+      }
+    },
+
+    "Edit Alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker bearbeiten" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Modifica sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier l'alarme" } }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Speichern" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Salva" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrer" } }
+      }
+    },
+    "Label" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bezeichnung" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Etichetta" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étiquette" } }
+      }
+    },
+    "Alarm label" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker-Bezeichnung" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta de la alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Etichetta della sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étiquette de l'alarme" } }
+      }
+    },
+    "Repeat" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wiederholung" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Repetir" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ripeti" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Répéter" } }
+      }
+    },
+    "NFC Tag" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "NFC-Tag" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta NFC" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Tag NFC" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tag NFC" } }
+      }
+    },
+    "Tag bound" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag verbunden" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta vinculada" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Tag collegato" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tag associé" } }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Ändern" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cambiar" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Cambia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier" } }
+      }
+    },
+    "Bind an NFC tag to stop this alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verbinde einen NFC-Tag, um diesen Wecker zu stoppen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vincula una etiqueta NFC para detener esta alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Collega un tag NFC per fermare questa sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Associe un tag NFC pour arrêter cette alarme" } }
+      }
+    },
+    "Scan Tag" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Tag scannen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Escanear etiqueta" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Scansiona tag" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Scanner le tag" } }
+      }
+    },
+    "Delete Alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker löschen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Eliminar alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Elimina sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer l'alarme" } }
+      }
+    },
+    "Error" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Fehler" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Errore" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Erreur" } }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK" } }
+      }
+    },
+    "New Alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Neuer Wecker" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Nuova sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouvelle alarme" } }
+      }
+    },
+
+    "Analytics" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Statistik" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estadísticas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Statistiche" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Statistiques" } }
+      }
+    },
+    "TIME SAVED IN YOUR LIFE" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "ZEIT IN DEINEM LEBEN GESPART" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "TIEMPO AHORRADO EN TU VIDA" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "TEMPO RISPARMIATO NELLA TUA VITA" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "TEMPS GAGNÉ DANS TA VIE" } }
+      }
+    },
+    "Versus the average sleep-in. Every morning you scan, you save your future self real minutes." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Verglichen mit dem durchschnittlichen Ausschlafen. Jeden Morgen, an dem du scannst, sparst du deinem zukünftigen Ich echte Minuten." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Frente a la media de dormir más de la cuenta. Cada mañana que escaneas, le ahorras minutos reales a tu yo futuro." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Rispetto alla media di chi resta a letto. Ogni mattina che scansioni, regali minuti veri al tuo io futuro." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Par rapport au temps moyen passé à traîner au lit. Chaque matin où tu scannes, tu offres de vraies minutes à ton futur toi." } }
+      }
+    },
+    "Time to scan" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Scan-Zeit" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tiempo hasta escanear" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Tempo per scansionare" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Temps avant scan" } }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Heute" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Oggi" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aujourd'hui" } }
+      }
+    },
+    "This week" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Diese Woche" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Esta semana" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Questa settimana" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Cette semaine" } }
+      }
+    },
+    "All-time" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Insgesamt" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Sempre" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tout temps" } }
+      }
+    },
+    "Top %lld%% of GetUp users" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Top %lld %% der GetUp-Nutzer" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Top %lld %% de los usuarios de GetUp" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Top %lld %% degli utenti GetUp" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Top %lld %% des utilisateurs GetUp" } }
+      }
+    },
+    "Faster than %lld%% of users this week." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Schneller als %lld %% der Nutzer diese Woche." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Más rápido que el %lld %% de los usuarios esta semana." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Più veloce del %lld %% degli utenti questa settimana." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus rapide que %lld %% des utilisateurs cette semaine." } }
+      }
+    },
+    "Slowest" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Langsamste" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Más lento" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Più lento" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus lent" } }
+      }
+    },
+    "Fastest" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Schnellste" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Más rápido" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Più veloce" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus rapide" } }
+      }
+    },
+    "What you could've done with that time" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Was du in der Zeit hättest tun können" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Lo que podrías haber hecho con ese tiempo" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Cosa avresti potuto fare in quel tempo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ce que tu aurais pu faire de ce temps" } }
+      }
+    },
+    "Read 3 Harry Potter books" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "3 Harry-Potter-Bücher lesen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Leer 3 libros de Harry Potter" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Leggere 3 libri di Harry Potter" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lire 3 tomes de Harry Potter" } }
+      }
+    },
+    "27 hours is roughly enough to finish books 1, 2, and 3 cover-to-cover." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "27 Stunden reichen ungefähr, um Buch 1, 2 und 3 von vorne bis hinten zu lesen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "27 horas son aproximadamente lo que se necesita para terminar los libros 1, 2 y 3 de cabo a rabo." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "27 ore sono più o meno quanto serve per finire i libri 1, 2 e 3 dall'inizio alla fine." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "27 heures, c'est à peu près ce qu'il faut pour terminer les tomes 1, 2 et 3 de bout en bout." } }
+      }
+    },
+    "162 mornings of coffee" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "162 Morgen mit Kaffee" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "162 mañanas de café" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "162 mattine con un caffè" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "162 matins avec un café" } }
+      }
+    },
+    "Brewing and actually enjoying a cup takes ~10 minutes. You reclaimed 162 of them." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Eine Tasse aufbrühen und in Ruhe genießen dauert etwa 10 Minuten. Du hast dir 162 davon zurückgeholt." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparar y disfrutar una taza lleva unos 10 minutos. Has recuperado 162." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Preparare e gustarsi davvero una tazza richiede circa 10 minuti. Tu te ne sei ripreso 162." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Préparer et savourer une tasse prend environ 10 minutes. Tu en as récupéré 162." } }
+      }
+    },
+    "Watched 13 movies" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "13 Filme geschaut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vistas 13 películas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Visti 13 film" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Regardé 13 films" } }
+      }
+    },
+    "27 hours is a 13-movie marathon. Or one Lord of the Rings extended trilogy with snack breaks." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "27 Stunden sind ein 13-Filme-Marathon. Oder eine Herr-der-Ringe-Extended-Trilogie mit Snack-Pausen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "27 horas equivalen a un maratón de 13 películas. O una trilogía extendida de El Señor de los Anillos con pausas para picar." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "27 ore sono una maratona da 13 film. O una trilogia estesa del Signore degli Anelli con pause snack." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "27 heures, c'est un marathon de 13 films. Ou une trilogie étendue du Seigneur des anneaux avec des pauses goûter." } }
+      }
+    },
+    "Ran an extra 130 km" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zusätzliche 130 km gelaufen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "130 km extra corriendo" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Corso 130 km in più" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Couru 130 km de plus" } }
+      }
+    },
+    "At a steady 5 min/km pace, you could have run roughly 3 marathons in the time you saved." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "In einem stetigen Tempo von 5 min/km hättest du ungefähr 3 Marathons in der gesparten Zeit laufen können." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "A un ritmo constante de 5 min/km, podrías haber corrido unos 3 maratones con el tiempo ahorrado." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "A un ritmo costante di 5 min/km, avresti potuto correre circa 3 maratone con il tempo risparmiato." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "À un rythme régulier de 5 min/km, tu aurais pu courir environ 3 marathons avec le temps gagné." } }
+      }
+    },
+
+    "Settings" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Einstellungen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Impostazioni" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réglages" } }
+      }
+    },
+    "Premium alarm utility" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Premium-Wecker-Werkzeug" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Utilidad de alarma premium" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Strumento sveglia premium" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Outil d'alarme premium" } }
+      }
+    },
+    "Enforcement" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Durchsetzung" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumplimiento" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Applicazione" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Application" } }
+      }
+    },
+    "GetUp Mode" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp-Modus" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo GetUp" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Modalità GetUp" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode GetUp" } }
+      }
+    },
+    "Require NFC scan to silence alarms" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "NFC-Scan erforderlich, um Wecker stumm zu schalten" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Requerir escaneo NFC para silenciar alarmas" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Richiedi la scansione NFC per silenziare le sveglie" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exiger un scan NFC pour faire taire les alarmes" } }
+      }
+    },
+    "Emergency bypasses" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Notfall-Umgehungen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Saltos de emergencia" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Bypass d'emergenza" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Contournements d'urgence" } }
+      }
+    },
+    "Bypass history" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Umgehungs-Historie" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial de saltos" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Cronologia bypass" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Historique des contournements" } }
+      }
+    },
+    "Last 30 days" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Letzte 30 Tage" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Últimos 30 días" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ultimi 30 giorni" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "30 derniers jours" } }
+      }
+    },
+    "Last used" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Zuletzt benutzt" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Último uso" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ultimo utilizzo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dernière utilisation" } }
+      }
+    },
+    "No emergency stops used yet. Good job." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bislang keine Notfall-Stopps genutzt. Gut gemacht." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no se han usado paradas de emergencia. Buen trabajo." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Nessuno stop d'emergenza usato finora. Bravo." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun arrêt d'urgence utilisé pour l'instant. Bravo." } }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Über" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Acerca de" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Informazioni" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "À propos" } }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Versión" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Versione" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Version" } }
+      }
+    },
+    "Privacy policy" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Datenschutzerklärung" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Política de privacidad" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Informativa sulla privacy" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Politique de confidentialité" } }
+      }
+    },
+    "Support" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Support" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Soporte" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Supporto" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Support" } }
+      }
+    },
+    "Contact support" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Support kontaktieren" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contactar con soporte" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Contatta il supporto" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Contacter le support" } }
+      }
+    },
+    "Rate GetUp" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "GetUp bewerten" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Valorar GetUp" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Valuta GetUp" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Évaluer GetUp" } }
+      }
+    },
+    "Made for heavy sleepers." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Für Tiefschläfer gemacht." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho para los que duermen profundamente." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Pensato per chi dorme sodo." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conçu pour les gros dormeurs." } }
+      }
+    },
+    "Data reset complete" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Daten-Reset abgeschlossen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecimiento de datos completo" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ripristino dati completato" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialisation des données terminée" } }
+      }
+    },
+    "Force-quit and relaunch GetUp to start fresh. (Swipe up from the bottom and swipe the app away.)" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Beende GetUp komplett und starte neu, um frisch zu beginnen. (Vom unteren Rand nach oben wischen und die App wegwischen.)" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cierra GetUp por completo y vuelve a abrirla para empezar de cero. (Desliza hacia arriba desde abajo y desliza la app fuera.)" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Forza la chiusura e riapri GetUp per ricominciare da capo. (Scorri verso l'alto dal basso e fai uscire l'app.)" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quitte complètement GetUp et relance-la pour repartir à zéro. (Glisse vers le haut depuis le bas et balaie l'app.)" } }
+      }
+    },
+
+    "Scan to stop alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Scannen, um Wecker zu stoppen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Escanea para detener la alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Scansiona per fermare la sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Scanne pour arrêter l'alarme" } }
+      }
+    },
+    "Hold the top of your iPhone near your NFC tag." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Halte die Oberkante deines iPhones an deinen NFC-Tag." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Acerca la parte superior del iPhone a tu etiqueta NFC." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Avvicina la parte superiore dell'iPhone al tuo tag NFC." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Approche le haut de ton iPhone de ton tag NFC." } }
+      }
+    },
+    "Alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Alarme" } }
+      }
+    },
+    "You're up." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Du bist wach." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estás en pie." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Sei sveglio." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tu es debout." } }
+      }
+    },
+    "That's not your tag." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Das ist nicht dein Tag." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Esta no es tu etiqueta." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Questo non è il tuo tag." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ce n'est pas ton tag." } }
+      }
+    },
+    "Have a good morning." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Hab einen guten Morgen." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Que tengas buena mañana." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Buona giornata." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Passe une bonne matinée." } }
+      }
+    },
+    "Try again." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Versuch's nochmal." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inténtalo de nuevo." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Riprova." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réessaie." } }
+      }
+    },
+    "Emergency Stop" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Notfall-Stopp" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Parada de emergencia" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Stop d'emergenza" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Arrêt d'urgence" } }
+      }
+    },
+    "Stop Alarm" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Wecker stoppen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Detener alarma" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ferma sveglia" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Arrêter l'alarme" } }
+      }
+    },
+    "Alright sleepyhead, due to regulations you do have a way out here. If your GetUp Tag is broken, you do not find it or you are unable to move, then there is a way. Hold the button for 20 seconds to stop the alarm. Use it wisely sleepyhead!" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Okay Schlafmütze, aus regulatorischen Gründen gibt's einen Notausgang. Wenn dein GetUp-Tag kaputt ist, du ihn nicht findest oder dich nicht bewegen kannst — halte den Knopf 20 Sekunden gedrückt, um den Wecker zu stoppen. Benutz das mit Bedacht, Schlafmütze!" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vale, dormilón, por temas legales tienes una salida. Si tu etiqueta GetUp está rota, no la encuentras o no puedes moverte, hay una manera. Mantén pulsado el botón 20 segundos para detener la alarma. ¡Úsalo con cabeza, dormilón!" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Ok dormiglione, per ragioni normative hai una via d'uscita. Se il tuo tag GetUp è rotto, non lo trovi o non riesci a muoverti, c'è un modo. Tieni premuto il pulsante per 20 secondi per fermare la sveglia. Usalo con saggezza, dormiglione!" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK marmotte, pour des raisons réglementaires, tu as une porte de sortie. Si ton tag GetUp est cassé, que tu ne le retrouves pas ou que tu ne peux pas bouger, il y a un moyen. Maintiens le bouton 20 secondes pour arrêter l'alarme. À utiliser avec sagesse, marmotte !" } }
+      }
+    },
+    "Mock NFC Scan" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "NFC-Scan simulieren" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Simular escaneo NFC" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Simula scansione NFC" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Simuler le scan NFC" } }
+      }
+    },
+
+    "Woken with GetUp %lld time this month." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld Mal in diesem Monat mit GetUp geweckt." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despertado con GetUp %lld vez este mes." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Svegliato con GetUp %lld volta questo mese." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réveillé avec GetUp %lld fois ce mois-ci." } }
+      }
+    },
+    "Woken with GetUp %lld times this month." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%lld Mal in diesem Monat mit GetUp geweckt." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despertado con GetUp %lld veces este mes." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Svegliato con GetUp %lld volte questo mese." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réveillé avec GetUp %lld fois ce mois-ci." } }
+      }
+    },
+    "Woken with GetUp %1$lld time in %2$@." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld Mal mit GetUp im %2$@ geweckt." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despertado con GetUp %1$lld vez en %2$@." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Svegliato con GetUp %1$lld volta a %2$@." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réveillé avec GetUp %1$lld fois en %2$@." } }
+      }
+    },
+    "Woken with GetUp %1$lld times in %2$@." : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld Mal mit GetUp im %2$@ geweckt." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Despertado con GetUp %1$lld veces en %2$@." } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Svegliato con GetUp %1$lld volte a %2$@." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réveillé avec GetUp %1$lld fois en %2$@." } }
+      }
+    },
+    "Previous month" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Vorheriger Monat" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mes anterior" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Mese precedente" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mois précédent" } }
+      }
+    },
+    "Next month" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Nächster Monat" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mes siguiente" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Mese successivo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mois suivant" } }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Home" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Accueil" } }
+      }
+    },
+    "Close NFC scan" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "NFC-Scan schließen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerrar escaneo NFC" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Chiudi scansione NFC" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fermer le scan NFC" } }
+      }
+    },
+    "Ready to scan" : {
+      "localizations" : {
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Bereit zum Scannen" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo para escanear" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Pronto per la scansione" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Prêt à scanner" } }
+      }
+    }
+  }
+}
